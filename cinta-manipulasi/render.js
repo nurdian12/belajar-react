@@ -8,14 +8,17 @@ const id = +process.argv[2];
 const fps = +(process.argv[3] || 30);
 const preview = process.argv[4] === 'preview';
 const DUR = 20;
-const NAMES = { 1: 'love-bombing-hadiah-berbayar', 2: 'gaslighting-kebalikannya', 3: 'diminta-maaf-hitungan', 4: 'manipulasi-tali-boneka', 5: 'siklus-rantai', 6: 'peduli-vs-kontrol' };
-const outDir = path.join(__dirname, 'out'); fs.mkdirSync(outDir, { recursive: true });
+const NAMES = process.env.VER === '2'
+  ? { 1: 'baru-2-minggu-soulmate', 2: 'dibilang-lebay', 3: 'maaf-ke-100', 4: 'kalau-kamu-sayang-tali', 5: 'putus-balikan-rantai', 6: 'share-loc-vs-kabarin' }
+  : { 1: 'love-bombing-hadiah-berbayar', 2: 'gaslighting-kebalikannya', 3: 'diminta-maaf-hitungan', 4: 'manipulasi-tali-boneka', 5: 'siklus-rantai', 6: 'peduli-vs-kontrol' };
+const VER = process.env.VER || '';
+const outDir = path.join(__dirname, 'out' + VER); fs.mkdirSync(outDir, { recursive: true });
 const tmp = process.env.TMPD || outDir;
 
 (async () => {
   const browser = await chromium.launch();
   const page = await browser.newPage({ viewport: { width: 1080, height: 1920 } });
-  await page.goto('file://' + path.join(__dirname, 'scenes.html'));
+  await page.goto('file://' + path.join(__dirname, `scenes${VER}.html`));
   await page.waitForFunction('window.ready === true');
   if (preview) {
     // contact-sheet frames
