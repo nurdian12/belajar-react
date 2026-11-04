@@ -1,0 +1,563 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>kenalipolanya</title>
+<style>html,body{margin:0;background:#000}canvas{display:block}</style></head>
+<body><canvas id="c" width="1080" height="1920"></canvas>
+<script>
+const W = 1080, H = 1920;
+const c = document.getElementById('c'), g = c.getContext('2d');
+const SANS = '"Inter","DejaVu Sans",sans-serif';
+const INK = '#15161a', PAPER = '#f3f0e8', YEL = '#ffd23f', RED = '#e8392e', BLUE = '#3b8fe0', GREEN = '#2f9e62';
+const REVEAL = 8.5;
+const WATERMARK = '@kenalipolanya';
+let NOW = 0;
+
+/* ================= utils ================= */
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const lerp = (a, b, t) => a + (b - a) * t;
+const seg = (t, a, b) => clamp((t - a) / (b - a));
+const eo = x => 1 - Math.pow(1 - x, 3);
+const eio = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+const bounce = x => { const k = eo(x); return k + Math.sin(x * Math.PI) * .18; };
+const rad = d => d * Math.PI / 180;
+const win = (t, a, b, f = .18) => seg(t, a, a + f) * (1 - seg(t, b - f, b));
+const rnd = i => { const x = Math.sin(i * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
+const hex = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+const mix = (a, b, p) => { const A = hex(a), B = hex(b); return `rgb(${A.map((v, i) => Math.round(lerp(v, B[i], p))).join(',')})`; };
+const rp = n => 'Rp ' + Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+function font(size, w = 800) { return `${w} ${size}px ${SANS}`; }
+function text(s, x, y, o = {}) {
+  const { size = 30, color = INK, align = 'center', w = 800, ls = 0, alpha = 1 } = o;
+  if (alpha <= 0) return;
+  g.save(); g.globalAlpha *= alpha; g.font = font(size, w); g.letterSpacing = ls + 'px';
+  g.fillStyle = color; g.textAlign = align; g.textBaseline = 'middle'; g.fillText(s, x, y); g.restore();
+}
+function measure(s, size, w = 800, ls = 0) { g.save(); g.font = font(size, w); g.letterSpacing = ls + 'px'; const m = g.measureText(s).width; g.restore(); return m; }
+function rrect(x, y, w, h, r) {
+  g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r);
+  g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath();
+}
+function ln(x1, y1, x2, y2, col = INK, lw = 6, alpha = 1) {
+  if (alpha <= 0) return;
+  g.save(); g.globalAlpha *= alpha; g.strokeStyle = col; g.lineWidth = lw; g.lineCap = 'round';
+  g.beginPath(); g.moveTo(x1, y1); g.lineTo(x2, y2); g.stroke(); g.restore();
+}
+function glow(x, y, r, col, a = 1) {
+  if (a <= 0) return;
+  const gr = g.createRadialGradient(x, y, 0, x, y, r); gr.addColorStop(0, col); gr.addColorStop(1, 'rgba(255,255,255,0)');
+  g.save(); g.globalAlpha *= a; g.fillStyle = gr; g.beginPath(); g.arc(x, y, r, 0, 7); g.fill(); g.restore();
+}
+
+/* ================= character (ala ilustrasi referensi) ================= */
+const POSES = {
+  idle: { L: [-36, 128, 1], R: [36, 128, -1] },
+  cross: { L: [64, 46, 1], R: [-64, 46, -1] },
+  up: { L: [-66, -84, -1], R: [66, -84, 1] },
+  point: { L: [-36, 128, 1], R: [124, -10, 1] },
+  phone: { L: [-36, 128, 1], R: [56, 50, -1] },
+  stop: { L: [-36, 128, 1], R: [96, -62, 1] },
+  shrug: { L: [-84, 40, 1], R: [84, 40, -1] },
+  grab: { L: [-36, 128, 1], R: [122, 38, 1] },
+  hold2: { L: [58, 66, 1], R: [80, 52, -1] },
+  hands: { L: [-70, 10, 1], R: [70, 10, -1] },
+  face: { L: [-26, -52, -1], R: [26, -52, 1] }
+};
+function mixPose(a, b, p) {
+  const A = typeof a === 'string' ? POSES[a] : a, B = typeof b === 'string' ? POSES[b] : b;
+  const m = k => [lerp(A[k][0], B[k][0], p), lerp(A[k][1], B[k][1], p), p < .5 ? A[k][2] : B[k][2]];
+  return { L: m('L'), R: m('R') };
+}
+function ik(sx, sy, tx, ty, l1, l2, bend) {
+  let dx = tx - sx, dy = ty - sy, d = Math.hypot(dx, dy); const max = l1 + l2 - 1;
+  if (d > max) { dx *= max / d; dy *= max / d; d = max; }
+  if (d < 20) { d = 20; }
+  const a = (l1 * l1 - l2 * l2 + d * d) / (2 * d), h = Math.sqrt(Math.max(0, l1 * l1 - a * a));
+  const mx = sx + dx * a / d, my = sy + dy * a / d;
+  return { ex: mx - bend * h * dy / d, ey: my + bend * h * dx / d, hx: sx + dx, hy: sy + dy };
+}
+function hair(kind) {
+  g.lineWidth = 5;
+  g.beginPath();
+  if (kind === 'slick') { g.moveTo(-34, -34); g.quadraticCurveTo(-8, -64, 36, -30); g.moveTo(-22, -44); g.quadraticCurveTo(0, -60, 22, -42); }
+  else { g.moveTo(-22, -44); g.quadraticCurveTo(-10, -62, 2, -52); g.moveTo(2, -54); g.quadraticCurveTo(12, -62, 18, -50); g.moveTo(-10, -52); g.quadraticCurveTo(0, -66, 8, -58); }
+  g.stroke();
+}
+function brow(x1, y1, x2, y2, cv) { g.beginPath(); g.moveTo(x1, y1); g.quadraticCurveTo((x1 + x2) / 2, (y1 + y2) / 2 - cv, x2, y2); g.stroke(); }
+function face(st, look, fx, seed) {
+  const blink = ((NOW + seed) % 3.4) < .11 && !['closed', 'shock', 'love'].includes(st);
+  g.lineWidth = 5; g.strokeStyle = INK; g.fillStyle = INK; g.lineCap = 'round';
+  const ex = 18, ey = -4;
+  let browsL = [-32, -29, -8, -31, 7], browsR = [8, -31, 32, -29, 7];
+  let eyeRy = 8.5, eyeRx = 5.5, mouth = 'smile';
+  if (st === 'angry') { browsL = [-34, -36, -8, -22, 0]; browsR = [8, -22, 34, -36, 0]; eyeRy = 6; mouth = 'flatdown'; }
+  if (st === 'sad' || st === 'worried' || st === 'cry') { browsL = [-34, -22, -8, -34, 0]; browsR = [8, -34, 34, -22, 0]; mouth = st === 'worried' ? 'wavy' : 'sad'; }
+  if (st === 'shock') { browsL = [-32, -38, -8, -40, 9]; browsR = [8, -40, 32, -38, 9]; mouth = 'o'; }
+  if (st === 'smug') { browsL = [-32, -29, -8, -31, 7]; browsR = [8, -37, 32, -29, 2]; eyeRy = 6.5; mouth = 'smirk'; }
+  if (st === 'happy') { mouth = 'grin'; }
+  if (st === 'flat') { mouth = 'flat'; }
+  if (st === 'closed') { mouth = 'flat'; }
+  // brows
+  brow(browsL[0], browsL[1], browsL[2], browsL[3], browsL[4]); brow(browsR[0], browsR[1], browsR[2], browsR[3], browsR[4]);
+  // eyes
+  if (st === 'closed') { [-ex, ex].forEach(x => { g.beginPath(); g.moveTo(x - 9, ey); g.quadraticCurveTo(x, ey + 9, x + 9, ey); g.stroke(); }); }
+  else if (st === 'love') { [-ex, ex].forEach(x => { g.fillStyle = '#e8392e'; g.font = font(26, 800); g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('♥', x, ey + 1); }); g.fillStyle = INK; }
+  else if (st === 'shock') { [-ex, ex].forEach(x => { g.fillStyle = '#fff'; g.beginPath(); g.arc(x, ey, 11, 0, 7); g.fill(); g.stroke(); g.fillStyle = INK; g.beginPath(); g.arc(x + look, ey, 3.5, 0, 7); g.fill(); }); }
+  else { [-ex, ex].forEach(x => { g.beginPath(); g.ellipse(x + look, ey + (st === 'sad' ? 3 : 0), eyeRx, blink ? 1.2 : eyeRy, 0, 0, 7); g.fill(); }); }
+  // mouth
+  g.beginPath();
+  if (mouth === 'smile') { g.moveTo(-30, 20); g.quadraticCurveTo(0, 34, 34, 12); g.stroke(); }
+  else if (mouth === 'smirk') { g.moveTo(-18, 24); g.quadraticCurveTo(10, 26, 34, 8); g.stroke(); }
+  else if (mouth === 'sad') { g.moveTo(-20, 32); g.quadraticCurveTo(0, 14, 20, 32); g.stroke(); }
+  else if (mouth === 'flat') { g.moveTo(-18, 26); g.lineTo(18, 26); g.stroke(); }
+  else if (mouth === 'flatdown') { g.moveTo(-22, 32); g.quadraticCurveTo(0, 20, 22, 32); g.stroke(); }
+  else if (mouth === 'wavy') { g.moveTo(-22, 28); g.quadraticCurveTo(-11, 20, 0, 28); g.quadraticCurveTo(11, 36, 22, 28); g.stroke(); }
+  else if (mouth === 'o') { g.ellipse(0, 28, 10, 13, 0, 0, 7); g.fill(); }
+  else if (mouth === 'grin') { g.moveTo(-28, 15); g.quadraticCurveTo(0, 22, 28, 15); g.quadraticCurveTo(24, 44, 0, 44); g.quadraticCurveTo(-24, 44, -28, 15); g.fill(); g.fillStyle = '#e86a6a'; g.beginPath(); g.ellipse(0, 40, 12, 5, 0, 0, 7); g.fill(); g.fillStyle = INK; }
+  // effects
+  if (fx.includes('sweat')) { const bb = Math.sin(NOW * 6) * 2; g.fillStyle = '#6ec1ff'; g.strokeStyle = INK; g.lineWidth = 3; g.beginPath(); g.moveTo(46, -26 + bb); g.quadraticCurveTo(58, -6 + bb, 46, -4 + bb); g.quadraticCurveTo(34, -6 + bb, 46, -26 + bb); g.fill(); g.stroke(); }
+  if (fx.includes('tear')) { g.strokeStyle = '#3b8fe0'; g.lineWidth = 5; [-ex, ex].forEach((x, i) => { const p = (NOW * 1.6 + i * .5) % 1; g.globalAlpha = 1 - p; ln(x, ey + 14, x - 2, ey + 14 + 40 * p + 12, '#3b8fe0', 5); g.globalAlpha = 1; }); }
+  if (fx.includes('anger')) { const k = 1 + Math.sin(NOW * 12) * .12; g.save(); g.translate(40, -48); g.scale(k, k); g.strokeStyle = RED; g.lineWidth = 5; [[-10, -3, -3, -3], [-3, -3, -3, -10], [10, -3, 3, -3], [3, -3, 3, -10], [-10, 3, -3, 3], [-3, 3, -3, 10], [10, 3, 3, 3], [3, 3, 3, 10]].forEach(a => { g.beginPath(); g.moveTo(a[0], a[1]); g.lineTo(a[2], a[3]); g.stroke(); }); g.restore(); }
+  if (fx.includes('blush')) { g.fillStyle = 'rgba(255,120,140,.5)'; [-34, 34].forEach(x => { g.beginPath(); g.ellipse(x, 14, 10, 6, 0, 0, 7); g.fill(); }); }
+}
+function man(x, y, o = {}) {
+  const s = o.s ?? 1, d = o.dir ?? 1, lean = o.lean || 0, tie = o.tie || INK, ph = o.walk, fx = o.fx || [];
+  const bob = ph !== undefined ? -4 * Math.abs(Math.sin(ph)) : 0;
+  let legs = o.legs || [3, -3];
+  if (ph !== undefined) legs = [26 * Math.sin(ph), -26 * Math.sin(ph)];
+  let pose = typeof o.pose === 'string' ? POSES[o.pose] : (o.pose || POSES.idle);
+  const base = g.getTransform().inverse();
+  g.save(); g.globalAlpha *= (o.alpha ?? 1);
+  g.translate(x, y + bob * s); g.scale(d * s, s);
+  g.lineCap = 'round'; g.lineJoin = 'round'; g.strokeStyle = INK; g.fillStyle = '#fff'; g.lineWidth = 6.2;
+  const HIP = -182, SY = -306, HC = -374;
+  legs.forEach(a => {
+    const fxx = Math.sin(rad(a)) * 178, fyy = HIP + Math.cos(rad(a)) * 178;
+    ln(0, HIP, fxx, fyy, INK, 6.2);
+    g.fillStyle = '#fff'; g.beginPath(); g.ellipse(fxx + 15, fyy + 3, 28, 9, 0, 0, 7); g.fill(); g.stroke();
+  });
+  g.save(); g.translate(0, HIP); g.rotate(rad(lean)); g.translate(0, -HIP);
+  if (o.behind) o.behind();
+  const full = g.getTransform();
+  const P = (px, py) => { const p = full.transformPoint(new DOMPoint(px, py)); const q = base.transformPoint(p); return { x: q.x, y: q.y }; };
+  ln(0, HC + 48, 0, SY, INK, 6.2);
+  // tie
+  g.fillStyle = tie; g.strokeStyle = INK; g.lineWidth = 3;
+  g.beginPath(); g.moveTo(-8, SY + 2); g.lineTo(8, SY + 2); g.lineTo(12, SY + 22); g.lineTo(-12, SY + 22); g.closePath(); g.fill(); g.stroke();
+  g.beginPath(); g.moveTo(-10, SY + 22); g.lineTo(10, SY + 22); g.lineTo(26, SY + 92); g.lineTo(0, HIP + 6); g.lineTo(-26, SY + 92); g.closePath(); g.fill(); g.stroke();
+  // arms
+  const sway = Math.sin(NOW * 2 + (o.seed || 0)) * 3;
+  const hands = {};
+  ['L', 'R'].forEach(k => {
+    const t = pose[k]; let tx = t[0], ty = t[1] + sway;
+    if (ph !== undefined && pose === POSES.idle) tx += (k === 'L' ? 1 : -1) * 18 * Math.sin(ph) * (k === 'L' ? 1 : -1);
+    const r = ik(0, SY, tx, SY + ty, 64, 60, t[2]);
+    g.strokeStyle = INK; g.lineWidth = 6.2; g.beginPath(); g.moveTo(0, SY); g.lineTo(r.ex, r.ey); g.lineTo(r.hx, r.hy); g.stroke();
+    const ang = Math.atan2(r.hy - r.ey, r.hx - r.ex);
+    g.save(); g.translate(r.hx, r.hy); g.rotate(ang); g.fillStyle = '#fff'; g.lineWidth = 4; g.beginPath(); g.ellipse(7, 0, 14, 9, 0, 0, 7); g.fill(); g.stroke(); g.restore();
+    hands[k] = P(r.hx, r.hy);
+  });
+  // head
+  g.save(); g.translate(0, HC); g.rotate(rad(o.tilt || 0));
+  g.fillStyle = '#fff'; g.strokeStyle = INK; g.lineWidth = 6.2; g.beginPath(); g.arc(0, 0, 50, 0, 7); g.fill(); g.stroke();
+  hair(o.hair || 'tuft');
+  face(o.face || 'smile', o.look || 0, fx, o.seed || 0);
+  g.restore();
+  hands.head = P(0, HC); hands.top = P(0, HC - 60); hands.chest = P(0, SY + 40);
+  g.restore(); g.restore();
+  hands.feet = { x, y }; hands.hr = 50 * s;
+  return hands;
+}
+
+/* ================= props ================= */
+function balloon(x, y, str, o = {}) {
+  const { a = 1, size = 24, tail, color = INK, fill = '#fff' } = o;
+  if (a <= 0) return;
+  const lines = str.split('\n'); g.save(); g.font = font(size, 800);
+  const w = Math.max(...lines.map(l => g.measureText(l).width)) + 44, h = lines.length * size * 1.18 + 28; g.restore();
+  g.save(); g.globalAlpha *= clamp(a * 1.5); const k = .6 + .4 * bounce(clamp(a)); g.translate(x, y); g.scale(k, k);
+  g.fillStyle = fill; g.strokeStyle = INK; g.lineWidth = 4; g.lineJoin = 'round';
+  let seam = null;
+  if (tail) {
+    const tx = tail[0] - x, ty = tail[1] - y;
+    if (Math.abs(tx) > w / 2 + 6) {
+      const sg = tx > 0 ? 1 : -1, by = clamp(ty, -h / 2 + 22, h / 2 - 22);
+      g.beginPath(); g.moveTo(sg * w / 2, by - 13); g.lineTo(tx, ty); g.lineTo(sg * w / 2, by + 13); g.closePath(); g.fill(); g.stroke();
+      seam = [sg * w / 2 - (sg > 0 ? 6 : -1), by - 10, 7, 20];
+    } else {
+      const bx = clamp(tx, -w / 2 + 34, w / 2 - 34), sg = ty > 0 ? 1 : -1, by = sg * h / 2;
+      g.beginPath(); g.moveTo(bx - 14, by); g.lineTo(tx, ty); g.lineTo(bx + 14, by); g.closePath(); g.fill(); g.stroke();
+      seam = [bx - 11, by - (sg > 0 ? 6 : -1), 22, 7];
+    }
+  }
+  rrect(-w / 2, -h / 2, w, h, 22); g.fill(); g.stroke();
+  if (seam) { g.fillStyle = fill; g.fillRect(...seam); }
+  g.fillStyle = color; g.font = font(size, 800); g.textAlign = 'center'; g.textBaseline = 'middle';
+  lines.forEach((l, i) => g.fillText(l, 0, (i - (lines.length - 1) / 2) * size * 1.18 + 1));
+  g.restore();
+}
+function say(h0, str, side = 'u', o = {}) {
+  const h = h0.head ? { x: h0.head.x, y: h0.head.y, hr: h0.hr } : h0;
+  const { a = 1, size = 24, ox = 0, oy = 0, maxW = 980 } = o; if (a <= 0) return;
+  const lines = str.split('\n'); g.save(); g.font = font(size, 800);
+  const w = Math.max(...lines.map(l => g.measureText(l).width)) + 44, hh = lines.length * size * 1.18 + 28; g.restore();
+  let x, y, tail;
+  if (side === 'u') { x = h.x + ox; y = h.y - h.hr - 34 - hh / 2 + oy; tail = [h.x, h.y - h.hr - 5]; }
+  else { const sg = side === 'r' ? 1 : -1; x = h.x + sg * (h.hr + 44 + w / 2) + ox; y = h.y - 24 + oy; tail = [h.x + sg * (h.hr + 3), h.y - 12]; }
+  x = clamp(x, w / 2 + 14, maxW - w / 2 - 14); y = Math.max(y, hh / 2 + 10);
+  balloon(x, y, str, { ...o, tail });
+}
+function tagBox(x, y, str, o = {}) {
+  const { a = 1, size = 19, bg = YEL, color = INK, rot = 0 } = o; if (a <= 0) return;
+  g.save(); g.globalAlpha *= clamp(a * 2); g.translate(x, y); g.rotate(rad(rot)); const k = .7 + .3 * bounce(clamp(a)); g.scale(k, k);
+  const w = measure(str, size) + 24, h = size + 16; g.fillStyle = bg; g.strokeStyle = INK; g.lineWidth = 3.5; rrect(-w / 2, -h / 2, w, h, 6); g.fill(); g.stroke();
+  g.fillStyle = color; g.font = font(size, 800); g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(str, 0, 1); g.restore();
+}
+function phoneP(x, y, o = {}) {
+  const { rot = 0, sc = 1, scr = '#bfe3ff', bars = 0, a = 1, shake = 0 } = o; if (a <= 0) return;
+  g.save(); g.globalAlpha *= a; g.translate(x + shake * Math.sin(NOW * 60), y); g.rotate(rad(rot)); g.scale(sc, sc);
+  g.fillStyle = INK; rrect(-22, -38, 44, 76, 8); g.fill(); g.fillStyle = scr; rrect(-18, -33, 36, 62, 4); g.fill();
+  for (let i = 0; i < bars; i++) { g.fillStyle = i % 2 ? '#fff' : '#58c47f'; rrect(i % 2 ? -14 : -2, -28 + i * 11, 16, 8, 3); g.fill(); }
+  g.restore();
+}
+function badge(x, y, n, a = 1) { if (a <= 0) return; g.save(); g.globalAlpha *= a; g.fillStyle = RED; g.strokeStyle = INK; g.lineWidth = 3; g.beginPath(); g.arc(x, y, 15, 0, 7); g.fill(); g.stroke(); g.restore(); text(String(n), x, y + 1, { size: 17, color: '#fff', alpha: a }); }
+function heart(x, y, s = 40, a = 1) { text('♥', x, y, { size: s, color: '#ff4d6d', alpha: a, w: 800 }); }
+function coin(x, y, r = 16, a = 1) { if (a <= 0) return; g.save(); g.globalAlpha *= a; g.fillStyle = '#ffcc33'; g.strokeStyle = INK; g.lineWidth = 3.5; g.beginPath(); g.arc(x, y, r, 0, 7); g.fill(); g.stroke(); text('Rp', x, y + 1, { size: r * .8, a }); g.restore(); }
+function bill(x, y, w = 74, h = 38, rot = 0) { g.save(); g.translate(x, y); g.rotate(rad(rot)); g.fillStyle = '#7fcf8f'; g.strokeStyle = INK; g.lineWidth = 3; rrect(-w / 2, -h / 2, w, h, 4); g.fill(); g.stroke(); g.fillStyle = '#4fa062'; g.beginPath(); g.arc(0, 0, h * .27, 0, 7); g.fill(); g.restore(); }
+function sparkle(x, y, s, p) { if (p <= 0 || p >= 1) return; g.save(); g.translate(x, y); g.rotate(p * 2); g.globalAlpha *= 1 - p; g.fillStyle = YEL; g.strokeStyle = INK; g.lineWidth = 3; const r = s * (.4 + p); g.beginPath(); for (let i = 0; i < 8; i++) { const a = i * Math.PI / 4, rr = i % 2 ? r * .35 : r; g.lineTo(Math.cos(a) * rr, Math.sin(a) * rr); } g.closePath(); g.fill(); g.stroke(); g.restore(); }
+function chainLinkP(x, y, w, h, rot, a = 1) { if (a <= 0) return; g.save(); g.globalAlpha *= a; g.translate(x, y); g.rotate(rot); g.strokeStyle = INK; g.lineWidth = 6; rrect(-w / 2, -h / 2, w, h, h / 2); g.stroke(); g.restore(); }
+function scissorsP(x, y, open, rot = 0, a = 1) {
+  g.save(); g.globalAlpha *= a; g.translate(x, y); g.rotate(rad(rot)); g.strokeStyle = INK; g.fillStyle = '#ffd23f'; g.lineWidth = 5; g.lineCap = 'round';
+  const o = rad(5 + open * 26);
+  [-1, 1].forEach(sg => { g.save(); g.rotate(sg * o); g.beginPath(); g.moveTo(0, 0); g.lineTo(0, -54); g.stroke(); g.beginPath(); g.moveTo(0, 0); g.lineTo(-sg * 6, 28); g.stroke(); g.beginPath(); g.arc(-sg * 10, 40, 11, 0, 7); g.fill(); g.stroke(); g.restore(); });
+  g.restore();
+}
+
+/* ================= layout ================= */
+function paperBG() {
+  g.fillStyle = PAPER; g.fillRect(0, 0, W, H);
+  g.fillStyle = 'rgba(0,0,0,.035)'; for (let i = 0; i < 260; i++) { g.beginPath(); g.arc(rnd(i) * W, rnd(i + 99) * H, 1 + rnd(i + 7) * 2, 0, 7); g.fill(); }
+}
+function header(t, pill, h1, h2) {
+  const a = eo(seg(t, 0, .5));
+  const pw = measure(pill, 21, 800, 3) + 44;
+  g.save(); g.globalAlpha = a; g.fillStyle = INK; rrect(W / 2 - pw / 2, 250, pw, 42, 21); g.fill(); g.restore();
+  text(pill, W / 2, 272, { size: 21, ls: 3, color: '#fff', alpha: a });
+  const s1 = h1.map(p => p[0]).join(''), s2 = h2.map(p => p[0]).join('');
+  let sz = 58; while ((measure(s1, sz) > 960 || measure(s2, sz) > 960) && sz > 28) sz -= 1;
+  text(s1, W / 2, 358 + (1 - a) * 18, { size: sz, alpha: a });
+  const b = bounce(seg(t, REVEAL, REVEAL + .6)), ba = clamp(b * 2);
+  if (ba > 0) {
+    const ws = h2.map(p => measure(p[0], sz)), tot = ws.reduce((x, y) => x + y, 0);
+    g.save(); g.globalAlpha = ba; g.translate(W / 2, 436); g.scale(.85 + .15 * b, .85 + .15 * b);
+    let cx = -tot / 2;
+    h2.forEach((p, i) => {
+      if (p[1]) { cx += 12; g.fillStyle = YEL; g.strokeStyle = INK; g.lineWidth = 4; rrect(cx - 12, -sz * .62, ws[i] + 24, sz * 1.24, 10); g.fill(); g.stroke(); }
+      text(p[0], cx, 2, { size: sz, align: 'left' }); cx += ws[i] + (p[1] ? 12 : 0);
+    });
+    g.restore();
+  }
+}
+function drawStage(x, y, w, h, label, warm, fn, o = {}) {
+  g.save(); g.fillStyle = INK; rrect(x + 9, y + 11, w, h, 24); g.fill();
+  g.save(); rrect(x, y, w, h, 24); g.clip();
+  const c1 = mix('#d7dfe9', '#fff0c9', warm), c2 = mix('#b6c1d0', '#ffd890', warm);
+  const gr = g.createLinearGradient(0, y, 0, y + h); gr.addColorStop(0, c1); gr.addColorStop(1, c2); g.fillStyle = gr; g.fillRect(x, y, w, h);
+  g.fillStyle = mix('#ffffff', '#fff6dd', warm); g.globalAlpha = .35; for (let i = 0; i < 70; i++) { g.beginPath(); g.arc(x + (i * 97) % w, y + (i * 53) % (h - 80), 4, 0, 7); g.fill(); } g.globalAlpha = 1;
+  const FL = h - 62;
+  g.fillStyle = mix('#8e9aac', '#e0a45a', warm); g.fillRect(x, y + FL, w, h - FL);
+  ln(x, y + FL, x + w, y + FL, INK, 5);
+  g.translate(x, y);
+  if (warm > 0) glow(w * .5, FL * .5, w * .55, 'rgba(255,255,255,.75)', warm * .6);
+  fn(FL, w, h);
+  g.restore();
+  if (o.dim > 0) { g.save(); rrect(x, y, w, h, 24); g.clip(); g.fillStyle = `rgba(228,226,218,${o.dim})`; g.fillRect(x, y, w, h); g.restore(); }
+  g.strokeStyle = INK; g.lineWidth = 7; rrect(x, y, w, h, 24); g.stroke();
+  g.fillStyle = INK; const lw = measure(label, 18, 800, 2) + 28; rrect(x + 18, y + h - 48, lw, 34, 8); g.fill();
+  text(label, x + 32, y + h - 31, { size: 18, ls: 2, color: '#fff', align: 'left' });
+  g.restore();
+}
+function finish(t) {
+  const a = bounce(seg(t, 16.8, 17.4));
+  if (a > 0) {
+    g.save(); g.translate(W / 2, 1432); g.scale(.7 + .3 * a, .7 + .3 * a); g.globalAlpha = clamp(a * 2);
+    const s = 'KIRIM KE TEMAN YANG BUTUH INI', w = measure(s, 25, 800, 1) + 90;
+    g.fillStyle = YEL; g.strokeStyle = INK; g.lineWidth = 5; g.rotate(rad(-1.5)); rrect(-w / 2, -30, w, 60, 30); g.fill(); g.stroke();
+    text(s, 12, 1, { size: 25, ls: 1 }); heart(-w / 2 + 38, 2, 32); g.restore();
+  }
+  g.save(); g.fillStyle = INK; const ww = measure(WATERMARK, 32, 800, 1) + 56; rrect(W / 2 - ww / 2, 1480, ww, 56, 28); g.fill(); g.restore();
+  text(WATERMARK, W / 2, 1509, { size: 32, ls: 1, color: '#fff' });
+}
+const PY = [500, 940], PH = 410, PXX = 50, PWW = 980, SY0 = 500, SH = 870;
+const FLOORP = PH - 62;
+
+/* ================= V1 : A vs B  cemburu vs percaya ================= */
+const V1 = {
+  pill: () => 'JAM 23.10',
+  hook1: [['Dia cek HP-mu tiap malam.']],
+  hook2: [['Itu bukan cemburu, itu '], ['kontrol.', 1]],
+  cues: [[.2, 'whoosh'], [.9, 'notif'], [1.5, 'whoosh', .7], [1.95, 'pop'], [3.7, 'buzz', .6], [4.5, 'pop', .6], [6.5, 'thud', .8], [7.4, 'riser'], [8.5, 'reveal'], [8.9, 'sparkle', .8], [11.1, 'whoosh', .6], [14.1, 'heart'], [16.8, 'pop']],
+  draw(t) {
+    drawStage(PXX, PY[0], 980, PH, 'DIA YANG CEMBURU', 0, (FL) => {
+      const en = eo(seg(t, .2, .9)), s = .6;
+      const ax = lerp(-120, 250, en), bx = lerp(1100, 730, en);
+      const grab = eio(seg(t, 1.4, 2.0));
+      const aPose = grab < 1 ? mixPose('phone', 'shrug', seg(t, 1.7, 2.1)) : mixPose('shrug', 'hands', seg(t, 6.4, 7)), bPose = t < 1.3 ? POSES.cross : mixPose(mixPose('cross', 'grab', seg(t, 1.3, 1.8)), 'phone', seg(t, 2.1, 2.6));
+      const aF = t < 1.4 ? 'normal' : t < 6.4 ? 'worried' : 'sad', bF = t < 1.3 ? 'smug' : t < 6.4 ? 'angry' : 'smug';
+      const A = man(ax, FL, { s, tie: INK, pose: aPose, face: aF, fx: t > 1.4 ? ['sweat'] : [], tilt: t > 6.4 ? 6 : 0, seed: 1 });
+      const B = man(bx, FL, { s, dir: -1, tie: RED, hair: 'slick', pose: bPose, face: bF, fx: t > 3.5 && t < 6.4 ? ['anger'] : [], seed: 2 });
+      const px = lerp(A.R.x, B.R.x, grab), py = lerp(A.R.y, B.R.y, grab);
+      phoneP(px, py - 6, { rot: lerp(0, -18, grab), sc: .8, bars: 5, shake: t > .9 && t < 1.4 ? 2 : 0 });
+      badge(px + 14, py - 34, 7, seg(t, .9, 1.1));
+      say(B, 'SINI HP KAMU!', 'l', { a: win(t, 1.3, 3.5), size: 23 });
+      say(B, 'KOK ADA CHAT DIA?!', 'l', { a: win(t, 3.6, 6.2), size: 23 });
+      say(A, 'CUMA TEMEN KERJA...', 'u', { a: win(t, 4.4, 6.4), size: 21, ox: 40 });
+      say(B, 'BESOK HAPUS NOMORNYA!', 'l', { a: win(t, 6.6, 8.4), size: 23 });
+    });
+    const t2 = Math.max(0, t - REVEAL), warm = eo(seg(t, REVEAL, REVEAL + .6)), fl = seg(t, REVEAL - .05, REVEAL + .25) * (1 - seg(t, REVEAL + .25, REVEAL + .7));
+    drawStage(PXX, PY[1], 980, PH, 'DIA YANG PERCAYA', warm, (FL) => {
+      const s = .6, walk = seg(t2, 2.6, 6.2);
+      const ax = lerp(580, 1060, eio(walk));
+      const wave = { L: POSES.idle.L, R: [72 + 8 * Math.sin(t * 9), -78 + 6 * Math.sin(t * 9), 1] };
+      const B = man(230, FL, { s, tie: RED, hair: 'slick', pose: t2 > .3 ? wave : 'idle', face: t2 > .3 ? 'happy' : 'flat', seed: 3 });
+      g.fillStyle = '#b98a54'; g.strokeStyle = INK; g.lineWidth = 4; rrect(360, FL - 100, 130, 12, 4); g.fill(); g.stroke(); ln(372, FL - 88, 372, FL, INK, 5); ln(478, FL - 88, 478, FL, INK, 5);
+      phoneP(425, FL - 122, { rot: 80, sc: .62, bars: 4 });
+      const A = man(ax, FL, { s, tie: INK, pose: 'idle', face: t2 > .3 ? 'happy' : 'flat', walk: walk > 0 && walk < 1 ? t * 7 : undefined, seed: 4 });
+      say(B, 'SENENG-SENENG YA!', 'r', { a: win(t2, .6, 2.6), size: 22 });
+      say(B, 'KABARIN KALAU\nUDAH SAMPAI', 'r', { a: win(t2, 3.0, 5.4), size: 22 });
+      say({ x: Math.min(A.head.x, 900), y: A.head.y, hr: A.hr }, 'MAKASIH UDAH\nPERCAYA AKU', 'l', { a: win(t2, 5.6, 8.2), size: 22 });
+      heart(B.head.x + 20, B.head.y - 90 - (t2 > 5.6 ? Math.min(30, (t2 - 5.6) * 20) : 0), 46, seg(t2, 5.6, 6) * (1 - seg(t2, 8.5, 9)));
+    }, { dim: .86 * (1 - warm) });
+    if (fl > 0) { g.fillStyle = `rgba(255,255,255,${fl * .8})`; g.fillRect(0, 0, W, H); }
+  }
+};
+
+/* ================= V2 : pembalikan  dia sibuk ================= */
+const V2 = {
+  pill: () => 'HARI KE-3',
+  hook1: [['Dia ngilang 3 hari: "aku sibuk."']],
+  hook2: [['Giliran kamu yang sibuk, '], ['dia marah.', 1]],
+  cues: [[.2, 'whoosh'], [1.0, 'pop'], [1.7, 'pop'], [2.4, 'pop'], [3.4, 'notif'], [5.9, 'sad'], [7.5, 'riser'], [8.5, 'record'], [8.7, 'whoosh'], [9.6, 'ding'], [12.2, 'buzz', .7], [12.5, 'anger'], [14.9, 'ding'], [16.8, 'pop']],
+  draw(t) {
+    const flip = eio(seg(t, REVEAL - .1, REVEAL + .8));
+    drawStage(PXX, SY0, 980, SH, 'PEMBALIKAN', eo(seg(t, 14.4, 15.4)), (FL) => {
+      const s = 1.2, hop = Math.sin(flip * Math.PI) * 90;
+      const ax = lerp(260, 720, flip), bx = lerp(720, 260, flip);
+      for (let i = 0; i < 3; i++) {
+        const a = seg(t, 1.0 + i * .7, 1.3 + i * .7) * (1 - seg(t, REVEAL - .2, REVEAL + .1));
+        if (a <= 0) continue;
+        g.save(); g.globalAlpha = a; g.fillStyle = '#fff'; g.strokeStyle = INK; g.lineWidth = 4; rrect(335 + i * 110, 70, 96, 96, 10); g.fill(); g.stroke();
+        text('HARI ' + (i + 1), 383 + i * 110, 96, { size: 17 }); ln(352 + i * 110, 110, 414 + i * 110, 154, RED, 7); ln(414 + i * 110, 110, 352 + i * 110, 154, RED, 7); g.restore();
+      }
+      const post = t > REVEAL;
+      const aPose = !post ? mixPose('phone', 'shrug', seg(t, 5.8, 6.3)) : 'cross';
+      const bPose = !post ? 'cross' : mixPose('phone', 'shrug', seg(t, 12.0, 12.4));
+      const aFace = !post ? (t < 5.8 ? 'sad' : 'cry') : 'smug', bFace = !post ? 'smug' : (t < 12 ? 'normal' : 'angry');
+      const A = man(ax, FL - hop * (flip < 1 ? 1 : 0), { s, dir: flip < .5 ? 1 : -1, tie: INK, pose: aPose, face: aFace, fx: !post ? (t > 5.8 ? ['tear'] : ['sweat']) : [], seed: 1 });
+      const B = man(bx, FL - hop * .5 * (flip < 1 ? 1 : 0), { s, dir: flip < .5 ? -1 : 1, tie: RED, hair: 'slick', pose: bPose, face: bFace, fx: post && t > 12 ? ['anger'] : [], seed: 2 });
+      if (!post) phoneP(A.R.x, A.R.y - 6, { sc: 1.25, bars: 5 }); else phoneP(B.R.x, B.R.y - 6, { sc: 1.25, bars: 5 });
+      say(A, 'UDAH 3 HARI\nGAK ADA KABAR...', 'u', { a: win(t, .5, 3.1), size: 26 });
+      say(B, 'AKU SIBUK.\nNGERTIIN DONG.', 'u', { a: win(t, 3.3, 5.7), size: 28 });
+      say(A, 'IYA... MAAF YA.', 'u', { a: win(t, 5.9, 8.2), size: 28 });
+      say(A, 'AKU SIBUK.\nNGERTIIN DONG.', 'u', { a: win(t, 9.6, 12.0), size: 28 });
+      say(B, 'KOK KAMU\nCUEK SIH?!', 'u', { a: win(t, 12.2, 14.6), size: 28 });
+      tagBox(B.R.x + (post ? 70 : 0), B.R.y - 90, 'DIBACA 3 HARI', { a: seg(t, 12.1, 12.5) * (1 - seg(t, 14.4, 14.8)), bg: '#fff', size: 21 });
+      say(A, 'NAH. RASANYA\nGINI KAN?', 'u', { a: win(t, 14.8, 17.6), size: 30 });
+      sparkle(A.head.x + 40, A.head.y - 100, 44, seg(t, 14.9, 15.7));
+    });
+  }
+};
+
+/* ================= V3 : hitungan utang ================= */
+const EVT3 = [[1.0, 50000, 'PINJEM 50RB', 1], [2.0, 350000, 'BAYARIN MAKAN', 2], [3.0, 1500000, 'BAYAR KOS DIA', 3], [4.2, 3000000, 'CICILAN HP DIA', 4], [5.4, 2500000, 'ONGKOS KAMPUNG', 6], [6.6, 3000000, 'PINJEM LAGI', 8], [7.6, 2100000, 'ULTAH DIA', 10]];
+function debtAt(t) { let v = 0, mo = 0; EVT3.forEach(([ts, add, , m]) => { const p = clamp((t - ts) / .5); v += add * eo(p); if (t >= ts) mo = m; }); return { v, mo }; }
+const V3 = {
+  pill: t => 'BULAN ' + Math.max(1, debtAt(Math.min(t, 8.4)).mo),
+  hook1: [['Dia pinjam Rp50 ribu: "nanti aku ganti."']],
+  hook2: [['Cinta nggak minta kamu '], ['bangkrut.', 1]],
+  cues: [[.2, 'whoosh'], ...EVT3.flatMap(([ts]) => [[ts, 'coin'], [ts + .15, 'tick', .5]]), [7.6, 'buzz', .7], [7.4, 'riser'], [8.5, 'record'], [9.0, 'reveal'], ...[10.6, 11.2, 11.8, 12.4, 13.0, 13.6, 14.2].map(x => [x, 'coin', .7]), [15.0, 'sparkle'], [16.8, 'pop']],
+  draw(t) {
+    const warm = eo(seg(t, REVEAL + .5, REVEAL + 1.2));
+    drawStage(PXX, SY0, 980, SH, 'HITUNGAN', warm, (FL) => {
+      const s = 1.0, d = debtAt(Math.min(t, REVEAL));
+      const bLeave = seg(t, 13.2, 14.8);
+      const aFace = t < 2 ? 'smile' : t < 5 ? 'worried' : t < REVEAL ? 'sad' : t < 10 ? 'shock' : 'happy';
+      const aPose = t < REVEAL ? 'idle' : mixPose('idle', 'stop', seg(t, REVEAL, REVEAL + .3));
+      const A = man(220, FL, { s, tie: INK, pose: t < 13 ? aPose : mixPose('stop', 'up', seg(t, 13.5, 14)), face: aFace, fx: t > 2 && t < REVEAL ? ['sweat'] : [], seed: 1 });
+      const B = man(lerp(780, 1200, eo(bLeave)), FL, { s, dir: -1, tie: RED, hair: 'slick', pose: t < REVEAL ? 'idle' : 'cross', face: t < REVEAL ? 'smile' : 'shock', walk: bLeave > 0 && bLeave < 1 ? t * 8 : undefined, seed: 2 });
+      if (t < 9.8) {
+        text('UTANG DIA KE KAMU', 490, 80, { size: 24, ls: 3, alpha: 1 - seg(t, 9.4, 9.8) });
+        text(rp(d.v), 490, 152, { size: 96, color: d.v > 8e6 ? RED : INK, alpha: 1 - seg(t, 9.4, 9.8) });
+      }
+      if (t > 10) {
+        const sv = 3000000 * eo(seg(t, 10.4, 14.4));
+        text('TABUNGANMU', 490, 80, { size: 24, ls: 3, alpha: seg(t, 10, 10.4) });
+        text(rp(sv), 490, 152, { size: 96, color: GREEN, alpha: seg(t, 10, 10.4) });
+      }
+      EVT3.forEach(([ts, add, lab], i) => {
+        const p = seg(t, ts, ts + .6);
+        if (p > 0 && p < 1) { const x = lerp(A.R.x + 30, B.R.x, eo(p)), y = lerp(A.R.y, B.R.y, eo(p)) - Math.sin(p * Math.PI) * 120; coin(x, y, 18); }
+        tagBox(490, 222 + (i % 2) * 38, lab, { a: win(t, ts + .1, ts + 1.2), size: 21, rot: i % 2 ? 3 : -3 });
+      });
+      const nPile = EVT3.filter(e => t > e[0] + .5).length;
+      for (let i = 0; i < nPile; i++) bill(660, FL - 18 - i * 17, 82, 36, (i % 2 ? 4 : -3));
+      const wall = t > REVEAL + 1.6 ? seg(t, REVEAL + 1.6, 14.4) : 0;
+      for (let i = 0; i < Math.floor(wall * 8); i++) bill(110, FL - 18 - i * 17, 82, 36, i % 2 ? 4 : -3);
+      const nb = win(t, 1.2, 2.8) + win(t, 3.2, 4.6) + win(t, 5.6, 7.0);
+      say(B, 'NANTI AKU GANTI~', 'u', { a: nb, size: 28, ox: -20 });
+      say(A, 'STOP.', 'u', { a: win(t, REVEAL + .1, 10.1), size: 44, ox: 20 });
+      say(A, 'CINTA NGGAK MINTA\nKAMU BANGKRUT.', 'u', { a: win(t, 10.2, 14.6), size: 30, ox: 120 });
+      sparkle(A.head.x + 70, A.head.y - 40, 46, seg(t, 14.9, 15.7));
+      heart(A.head.x + 90, A.head.y - 90 - seg(t, 15, 17) * 40, 52, seg(t, 15, 15.3));
+    });
+  }
+};
+
+/* ================= V4 : ransel batu (guilt-trip) ================= */
+const STONES = [['SETELAH SEMUA\nYANG AKU LAKUIN', 1.0], ['KAMU EGOIS', 2.8], ['AKU SAKIT HATI\nGARA-GARA KAMU', 4.6], ['GAK ADA YANG\nSESAYANG AKU', 6.4]];
+function stone(x, y, lab) {
+  g.save(); g.translate(x, y); g.fillStyle = '#9aa1ad'; g.strokeStyle = INK; g.lineWidth = 4.5; rrect(-72, -23, 144, 46, 22); g.fill(); g.stroke();
+  lab.split('\n').forEach((l, j, arr) => text(l, 0, (j - (arr.length - 1) / 2) * 15 + 1, { size: 12.5 })); g.restore();
+}
+const V4 = {
+  pill: () => 'TAHUN 2',
+  hook1: [['"Setelah semua yang aku lakuin..." itu ransel batu.']],
+  hook2: [['Kamu '], ['boleh menurunkannya.', 1]],
+  cues: [[.2, 'whoosh'], ...STONES.flatMap(([, ts]) => [[ts, 'whoosh', .6], [ts + .4, 'stone']]), [7.6, 'riser'], [8.5, 'reveal'], [9.0, 'crack'], [9.4, 'stone'], [9.6, 'stone', .8], [9.8, 'stone', .7], [10.0, 'stone', .6], [12.0, 'whoosh', .7], [13.0, 'sparkle'], [16.8, 'pop']],
+  draw(t) {
+    const warm = eo(seg(t, REVEAL + .6, REVEAL + 1.4));
+    drawStage(PXX, SY0, 980, SH, 'GUILT-TRIP', warm, (FL) => {
+      const s = 1.0;
+      const n = STONES.filter(([, ts]) => t > ts + .45).length;
+      const drop = t > REVEAL + .4;
+      const lean = drop ? 0 : 3 + n * 3;
+      const free = seg(t, REVEAL + 1.2, REVEAL + 2.2);
+      const ax = drop ? lerp(430, 520, free) : 430;
+      const behind = () => {
+        if (drop) return;
+        g.fillStyle = '#b97f48'; g.strokeStyle = INK; g.lineWidth = 5; rrect(-100, -312, 86, 132, 18); g.fill(); g.stroke();
+        ln(-14, -292, 4, -300, INK, 5); ln(-14, -232, 4, -240, INK, 5);
+        STONES.forEach(([lab, ts], i) => {
+          const dp = seg(t, ts + .05, ts + .45); if (dp <= 0) return;
+          const yy = -336 - i * 48 - (1 - bounce(dp)) * 140;
+          stone(-130, yy, lab);
+        });
+      };
+      const A = man(ax, FL, { s, tie: INK, lean, behind, pose: drop ? mixPose('hands', 'up', seg(t, REVEAL + 1.4, REVEAL + 2)) : mixPose('idle', 'hands', n / 4), face: drop ? (free > .5 ? 'happy' : 'shock') : n < 2 ? 'worried' : 'cry', fx: !drop ? (n < 2 ? ['sweat'] : ['tear']) : [], tilt: drop ? 0 : -4, legs: drop ? [3, -3] : [8 + n * 2, -(8 + n * 2)], seed: 1 });
+      if (drop) STONES.forEach(([lab], i) => {
+        const p = seg(t, REVEAL + .4 + i * .18, REVEAL + .95 + i * .18);
+        const y = lerp(FL - 330 - i * 48, FL - 24 - i * 46, eo(p));
+        stone(150 + (i % 2) * 14, y, lab);
+      });
+      const bshake = drop ? Math.sin(t * 40) * 4 * (1 - seg(t, REVEAL + 1, REVEAL + 1.4)) : 0;
+      const bFace = !drop ? (t < 7 ? 'smug' : 'angry') : (free > .3 ? 'shock' : 'flat');
+      const B = man(790 + bshake + (drop ? seg(t, REVEAL + 1.5, REVEAL + 3) * 100 : 0), FL, { s, dir: -1, tie: RED, hair: 'slick', pose: drop ? 'shrug' : 'cross', face: bFace, fx: !drop && t > 7 ? ['anger'] : [], seed: 2 });
+      say(B, '"SETELAH SEMUA YANG\nAKU LAKUIN..."', 'u', { a: win(t, 1.0, 2.7), size: 26 });
+      say(B, 'KAMU EGOIS!', 'u', { a: win(t, 2.8, 4.5), size: 32 });
+      say(B, 'AKU SAKIT HATI\nGARA-GARA KAMU!', 'u', { a: win(t, 4.6, 6.3), size: 26 });
+      say(B, 'GAK ADA YANG\nSESAYANG AKU!', 'u', { a: win(t, 6.4, 8.3), size: 26 });
+      say(A, 'ITU BUKAN\nBEBANKU.', 'u', { a: win(t, REVEAL + 1.6, 12.6), size: 34, ox: 40 });
+      say(B, 'HAH?!', 'u', { a: win(t, REVEAL + 1.8, 11.6), size: 36 });
+      sparkle(A.head.x + 60, A.head.y - 60, 50, seg(t, 13.0, 13.8));
+      heart(A.head.x + 80, A.head.y - 100 - seg(t, 13.4, 16) * 40, 52, seg(t, 13.4, 13.7));
+    });
+  }
+};
+
+/* ================= V5 : rantai pertemanan ================= */
+const NODES = [['TEMAN', 100, 330], ['SAHABAT', 220, 170], ['KELUARGA', 440, 170], ['HOBI', 580, 330]];
+const CUT = [2.1, 4.0, 5.9, 7.5], BACK = [9.3, 10.5, 11.7, 12.9];
+const V5 = {
+  pill: () => 'BULAN 3',
+  hook1: [['Dijauhkan dari teman "demi kebaikanmu."']],
+  hook2: [['Rantainya '], ['bisa disambung lagi.', 1]],
+  cues: [[.2, 'whoosh'], ...CUT.map(c => [c, 'snip']), ...CUT.map(c => [c + .1, 'sad', .5]), [7.6, 'riser'], [8.5, 'reveal'], ...BACK.flatMap(b => [[b, 'pop'], [b + .1, 'heart', .6]]), [13.8, 'whoosh'], [14.6, 'sparkle'], [16.8, 'pop']],
+  draw(t) {
+    const warm = eo(seg(t, REVEAL + .5, REVEAL + 1.2));
+    drawStage(PXX, SY0, 980, SH, 'RANTAI', warm, (FL) => {
+      const s = 1.0, ax = 330;
+      const handsUp = t < CUT[3] + .4 || t > 8.9;
+      const A = man(ax, FL, { s, tie: INK, pose: handsUp ? mixPose('idle', 'up', seg(t, .2, .6) * (t < 8.9 ? 1 : seg(t, 8.9, 9.3))) : 'idle', face: t < CUT[0] ? 'smile' : t < REVEAL ? 'sad' : t < BACK[3] ? 'worried' : 'happy', fx: t > CUT[2] && t < REVEAL ? ['tear'] : [], seed: 1 });
+      const bx = t < 7.9 ? lerp(950, 800, eo(seg(t, .3, 1.4))) : lerp(800, 1250, eo(seg(t, 13.5, 14.8)));
+      const B = man(bx, FL, { s, dir: -1, tie: RED, hair: 'slick', pose: t < 7.9 ? 'point' : (t < 13.5 ? 'shrug' : 'idle'), face: t < 7.9 ? 'smug' : t < 12.9 ? 'shock' : 'sad', walk: t > 13.5 && t < 14.8 ? t * 8 : undefined, seed: 2 });
+      NODES.forEach(([lab, nx, ny], i) => {
+        const cut = t > CUT[i] && t < BACK[i], back = t >= BACK[i];
+        const out = cut ? eo(seg(t, CUT[i], CUT[i] + .9)) : 0;
+        const nxp = nx + (i < 2 ? -1 : 1) * out * 70, nyp = ny - out * 60;
+        const inA = back ? bounce(seg(t, BACK[i], BACK[i] + .5)) : 1;
+        const alpha = cut ? 1 - seg(t, CUT[i] + .4, CUT[i] + 1.3) : 1;
+        const ox = back ? lerp(nx + (i < 2 ? -1 : 1) * 70, nx, inA) : nxp, oy = back ? lerp(ny - 60, ny, inA) : nyp;
+        const aa = back ? clamp(inA * 1.5) : alpha;
+        const hand = i < 2 ? A.L : A.R;
+        if (aa > 0) {
+          const steps = 6;
+          for (let k = 1; k < steps; k++) { const f = k / steps, cx = lerp(hand.x, ox, f), cy = lerp(hand.y, oy, f), ang = Math.atan2(oy - hand.y, ox - hand.x); chainLinkP(cx, cy, 28, 15, ang + (k % 2 ? 0 : Math.PI / 2) * 0, aa * (cut ? 1 - out * .6 : 1)); }
+          g.save(); g.globalAlpha *= aa; g.fillStyle = back ? '#ffe28a' : '#fff'; g.strokeStyle = INK; g.lineWidth = 5; g.beginPath(); g.arc(ox, oy, 46, 0, 7); g.fill(); g.stroke(); g.restore();
+          text(lab, ox, oy + 1, { size: lab.length > 6 ? 14 : 17, alpha: aa });
+          if (back) heart(ox + 44, oy - 44 - seg(t, BACK[i], BACK[i] + 1) * 30, 34, (1 - seg(t, BACK[i] + .6, BACK[i] + 1.4)) * seg(t, BACK[i], BACK[i] + .2));
+        }
+        const mx = lerp(hand.x, nx, .55), my = lerp(hand.y, ny, .55);
+        sparkle(mx, my, 40, seg(t, CUT[i] - .1, CUT[i] + .5));
+      });
+      if (t < 8.2) {
+        let px = B.R.x - 8, py = B.R.y - 20;
+        CUT.forEach((c, i) => { const p = win(t, c - .7, c + .5, .3); const hand = i < 2 ? A.L : A.R; const mx = lerp(hand.x, NODES[i][1], .55), my = lerp(hand.y, NODES[i][2], .55); px = lerp(px, mx, eo(p)); py = lerp(py, my, eo(p)); });
+        const pulse = CUT.some(c => Math.abs(t - c) < .3) ? Math.abs(Math.sin(t * 30)) : .4;
+        scissorsP(px, py, pulse, 200, 1);
+      }
+      say(B, 'DIA GAK BAIK\nBUAT KAMU.', 'u', { a: win(t, 1.2, 3.1), size: 25 });
+      say(B, 'KELUARGAMU\nCUMA NGATUR.', 'u', { a: win(t, 3.1, 5.0), size: 25 });
+      say(B, 'NONGKRONG TUH\nBUANG WAKTU.', 'u', { a: win(t, 5.0, 6.9), size: 25 });
+      say(B, 'KAMU CUMA\nBUTUH AKU.', 'u', { a: win(t, 6.9, 8.5), size: 27 });
+      say(A, 'HALO... KANGEN\nNGOBROL.', 'r', { a: win(t, 8.9, 11.0), size: 26, oy: 90 });
+      say(A, 'MAKASIH UDAH\nNUNGGUIN AKU.', 'r', { a: win(t, 11.3, 13.8), size: 26, oy: 90 });
+      say(A, 'AKU GAK\nSENDIRIAN.', 'r', { a: win(t, 14.0, 17.6), size: 30, oy: 90 });
+    });
+  }
+};
+
+/* ================= V6 : A vs B  silent treatment vs 10 menit ================= */
+const V6 = {
+  pill: () => 'JAM 21.00',
+  hook1: [['Didiamin 3 hari tanpa alasan.']],
+  hook2: [['Sehat itu: '], ['"Aku butuh 10 menit."', 1]],
+  cues: [[.2, 'whoosh'], [.8, 'notif'], [2.6, 'notif', .8], [4.4, 'notif', .8], [6.2, 'sad'], [7.4, 'riser'], [8.5, 'reveal'], [8.9, 'sparkle', .8], ...[10.9, 11.6, 12.3, 13.0].map(x => [x, 'tick', .8]), [13.4, 'ding'], [14.5, 'heart'], [16.8, 'pop']],
+  draw(t) {
+    const hrs = Math.floor(72 * eo(seg(t, .8, 8)));
+    drawStage(PXX, PY[0], 980, PH, 'DIA YANG MENGHILANG', 0, (FL) => {
+      const s = .6;
+      const A = man(250, FL, { s, tie: INK, pose: 'phone', face: t < 1.5 ? 'normal' : t < 6.2 ? 'worried' : 'cry', fx: t < 6.2 ? ['sweat'] : ['tear'], tilt: Math.sin(t * 4) * 3, seed: 1 });
+      const B = man(730, FL, { s, dir: 1, tie: RED, hair: 'slick', pose: 'cross', face: 'closed', seed: 2 });
+      phoneP(A.R.x, A.R.y - 6, { sc: .8, bars: 5, shake: [.8, 2.6, 4.4].some(x => t > x && t < x + .25) ? 3 : 0 });
+      tagBox(490, 44, 'DIBACA ✓✓ ' + hrs + ' JAM LALU', { a: seg(t, .8, 1.1), size: 26, bg: '#fff' });
+      say(A, 'AKU SALAH APA?', 'r', { a: win(t, 1.5, 4.0), size: 23 });
+      say(A, 'TOLONG BALES...', 'r', { a: win(t, 4.4, 8.4), size: 23 });
+      g.save(); g.globalAlpha = seg(t, 2, 2.6); text('zzZ', B.head.x + 58, B.head.y - 56 + Math.sin(t * 3) * 4, { size: 28, color: '#6b7a90' }); g.restore();
+    });
+    const t2 = Math.max(0, t - REVEAL), warm = eo(seg(t, REVEAL, REVEAL + .6)), fl = seg(t, REVEAL - .05, REVEAL + .25) * (1 - seg(t, REVEAL + .25, REVEAL + .7));
+    drawStage(PXX, PY[1], 980, PH, 'DIA YANG BILANG', warm, (FL) => {
+      const s = .6;
+      const cd = Math.max(0, 600 - Math.floor(600 * seg(t2, 2.4, 5.0)));
+      const mm = String(Math.floor(cd / 60)).padStart(2, '0'), ss = String(cd % 60).padStart(2, '0');
+      const B = man(250, FL, { s, tie: RED, hair: 'slick', pose: t2 > 2.2 ? mixPose('idle', 'phone', seg(t2, 2.2, 2.6)) : 'idle', face: t2 > 5.2 ? 'happy' : 'smile', seed: 3 });
+      if (t2 > 2.2) { g.fillStyle = '#fff'; g.strokeStyle = INK; g.lineWidth = 3.5; rrect(B.R.x - 12, B.R.y - 16, 26, 28, 5); g.fill(); g.stroke(); ln(B.R.x + 14, B.R.y - 6, B.R.x + 22, B.R.y, INK, 3.5); }
+      const A = man(740, FL, { s, dir: -1, tie: INK, pose: 'idle', face: t2 > 5.6 ? 'happy' : 'smile', seed: 4 });
+      if (t2 > 2.0 && t2 < 7.2) { g.save(); g.globalAlpha = seg(t2, 2.0, 2.3) * (1 - seg(t2, 6.8, 7.2)); g.fillStyle = '#fff'; g.strokeStyle = INK; g.lineWidth = 5; g.beginPath(); g.arc(490, 245, 58, 0, 7); g.fill(); g.stroke(); text(mm + ':' + ss, 490, 245, { size: 34 }); g.restore(); }
+      say(B, 'AKU BUTUH\n10 MENIT.', 'r', { a: win(t2, .7, 2.3), size: 22 });
+      say(A, 'OKE, AKU TUNGGU.', 'l', { a: win(t2, 2.4, 4.9), size: 22 });
+      say(B, 'YUK NGOBROL.', 'r', { a: win(t2, 5.4, 9), size: 24 });
+      heart(490, 190 - seg(t2, 6, 9) * 50, 56, seg(t2, 6, 6.3));
+      sparkle(490, 130, 40, seg(t2, 5.4, 6.2));
+    }, { dim: .86 * (1 - warm) });
+    if (fl > 0) { g.fillStyle = `rgba(255,255,255,${fl * .8})`; g.fillRect(0, 0, W, H); }
+  }
+};
+
+const SCENES = { 1: V1, 2: V2, 3: V3, 4: V4, 5: V5, 6: V6 };
+window.CUES = Object.fromEntries(Object.entries(SCENES).map(([k, v]) => [k, v.cues]));
+window.REVEAL = REVEAL;
+window.render = (id, t) => {
+  NOW = t; g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = 1;
+  const S = SCENES[id]; paperBG(); header(t, S.pill(t), S.hook1, S.hook2); S.draw(t); finish(t);
+};
+Promise.all([document.fonts.load('800 30px "Inter"')]).then(() => { window.ready = true; });
+</script></body></html>
