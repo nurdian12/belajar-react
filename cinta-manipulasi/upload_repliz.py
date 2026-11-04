@@ -73,10 +73,10 @@ def upload(path, mimetype):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--date', required=True, help='tanggal tayang (WIB), mis. 2026-11-05')
-    ap.add_argument('--username', default='kenalipolanya'); ap.add_argument('--dir', default='out3')
+    ap.add_argument('--username', default='kenalipolanya'); ap.add_argument('--account-id', default='6aeb121dfc43f81b7855b2ff', help='ID akun Repliz; kosongkan untuk mencari lewat username'); ap.add_argument('--dir', default='out3')
     ap.add_argument('--only', default='1,2,3,4,5,6'); ap.add_argument('--go', action='store_true')
     a = ap.parse_args()
-    caps = captions(); acc = find_account(a.username)
+    caps = captions(); acc = {'_id': a.account_id} if a.account_id else find_account(a.username)
     if not acc: sys.exit(1)
     plan = []
     for n in [int(x) for x in a.only.split(',')]:
