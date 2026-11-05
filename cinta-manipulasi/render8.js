@@ -7,7 +7,7 @@ const fs = require('fs');
 const id = +process.argv[2];
 const fps = +(process.argv[3] || 30);
 const DUR = 20;
-const NAMES = { 1: 'cinta-tulus-vs-fisik' };
+const NAMES = { 1: 'cinta-tulus-vs-fisik-pelukan' };
 const outDir = path.join(__dirname, 'out8'); fs.mkdirSync(outDir, { recursive: true });
 const tmp = process.env.TMPD || outDir; fs.mkdirSync(tmp, { recursive: true });
 

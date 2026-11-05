@@ -206,46 +206,53 @@ const TAGS_B = [['GANTENG', 1.0], ['MOBIL', 1.8], ['JAM MAHAL', 2.6], ['GAJI BES
 const FLAWS = [['SERING TELAT', 1.5], ['MUDAH NGAMBEK', 2.7], ['BOROS', 3.9]];
 
 function actors(t, lens) {
-  const ax = 250, leave = seg(t, T_LEAVE, 12.4), bx = lerp(650, 1080, eo(leave)), bWalk = leave > 0 && leave < 1;
+  const ax = 250, lf = seg(t, T_LEAVE, 11.6), back = seg(t, 12.6, 14.1), hug = seg(t, 14.1, 14.7);
+  const bx = t < 12.6 ? lerp(650, 900, eo(lf)) : lerp(900, ax + 66, eo(back));
+  const bWalk = (lf > 0 && lf < 1) || (back > 0 && back < 1);
+  const bDir = t < 11.6 ? 1 : -1;
   const glam = 1 - eo(seg(t, T_CHG, T_CHG + 1.0));
   if (glam > 0) glow(ax, 330, 170 * glam, 'rgba(255,214,120,.55)', glam);
-  const reach = win(t, 10.3, 12.2, .4);
-  const A = fig(ax, FLR, { s: 1.15, lean: 10 * (1 - glam) + 3 * Math.sin(t * 2), tilt: 8 * (1 - glam), arms: [lerp(10, 105, reach), -10], color: glam > .5 ? '#ffffff' : '#c7cfe3' });
+  const reach = win(t, 10.3, 12.4, .4), open = eo(seg(t, 13.3, 14.1));
+  const aArm = t < 13.3 ? lerp(10, 105, reach) : lerp(10, 80, open) + 20 * hug;
+  const A = fig(ax, FLR, { s: 1.15, lean: 10 * (1 - glam) * (1 - hug) + 9 * hug + 3 * Math.sin(t * 2) * (1 - hug), tilt: 8 * (1 - glam) * (1 - hug) - 10 * hug, arms: t < 13.3 ? [aArm, -10] : [aArm, aArm], color: glam > .5 ? '#ffffff' : '#c7cfe3' });
   crownP(A.head.x, A.head.y - 22, glam);
   if (glam > 0) { g.save(); g.globalAlpha = glam; g.strokeStyle = GOLD; g.lineWidth = 5; g.beginPath(); g.arc(A.hands[1].x, A.hands[1].y, 7, 0, 7); g.stroke(); g.restore(); }
-  const B = fig(bx, FLR, { s: 1.15, color: PINK, dir: bWalk || leave >= 1 ? 1 : -1, ...(bWalk ? walk(t * 8, 24) : { arms: [8, -8] }), lean: t > 8.0 && t < T_LEAVE ? 6 : 0 });
-  return { A, B, glam, bx, ax };
+  const bArms = t < 13.4 ? [8, -8] : [lerp(8, 82, eo(seg(t, 13.4, 14.1))) + 18 * hug, lerp(-8, 82, eo(seg(t, 13.4, 14.1))) + 18 * hug];
+  const B = fig(bx, FLR, { s: 1.15, color: PINK, dir: bDir, ...(bWalk ? walk(t * 8, 24) : {}), arms: bWalk ? undefined : bArms, lean: (t > 8.0 && t < T_LEAVE ? 6 : 0) + 9 * hug, tilt: -10 * hug });
+  if (hug > 0.3) { glow((A.head.x + B.head.x) / 2, 330, 190, 'rgba(255,200,130,.35)', seg(hug, .3, 1)); }
+  return { A, B, glam, bx, ax, hug };
 }
 function v8(t) {
   bg(); title('CINTA TULUS VS CINTA FISIK.', t);
   const topSub = t < 4.4 ? ['MELIHAT KEKURANGANNYA', GREY] : ['TETAP MENCINTAI', AMBER];
-  const botSub = t < T_CHG ? ['MENCINTAI YANG TAMPAK', GREY] : t < T_LEAVE ? ['PENAMPILAN BERUBAH', AMBER] : ['PERGI', RED];
-  const look = 100 * (1 - eo(seg(t, T_CHG, T_CHG + 2.6))) * .85 + 15 * (1 - seg(t, T_CHG, T_CHG + 2.6));  // penampilan A: 100 -> 15
-  const loveB = t < T_CHG + .5 ? 100 : Math.max(0, lerp(100, 0, eo(seg(t, T_CHG + .5, T_LEAVE + .2))));
-  // ---------- top : sudut pandang A ----------
+  const botSub = t < T_CHG ? ['MENCINTAI YANG TAMPAK', GREY] : t < T_LEAVE ? ['PENAMPILAN BERUBAH', AMBER] : t < 12.4 ? ['PERGI', RED] : t < 14.1 ? ['BARU SADAR', AMBER] : ['PULANG', '#58c47f'];
+  const look = 100 * (1 - eo(seg(t, T_CHG, T_CHG + 2.6))) * .85 + 15 * (1 - seg(t, T_CHG, T_CHG + 2.6));
+  const loveB = t < 12.6 ? (t < T_CHG + .5 ? 100 : Math.max(0, lerp(100, 0, eo(seg(t, T_CHG + .5, T_LEAVE + .2))))) : 100 * eo(seg(t, 12.6, 14.1));
   panel(...PA, 'A MENCINTAI KARENA HATI', topSub, () => {
     floor(FLR); const S = actors(t, 'top');
-    FLAWS.forEach(([s, ts], i) => chipP(S.bx, 255 - i * 46, s, RED, seg(t, ts, ts + .3) * (1 - seg(t, 12.3, 12.8)), 'rgba(40,12,16,.9)'));
-    // gold hearts A -> B (keep rising above A after B leaves)
-    for (let k = 0; k < 20; k++) { const tk = .8 + k * .7, p = seg(t, tk, tk + 1.0); if (p <= 0 || p >= 1) continue; const tx = t < 12.4 ? Math.min(S.bx, 880) - 40 : S.ax + 80; heart(lerp(S.ax + 60, tx, eo(p)), lerp(330, t < 12.4 ? 330 : 200, p) - Math.sin(Math.PI * p) * 70, 30, 1 - .3 * p, HEART_GOLD); }
+    FLAWS.forEach(([s, ts], i) => chipP(S.bx, 255 - i * 46, s, RED, seg(t, ts, ts + .3) * (1 - seg(t, 9.6, 10.2)), 'rgba(40,12,16,.9)'));
+    for (let k = 0; k < 24; k++) { const tk = .8 + k * .7, p = seg(t, tk, tk + 1.0); if (p <= 0 || p >= 1 || tk > 14.2) continue; const tx = Math.max(S.ax + 90, Math.min(S.bx, 880) - 40); heart(lerp(S.ax + 60, tx, eo(p)), 330 - Math.sin(Math.PI * p) * 70, 30, 1 - .3 * p, HEART_GOLD); }
     barP(480, 90, 230, 100, 'CINTA A', AMBER);
     bubble(S.ax + 30, 205, 'DIA TULUS.', { a: win(t, 4.2, 6.5, .25), size: 21, tx: -10 });
     bubble(S.ax + 30, 205, 'AKU TETAP SAYANG.', { a: win(t, 6.8, 9.6, .25), size: 21, tx: -10 });
-    bubble(S.ax + 40, 205, 'APA ADANYA KAMU.', { a: win(t, 10.3, 13.0, .25), size: 21, tx: -10 });
-    bubble(S.ax + 40, 205, 'AKU MASIH DI SINI.', { a: win(t, 13.2, 16, .25), size: 21, tx: -10 });
+    bubble(S.ax + 40, 205, 'APA ADANYA KAMU.', { a: win(t, 10.3, 12.5, .25), size: 21, tx: -10 });
+    bubble(S.ax + 40, 205, 'AKU MASIH DI SINI.', { a: win(t, 12.6, 14.2, .25), size: 21, tx: -10 });
+    bubble(S.ax + 30, 205, 'KAMU PULANG.', { a: win(t, 14.6, 16.2, .25), size: 22, tx: -10 });
+    for (let i = 0; i < 10; i++) { const p = seg(t, 14.5 + i * .16, 15.9 + i * .16); if (p > 0 && p < 1) heart(S.ax + 36 + (rnd(i) - .5) * 120, 300 - 150 * p, 26 + 10 * rnd(i + 2), 1 - p, i % 2 ? HEART_GOLD : '#ff7a90'); }
   });
-  if (t > 9.8) { g.fillStyle = `rgba(3,4,11,${.0})`; }
-  // ---------- bottom : sudut pandang B ----------
   panel(...PB, 'B MENCINTAI KARENA TAMPILAN', botSub, () => {
     floor(FLR); const S = actors(t, 'bot');
-    TAGS_B.forEach(([s, ts], i) => { const cr = eo(seg(t, T_CHG + .2 + i * .45, T_CHG + .6 + i * .45)); chipP(400, 280 - i * 46 + 0, s, '#58c47f', seg(t, ts, ts + .3), 'rgba(10,32,22,.9)', cr); });
-    // pink hearts B -> A until the change, grey hearts afterwards
-    for (let k = 0; k < 20; k++) { const tk = .8 + k * .7, p = seg(t, tk, tk + 1.0); if (p <= 0 || p >= 1 || tk > T_LEAVE) continue; const grey = tk >= T_CHG; if (!grey) heart(lerp(S.bx - 60, S.ax + 60, eo(p)), 330 - Math.sin(Math.PI * p) * 70, 30, 1 - .3 * p, '#ff7a90'); else heart(S.bx - 20 + (k % 3) * 14, 300 + 120 * p * p, 28, 1 - p, '#6b7388'); }
-    barP(520, 80, 200, look, 'PENAMPILAN A', GOLD); barP(520, 130, 200, loveB, 'CINTA B', '#ff7a90');
+    TAGS_B.forEach(([s, ts], i) => { const cr = eo(seg(t, T_CHG + .2 + i * .45, T_CHG + .6 + i * .45)); chipP(400, 280 - i * 46, s, '#58c47f', seg(t, ts, ts + .3) * (1 - seg(t, 12.4, 12.9)), 'rgba(10,32,22,.9)', cr); });
+    for (let k = 0; k < 24; k++) { const tk = .8 + k * .7, p = seg(t, tk, tk + 1.0); if (p <= 0 || p >= 1 || tk > 14.2) continue; if (tk >= T_LEAVE && tk < 12.6) continue; const grey = tk >= T_CHG && tk < T_LEAVE; if (!grey) heart(lerp(S.bx - 40, S.ax + 60, eo(p)), 330 - Math.sin(Math.PI * p) * 70, 30, 1 - .3 * p, '#ff7a90'); else heart(S.bx - 20 + (k % 3) * 14, 300 + 120 * p * p, 28, 1 - p, '#6b7388'); }
+    if (t < 12.4) barP(520, 80, 200, look, 'PENAMPILAN A', GOLD); else barP(520, 80, 200, 100 * eo(seg(t, 12.4, 13.2)), 'KETULUSAN A', '#58c47f');
+    barP(520, 130, 200, loveB, 'CINTA B', '#ff7a90');
     bubble(640, 215, 'KEREN BANGET DIA.', { a: win(t, 1.2, 3.4, .25), size: 21, tx: 10 });
     bubble(640, 215, 'BERUNTUNG PUNYA DIA.', { a: win(t, 3.6, 6.4, .25), size: 21, tx: 10 });
     bubble(640, 215, 'KOK BEDA?', { a: win(t, 7.8, 9.0, .2), size: 22, tx: 10 });
     bubble(640, 215, 'AKU NGGAK NYAMAN.', { a: win(t, 9.0, 10.5, .2), size: 21, tx: 10 });
+    bubble(700, 215, 'MAAF... AKU SALAH.', { a: win(t, 11.8, 13.6, .2), size: 21, tx: 100 });
+    bubble(640, 215, 'MAKASIH UDAH TETAP DI SINI.', { a: win(t, 14.7, 16.2, .2), size: 19, tx: -60 });
+    for (let i = 0; i < 10; i++) { const p = seg(t, 14.5 + i * .16, 15.9 + i * .16); if (p > 0 && p < 1) heart(S.ax + 40 + (rnd(i + 9) - .5) * 120, 300 - 150 * p, 26 + 10 * rnd(i + 5), 1 - p, i % 2 ? '#ff7a90' : HEART_GOLD); }
   });
   endCard(t, [[['CINTA SEJATI']], [['TIDAK HANYA MELIHAT']], [['YANG TAMPAK DI '], ['LUAR.', AMBER]]],
     [[['Pilih yang mencintai kekuranganmu,']], [['bukan hanya kelebihanmu.']]], { size: 62, py: 800, subY: 1330, subSize: 28 });
@@ -255,8 +262,9 @@ const CUES8 = (() => {
   TAGS_B.forEach(([, ts]) => c.push([ts, 'tick', .5])); FLAWS.forEach(([, ts]) => c.push([ts, 'tick', .4]));
   for (let k = 0; k < 14; k += 2) c.push([.8 + k * .7 + .4, 'pop', .25]);
   c.push([T_CHG, 'whoosh', .5], [T_CHG + .1, 'snuff', .5]); [0, 1, 2, 3].forEach(i => c.push([T_CHG + .4 + i * .45, 'buzz', .3]));
-  c.push([7.4, 'sad', .5], [9.0, 'thud', .4], [T_LEAVE, 'whoosh', .5]); for (let u = 10.0; u < 12.2; u += .3) c.push([u, 'step', .2]);
-  c.push([12.4, 'sparkle', .4], [16.0, 'ding', .8], [16.6, 'sparkle', .3]);
+  c.push([7.4, 'sad', .5], [9.0, 'thud', .4], [T_LEAVE, 'whoosh', .5]); for (let u = 10.0; u < 11.6; u += .3) c.push([u, 'step', .2]);
+  c.push([11.7, 'tick', .5], [12.4, 'sparkle', .4]); for (let u = 12.7; u < 14.1; u += .3) c.push([u, 'step', .2]);
+  c.push([14.1, 'whoosh', .4], [14.4, 'heart', 1], [14.5, 'sparkle', .7], [14.9, 'ding', .7], [16.0, 'ding', .8], [16.6, 'sparkle', .3]);
   return c.sort((a, b) => a[0] - b[0]);
 })();
 window.CUES = { 1: CUES8 }; window.DUR = 20;
