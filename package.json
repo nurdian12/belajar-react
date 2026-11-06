@@ -1,0 +1,22 @@
+{
+  "name": "belajar-react",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Animasi 'Tidak Semua Pelukan Itu Kasih Sayang' dengan Remotion",
+  "scripts": {
+    "dev": "remotion studio",
+    "build": "remotion render PelukanVideo out/pelukan.mp4",
+    "still": "remotion still PelukanVideo out/still.png --frame=60",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.541",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "remotion": "4.0.541"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "typescript": "^5.6.0"
+  }
+}
