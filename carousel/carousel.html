@@ -1,69 +1,117 @@
-<!doctype html><html lang="id"><head><meta charset="utf-8"><style>
+<!doctype html><html lang="id"><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--lime:#bfe62a;--limeD:#8fb800;--ink:#0b0b0b;--cream:#f1efe8}
 *{box-sizing:border-box;margin:0}
-body{background:#222;font-family:system-ui,"Inter",sans-serif}
-.s{width:1080px;height:1350px;padding:90px 80px;display:flex;flex-direction:column;position:relative;color:#f8fafc;background:#0f172a;overflow:hidden}
-.s.alt{background:#f8fafc;color:#0f172a}
-.tag{font-size:28px;font-weight:700;letter-spacing:2px;color:#22d3ee;text-transform:uppercase}
-.alt .tag{color:#0891b2}
-.main{flex:1;display:flex;flex-direction:column;justify-content:center}
-h1{font-size:92px;line-height:1.05;font-weight:800}
-h2{font-size:70px;line-height:1.1;font-weight:800;margin-bottom:44px}
-p{font-size:42px;line-height:1.4;color:#cbd5e1}
-.alt p{color:#334155}
-em{font-style:normal;color:#22d3ee}.alt em{color:#0891b2}
-.big{font-size:260px;font-weight:900;line-height:1;color:#22d3ee}
-.item{display:flex;gap:28px;align-items:flex-start;margin-bottom:38px}
-.num{flex:none;width:76px;height:76px;border-radius:50%;background:#22d3ee;color:#0f172a;font-size:40px;font-weight:800;display:flex;align-items:center;justify-content:center}
-.item p{color:inherit;font-size:40px}
-.foot{display:flex;justify-content:space-between;font-size:28px;color:#64748b}
-.flow{display:flex;flex-direction:column;gap:0}
-.step{background:#1e293b;border-radius:22px;padding:26px 34px;font-size:38px;display:flex;gap:24px;align-items:center}
-.step b{color:#22d3ee;font-size:34px;min-width:50px}
-.arrow{text-align:center;color:#22d3ee;font-size:36px;line-height:1.1}
-.box{background:#0f172a;color:#f8fafc;border-radius:26px;padding:34px 40px;font-size:40px;margin-top:30px;line-height:1.4}
-.btn{display:inline-block;margin-top:40px;background:#22d3ee;color:#0f172a;font-weight:800;font-size:44px;padding:28px 48px;border-radius:20px}
+body{background:#444;font-family:Inter,system-ui,sans-serif}
+.s{width:1080px;height:1350px;position:relative;overflow:hidden;padding:80px 76px;display:flex;flex-direction:column;background:var(--ink);color:#fff}
+.s.c{background:var(--cream);color:var(--ink)}
+.logo{display:flex;align-items:center;gap:14px;font-weight:700;font-size:26px;letter-spacing:2px;z-index:3}
+.logo i{width:34px;height:34px;border-radius:10px;border:3px solid var(--lime);display:block;position:relative}
+.logo i:after{content:"";position:absolute;inset:7px;background:var(--lime);border-radius:3px}
+.c .logo i{border-color:var(--ink)}.c .logo i:after{background:var(--ink)}
+.top{display:flex;justify-content:space-between;align-items:flex-start;z-index:3}
+.top small{font-size:26px;text-align:right;line-height:1.35;opacity:.85}
+h1{font-family:"Bebas Neue",Impact,sans-serif;font-weight:400;text-transform:uppercase;font-size:210px;line-height:.9;letter-spacing:1px;z-index:3;position:relative}
+h1 em{font-style:normal;color:var(--lime)}.c h1 em{color:var(--limeD)}
+.body{font-size:36px;line-height:1.4;font-weight:500;max-width:620px;z-index:3;position:relative}
+.main{flex:1;display:flex;flex-direction:column;justify-content:center;gap:40px;position:relative}
+.foot{display:flex;justify-content:space-between;align-items:flex-end;z-index:3;position:relative}
+.foot p{font-size:30px;line-height:1.35;max-width:560px;opacity:.9}
+.go{width:92px;height:92px;border-radius:50%;background:var(--lime);display:flex;align-items:center;justify-content:center;flex:none}
+.go svg{width:44px;height:44px}
+.pg{position:absolute;top:84px;right:76px;font-size:26px;opacity:.6;z-index:3}
+/* s1 */
+.clock{position:absolute;right:70px;top:190px;width:430px;height:430px;border-radius:50%;border:38px solid var(--lime);z-index:1}
+.clock:before,.clock:after{content:"";position:absolute;left:50%;top:50%;background:#fff;border-radius:10px;transform-origin:50% 100%}
+.clock:before{width:16px;height:150px;margin-left:-8px;margin-top:-150px;transform:rotate(25deg)}
+.clock:after{width:16px;height:110px;margin-left:-8px;margin-top:-110px;transform:rotate(-70deg)}
+.big60{font-family:"Bebas Neue";font-size:520px;line-height:.8;color:var(--lime)}
+/* s2 chats */
+.bub{position:absolute;font-size:38px;font-weight:700;padding:26px 38px;border-radius:34px;z-index:2;box-shadow:0 16px 40px rgba(0,0,0,.25)}
+.bd{background:var(--ink);color:#fff}.bl{background:var(--lime);color:var(--ink)}
+/* s3 */
+.row{display:flex;gap:28px;align-items:center;background:#1a1a1a;border-radius:30px;padding:30px 36px;margin-bottom:22px;font-size:36px;line-height:1.3;font-weight:500}
+.row b{font-family:"Bebas Neue";font-size:96px;color:var(--lime);font-weight:400;line-height:1;min-width:60px}
+/* s4 */
+.chip{display:inline-block;background:var(--ink);color:#fff;border-radius:60px;padding:18px 36px;font-size:34px;font-weight:700;margin:0 14px 14px 0}
+.chip.l{background:var(--lime);color:var(--ink)}
+.rule{background:var(--ink);color:#fff;border-radius:34px;padding:38px 44px;font-size:36px;line-height:1.4}
+.rule b{color:var(--lime)}
+/* s5 */
+.node{display:flex;align-items:center;gap:26px;background:#1a1a1a;border-radius:26px;padding:22px 32px;font-size:34px;font-weight:500;position:relative}
+.node b{background:var(--lime);color:var(--ink);width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;flex:none}
+.link{width:4px;height:22px;background:var(--lime);margin-left:58px}
+/* s6 */
+.arc{position:absolute;right:-540px;top:430px;opacity:.45;width:900px;height:900px;border-radius:50%;border:10px solid var(--lime);box-shadow:0 0 70px 6px rgba(191,230,42,.55),inset 0 0 60px rgba(191,230,42,.3);z-index:1}
+.pill{display:inline-flex;align-items:center;gap:18px;background:var(--lime);color:var(--ink);font-weight:800;font-size:40px;padding:26px 44px;border-radius:70px}
+.cta li{list-style:none;font-size:38px;font-weight:500;margin-bottom:22px;display:flex;gap:20px;align-items:center}
+.cta li b{color:var(--lime);font-family:"Bebas Neue";font-size:60px;font-weight:400}
 </style></head><body>
+<svg width="0" height="0"><defs><symbol id="ar" viewBox="0 0 24 24"><path d="M4 12h15m-6-6 6 6-6 6" fill="none" stroke="#0b0b0b" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></symbol></defs></svg>
 
-<div class="s" id="s1"><div class="tag">AI Automation untuk Bisnis</div>
-<div class="main"><div class="big">60</div><h1>jam per bulan<br>habis untuk <em>membalas chat yang sama.</em></h1>
-<p style="margin-top:44px">Hitungannya: 30 chat × 5 menit × 24 hari kerja. Itu lebih dari 7 hari kerja penuh.</p></div>
-<div class="foot"><span>Geser →</span><span>1/6</span></div></div>
+<!-- 1 -->
+<div class="s" id="s1">
+<div class="top"><div class="logo"><i></i>AI AUTOMATION</div><small>Hitung sendiri,<br>angkanya nyata.</small></div>
+<div class="clock"></div>
+<div class="main" style="justify-content:flex-start;padding-top:70px;gap:10px">
+<div class="big60">60</div>
+<h1 style="font-size:190px">JAM HILANG<br><em>TIAP BULAN.</em></h1></div>
+<div class="foot"><p>30 chat sama × 5 menit × 24 hari kerja = lebih dari 7 hari kerja penuh.</p><div class="go"><svg><use href="#ar"/></svg></div></div></div>
 
-<div class="s alt" id="s2"><div class="tag">Masalah Nyata</div>
-<div class="main"><h2>Hari-hari pemilik bisnis terasa seperti ini:</h2>
-<div class="item"><div class="num">1</div><p>Pesanan masuk lewat WhatsApp, lalu dicatat manual ke Excel</p></div>
-<div class="item"><div class="num">2</div><p>Invoice diketik ulang satu per satu</p></div>
-<div class="item"><div class="num">3</div><p>Lupa follow-up pelanggan yang sudah tanya harga</p></div>
-<p style="margin-top:20px"><b>Kamu bukan kurang rajin.</b> Kamu terlalu sibuk dengan kerjaan yang berulang.</p></div>
-<div class="foot"><span>Geser →</span><span>2/6</span></div></div>
+<!-- 2 -->
+<div class="s c" id="s2">
+<div class="top"><div class="logo"><i></i>AI AUTOMATION</div><small>Masalah nyata<br>pemilik bisnis.</small></div>
+<div class="main" style="justify-content:flex-start;padding-top:70px">
+<h1 style="font-size:200px">KERJAAN<br>YANG SAMA.<br><em>TERUS.</em></h1>
+<div class="bub bd" style="right:60px;top:480px;transform:rotate(4deg)">Harga berapa kak?</div>
+<div class="bub bl" style="right:150px;top:640px;transform:rotate(-4deg)">Ready stok? 🙏</div>
+<div class="bub bd" style="right:40px;top:760px;transform:rotate(3deg)">Transfer ke mana?</div></div>
+<div class="foot"><p>Catat pesanan manual, ketik ulang invoice, lupa follow-up. Kamu bukan malas, kerjaannya yang berulang.</p><div class="go"><svg><use href="#ar"/></svg></div></div></div>
 
-<div class="s" id="s3"><div class="tag">Kesalahan Umum</div>
-<div class="main"><h2>3 kesalahan saat semuanya serba <em>manual</em></h2>
-<div class="item"><div class="num">1</div><p>Menyalin data yang sama ke 3 tempat berbeda, rawan salah ketik</p></div>
-<div class="item"><div class="num">2</div><p>Mengandalkan ingatan untuk follow-up, akhirnya ada pelanggan yang terlewat</p></div>
-<div class="item"><div class="num">3</div><p>Mengira otomatisasi itu mahal dan ribet, padahal banyak yang bisa dimulai kecil</p></div></div>
-<div class="foot"><span>Geser →</span><span>3/6</span></div></div>
+<!-- 3 -->
+<div class="s" id="s3">
+<div class="top"><div class="logo"><i></i>AI AUTOMATION</div><small>Kesalahan umum<br>kerja manual.</small></div>
+<div class="main" style="gap:34px">
+<h1 style="font-size:165px">3 JEBAKAN<br><em>KERJA MANUAL.</em></h1>
+<div>
+<div class="row"><b>1</b>Menyalin data yang sama ke 3 tempat. Rawan salah ketik.</div>
+<div class="row"><b>2</b>Follow-up mengandalkan ingatan. Pelanggan terlewat.</div>
+<div class="row"><b>3</b>Mengira otomatisasi itu mahal dan ribet. Padahal bisa mulai kecil.</div></div></div>
+<div class="foot"><p>Satu per satu terlihat sepele. Dijumlah, jadi jam-jam yang hilang.</p><div class="go"><svg><use href="#ar"/></svg></div></div></div>
 
-<div class="s alt" id="s4"><div class="tag">Solusinya</div>
-<div class="main"><h2>AI Automation = asisten yang <em>kerja 24 jam</em></h2>
-<p>Tugas berulang dikerjakan otomatis oleh tools seperti n8n, Make, dan ChatGPT. Kamu cukup atur sekali.</p>
-<div class="box"><b>Aturan gampang:</b><br>Kalau satu tugas kamu kerjakan lebih dari 3 kali seminggu dengan langkah yang sama, itu kandidat untuk diotomatisasi.</div></div>
-<div class="foot"><span>Geser →</span><span>4/6</span></div></div>
+<!-- 4 -->
+<div class="s c" id="s4">
+<div class="top"><div class="logo"><i></i>AI AUTOMATION</div><small>Solusinya.</small></div>
+<div class="main">
+<h1 style="font-size:165px">KERJA 24 JAM.<br><em>TANPA LEMBUR.</em></h1>
+<p class="body" style="max-width:800px">AI Automation menjalankan tugas berulang secara otomatis. Kamu cukup atur sekali.</p>
+<div><span class="chip l">n8n</span><span class="chip">Make</span><span class="chip">ChatGPT</span><span class="chip">API</span></div>
+<div class="rule"><b>Aturan gampang:</b> tugas yang kamu ulang lebih dari 3x seminggu dengan langkah sama? Itu kandidat otomatisasi.</div></div>
+<div class="foot"><p>Fokus ke jualan dan pelanggan, bukan copy-paste.</p><div class="go"><svg><use href="#ar"/></svg></div></div></div>
 
-<div class="s" id="s5"><div class="tag">Contoh Workflow</div>
-<div class="main"><h2 style="font-size:60px;margin-bottom:30px">Pesanan masuk, <em>tanpa kamu ketik ulang</em></h2>
-<div class="flow">
-<div class="step"><b>1</b>Pelanggan isi form pesanan</div><div class="arrow">↓</div>
-<div class="step"><b>2</b>n8n / Make menangkap datanya</div><div class="arrow">↓</div>
-<div class="step"><b>3</b>Data masuk Google Sheets otomatis</div><div class="arrow">↓</div>
-<div class="step"><b>4</b>ChatGPT menulis balasan konfirmasi</div><div class="arrow">↓</div>
-<div class="step"><b>5</b>Terkirim ke WhatsApp/email + kamu dapat notifikasi</div></div>
-<p style="margin-top:30px;font-size:36px">Dari ±10 menit per pesanan menjadi hitungan detik (contoh ilustrasi).</p></div>
-<div class="foot"><span>Geser →</span><span>5/6</span></div></div>
+<!-- 5 -->
+<div class="s" id="s5">
+<div class="top"><div class="logo"><i></i>AI AUTOMATION</div><small>Contoh workflow<br>toko online.</small></div>
+<div class="main" style="gap:28px">
+<h1 style="font-size:170px">PESANAN MASUK.<br><em>SEMUA BERES.</em></h1>
+<div>
+<div class="node"><b>1</b>Pelanggan isi form pesanan</div><div class="link"></div>
+<div class="node"><b>2</b>n8n / Make menangkap datanya</div><div class="link"></div>
+<div class="node"><b>3</b>Masuk Google Sheets otomatis</div><div class="link"></div>
+<div class="node"><b>4</b>ChatGPT menulis balasan konfirmasi</div><div class="link"></div>
+<div class="node"><b>5</b>Terkirim ke WhatsApp + kamu dapat notifikasi</div></div></div>
+<div class="foot"><p>Contoh ilustrasi: dari ±10 menit per pesanan jadi hitungan detik.</p><div class="go"><svg><use href="#ar"/></svg></div></div></div>
 
-<div class="s alt" id="s6"><div class="tag">Langkah Selanjutnya</div>
-<div class="main"><h2>Mulai dari <em>1 pekerjaan</em> yang paling bikin capek</h2>
-<p>📌 <b>Simpan</b> postingan ini sebagai panduan kecil.<br><br>💬 Tulis di komentar: kerjaan manual apa yang paling menyita waktumu?<br><br>📩 Mau dibantu otomatisasi? <b>DM kata "OTOMATIS".</b></p>
-<div><span class="btn">Simpan &amp; Kirim DM</span></div></div>
-<div class="foot"><span>Terima kasih sudah membaca</span><span>6/6</span></div></div>
+<!-- 6 -->
+<div class="s" id="s6">
+<div class="top"><div class="logo"><i></i>AI AUTOMATION</div><small>Siap mulai?</small></div>
+<div class="arc"></div>
+<div class="main">
+<h1 style="font-size:170px">MULAI DARI<br><em>1 KERJAAN</em><br>PALING CAPEK.</h1>
+<ul class="cta">
+<li><b>01</b>Simpan postingan ini</li>
+<li><b>02</b>Komen: kerjaan apa yang paling capek?</li>
+<li><b>03</b>Mau dibantu? DM aku</li></ul></div>
+<div class="foot"><span class="pill">DM: "OTOMATIS" <svg width="40" height="40" style="width:40px;height:40px"><use href="#ar"/></svg></span><span style="font-size:26px;opacity:.6">6/6</span></div></div>
 </body></html>
