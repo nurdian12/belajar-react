@@ -1,15 +1,15 @@
 <!doctype html><html lang="id"><head><meta charset="utf-8">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-:root{--lime:#bfe62a;--limeD:#8fb800;--ink:#0b0b0b;--cream:#f1efe8}
+:root{--lime:#ff3d8b;--limeD:#ff3d8b;--ink:#0f1b3d;--blue:#2563eb;--soft:#eaf0ff}
 *{box-sizing:border-box;margin:0}
 body{background:#444;font-family:Inter,system-ui,sans-serif}
-.s{width:1080px;height:1350px;position:relative;overflow:hidden;padding:80px 76px;display:flex;flex-direction:column;background:var(--ink);color:#fff}
-.s.c{background:var(--cream);color:var(--ink)}
+.s{width:1080px;height:1350px;position:relative;overflow:hidden;padding:80px 76px;display:flex;flex-direction:column;background:#fff;color:var(--ink)}
+.s.c{background:#fff;color:var(--ink)}
 .logo{display:flex;align-items:center;gap:14px;font-weight:700;font-size:26px;letter-spacing:2px;z-index:3}
-.logo i{width:34px;height:34px;border-radius:10px;border:3px solid var(--lime);display:block;position:relative}
+.logo i{width:34px;height:34px;border-radius:10px;border:3px solid var(--blue);display:block;position:relative}
 .logo i:after{content:"";position:absolute;inset:7px;background:var(--lime);border-radius:3px}
-.c .logo i{border-color:var(--ink)}.c .logo i:after{background:var(--ink)}
+
 .top{display:flex;justify-content:space-between;align-items:flex-start;z-index:3}
 .top small{font-size:26px;text-align:right;line-height:1.35;opacity:.85}
 h1{font-family:"Bebas Neue",Impact,sans-serif;font-weight:400;text-transform:uppercase;font-size:210px;line-height:.9;letter-spacing:1px;z-index:3;position:relative}
@@ -22,33 +22,33 @@ h1 em{font-style:normal;color:var(--lime)}.c h1 em{color:var(--limeD)}
 .go svg{width:44px;height:44px}
 .pg{position:absolute;top:84px;right:76px;font-size:26px;opacity:.6;z-index:3}
 /* s1 */
-.clock{position:absolute;right:70px;top:190px;width:430px;height:430px;border-radius:50%;border:38px solid var(--lime);z-index:1}
-.clock:before,.clock:after{content:"";position:absolute;left:50%;top:50%;background:#fff;border-radius:10px;transform-origin:50% 100%}
+.clock{position:absolute;right:70px;top:190px;width:430px;height:430px;border-radius:50%;border:38px solid var(--blue);z-index:1}
+.clock:before,.clock:after{content:"";position:absolute;left:50%;top:50%;background:var(--lime);border-radius:10px;transform-origin:50% 100%}
 .clock:before{width:16px;height:150px;margin-left:-8px;margin-top:-150px;transform:rotate(25deg)}
 .clock:after{width:16px;height:110px;margin-left:-8px;margin-top:-110px;transform:rotate(-70deg)}
 .big60{font-family:"Bebas Neue";font-size:520px;line-height:.8;color:var(--lime)}
 /* s2 chats */
 .bub{position:absolute;font-size:38px;font-weight:700;padding:26px 38px;border-radius:34px;z-index:2;box-shadow:0 16px 40px rgba(0,0,0,.25)}
-.bd{background:var(--ink);color:#fff}.bl{background:var(--lime);color:var(--ink)}
+.bd{background:var(--blue);color:#fff}.bl{background:var(--lime);color:#fff}
 /* s3 */
-.row{display:flex;gap:28px;align-items:center;background:#1a1a1a;border-radius:30px;padding:30px 36px;margin-bottom:22px;font-size:36px;line-height:1.3;font-weight:500}
+.row{display:flex;gap:28px;align-items:center;background:var(--soft);border-radius:30px;padding:30px 36px;margin-bottom:22px;font-size:36px;line-height:1.3;font-weight:500}
 .row b{font-family:"Bebas Neue";font-size:96px;color:var(--lime);font-weight:400;line-height:1;min-width:60px}
 /* s4 */
-.chip{display:inline-block;background:var(--ink);color:#fff;border-radius:60px;padding:18px 36px;font-size:34px;font-weight:700;margin:0 14px 14px 0}
-.chip.l{background:var(--lime);color:var(--ink)}
-.rule{background:var(--ink);color:#fff;border-radius:34px;padding:38px 44px;font-size:36px;line-height:1.4}
-.rule b{color:var(--lime)}
+.chip{display:inline-block;background:var(--blue);color:#fff;border-radius:60px;padding:18px 36px;font-size:34px;font-weight:700;margin:0 14px 14px 0}
+.chip.l{background:var(--lime);color:#fff}
+.rule{background:var(--blue);color:#fff;border-radius:34px;padding:38px 44px;font-size:36px;line-height:1.4}
+.rule b{color:#ffd6e8}
 /* s5 */
-.node{display:flex;align-items:center;gap:26px;background:#1a1a1a;border-radius:26px;padding:22px 32px;font-size:34px;font-weight:500;position:relative}
-.node b{background:var(--lime);color:var(--ink);width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;flex:none}
+.node{display:flex;align-items:center;gap:26px;background:var(--soft);border-radius:26px;padding:22px 32px;font-size:34px;font-weight:500;position:relative}
+.node b{background:var(--lime);color:#fff;width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;flex:none}
 .link{width:4px;height:22px;background:var(--lime);margin-left:58px}
 /* s6 */
-.arc{position:absolute;right:-540px;top:430px;opacity:.45;width:900px;height:900px;border-radius:50%;border:10px solid var(--lime);box-shadow:0 0 70px 6px rgba(191,230,42,.55),inset 0 0 60px rgba(191,230,42,.3);z-index:1}
-.pill{display:inline-flex;align-items:center;gap:18px;background:var(--lime);color:var(--ink);font-weight:800;font-size:40px;padding:26px 44px;border-radius:70px}
+.arc{position:absolute;right:-540px;top:430px;opacity:.7;border-color:var(--blue);width:900px;height:900px;border-radius:50%;border:10px solid var(--lime);box-shadow:0 0 70px 6px rgba(255,61,139,.45),inset 0 0 60px rgba(255,61,139,.25);z-index:1}
+.pill{display:inline-flex;align-items:center;gap:18px;background:var(--lime);color:#fff;font-weight:800;font-size:40px;padding:26px 44px;border-radius:70px}
 .cta li{list-style:none;font-size:38px;font-weight:500;margin-bottom:22px;display:flex;gap:20px;align-items:center}
 .cta li b{color:var(--lime);font-family:"Bebas Neue";font-size:60px;font-weight:400}
 </style></head><body>
-<svg width="0" height="0"><defs><symbol id="ar" viewBox="0 0 24 24"><path d="M4 12h15m-6-6 6 6-6 6" fill="none" stroke="#0b0b0b" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></symbol></defs></svg>
+<svg width="0" height="0"><defs><symbol id="ar" viewBox="0 0 24 24"><path d="M4 12h15m-6-6 6 6-6 6" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></symbol></defs></svg>
 
 <!-- 1 -->
 <div class="s" id="s1">
