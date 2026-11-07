@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gak Semua Orang Bisa Dibantu</title>
+<style>
+  :root{--ink:#10131a;--grass:#6aa84f;--grass2:#4f8a3a;--wall:#b9b7b2;--sky:#e9d9c0}
+  *{box-sizing:border-box;margin:0}
+  html,body{height:100%;background:#000;color:#fff;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;overflow:hidden}
+  #wrap{position:fixed;inset:0;display:grid;place-items:center}
+  #stage{position:absolute;left:50%;top:calc(50% - 25px);width:720px;height:1280px;margin:-640px 0 0 -360px;transform-origin:center;overflow:hidden;background:#000;flex:none}
+  .scene{position:absolute;inset:0;opacity:0;transition:opacity .35s}
+  .scene.on{opacity:1}
+  .layer{position:absolute;inset:0}
+  .topcap{position:absolute;left:28px;top:26px;font-size:24px;font-weight:600;z-index:20;text-shadow:0 2px 6px #000a}
+  #sub{position:absolute;left:40px;right:40px;bottom:150px;text-align:center;font-size:36px;font-weight:700;line-height:1.25;z-index:20;
+       text-shadow:0 2px 0 #000,0 0 10px #000c;min-height:50px}
+  #sub span{background:#0008;padding:2px 14px;border-radius:8px;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+  .char{position:absolute;width:300px;height:390px;transition:transform .5s cubic-bezier(.3,1.4,.5,1),left .6s,bottom .6s,opacity .3s}
+  .char svg{width:100%;height:100%;overflow:visible}
+  .char .body{animation:bob 1.6s ease-in-out infinite;transform-origin:50% 100%}
+  @keyframes bob{50%{transform:translateY(-6px) scaleY(1.01)}}
+  .mouth{transform-origin:100px 96px;transform-box:fill-box}
+  .talk .mouth{animation:talk .28s steps(2) infinite}
+  @keyframes talk{0%{transform:scaleY(.35)}100%{transform:scaleY(1.5)}}
+  .eye{animation:blink 4s infinite;transform-box:fill-box;transform-origin:center}
+  @keyframes blink{0%,94%,100%{transform:scaleY(1)}97%{transform:scaleY(.1)}}
+  .shake{animation:shake .12s linear infinite}
+  @keyframes shake{25%{transform:translate(-5px,3px) rotate(-1deg)}75%{transform:translate(5px,-3px) rotate(1deg)}}
+  .cloud{position:absolute;background:#fff8;border-radius:50px;filter:blur(1px);animation:drift 30s linear infinite}
+  @keyframes drift{from{transform:translateX(-200px)}to{transform:translateX(900px)}}
+  .sway{animation:sway 3s ease-in-out infinite;transform-origin:bottom center}
+  @keyframes sway{50%{transform:rotate(3deg)}}
+  .pop{animation:pop .5s cubic-bezier(.3,1.6,.5,1) both}
+  @keyframes pop{from{transform:scale(0)}to{transform:scale(1)}}
+  .flash{position:absolute;inset:0;background:#fff;opacity:0;z-index:30;pointer-events:none}
+  .vignette{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center,transparent 55%,#0007);z-index:15}
+  .letter{position:absolute;left:0;right:0;height:150px;background:#000;z-index:18}
+  .bubble{position:absolute;background:#fff;color:#111;border-radius:22px;padding:10px 18px;font-weight:800;font-size:30px;z-index:12;animation:pop .4s both}
+  #ui{position:fixed;left:0;right:0;bottom:10px;display:flex;gap:10px;justify-content:center;z-index:50}
+  #ui button{background:#ffffff20;border:1px solid #fff4;color:#fff;padding:8px 16px;border-radius:99px;font-size:15px;cursor:pointer;backdrop-filter:blur(6px)}
+  #start{position:absolute;inset:0;z-index:40;background:#000c;display:grid;place-items:center;text-align:center;cursor:pointer}
+  #start h1{font-size:54px;line-height:1.05;letter-spacing:-1px}
+  #start h1 b{color:#ff8a3d}
+  #start p{margin-top:24px;opacity:.7;font-size:24px}
+  .title{position:absolute;inset:0;display:grid;place-items:center;text-align:center;z-index:25}
+  .title h1{font-size:92px;line-height:.95;font-weight:300;letter-spacing:-3px}
+  .title h1 b{font-weight:900}
+  .title h1 em{color:#e23a3a;font-style:normal;font-size:44px;display:block;text-align:left;margin-left:20px}
+  .credits{position:absolute;left:0;right:0;bottom:240px;text-align:center;font-size:22px;line-height:1.5;opacity:.9;z-index:25}
+  .credits small{display:block;opacity:.6;font-size:16px;margin-top:10px}
+</style>
+</head>
+<body>
+<div id="wrap"><div id="stage">
+  <div class="topcap">Gak semua orang bisa dibantu 🙏</div>
+  <div id="sub"></div>
+  <div class="flash" id="flash"></div>
+  <div class="vignette"></div>
+  <div id="scenes"></div>
+  <div id="start"><div><h1>Gak Semua Orang<br><b>Bisa Dibantu</b></h1><p>▶ ketuk untuk memulai</p></div></div>
+</div></div>
+<div id="ui"><button id="btnPlay">⏸ Jeda</button><button id="btnRe">↺ Ulang</button></div>
+
+<script>
+/* ---------- Karakter SVG ---------- */
+function char(o){
+  const {skin='#e7b98a',hair='#1d1a1a',shirt='#1b2a4a',glasses=false,lanyard=false,blazer=false,headphones=false,pants='#222'}=o;
+  return `<svg viewBox="0 0 200 260"><g class="body">
+    <rect x="62" y="205" width="32" height="55" rx="8" fill="${pants}"/><rect x="106" y="205" width="32" height="55" rx="8" fill="${pants}"/>
+    <path d="M40 120 Q40 100 70 98 L130 98 Q160 100 160 120 L165 215 L35 215Z" fill="${shirt}"/>
+    ${blazer?`<path d="M40 120 Q40 100 70 98 L92 98 L100 215 L35 215Z M160 120 Q160 100 130 98 L108 98 L100 215 L165 215Z" fill="#9b8b72"/><path d="M92 98 L100 150 L108 98Z" fill="#161616"/>`:''}
+    ${lanyard?`<path d="M80 98 L100 160 L120 98" stroke="#2fd08a" stroke-width="6" fill="none"/><rect x="88" y="158" width="24" height="34" rx="4" fill="#2fd08a"/><rect x="92" y="164" width="16" height="12" rx="2" fill="#fff8"/>`:''}
+    <rect class="arm" x="22" y="112" width="26" height="90" rx="13" fill="${shirt}"/><rect class="arm" x="152" y="112" width="26" height="90" rx="13" fill="${shirt}"/>
+    <circle cx="35" cy="206" r="13" fill="${skin}"/><circle cx="165" cy="206" r="13" fill="${skin}"/>
+    <rect x="88" y="84" width="24" height="20" fill="${skin}"/>
+    <ellipse cx="100" cy="58" rx="42" ry="46" fill="${skin}"/>
+    <path d="M56 54 Q54 10 100 10 Q148 10 144 54 Q130 30 100 32 Q72 30 56 54Z" fill="${hair}"/>
+    <g class="face">
+      <ellipse class="eye" cx="84" cy="58" rx="4.5" ry="5.5" fill="#111"/><ellipse class="eye" cx="116" cy="58" rx="4.5" ry="5.5" fill="#111"/>
+      <path d="M76 47 Q84 43 92 47M108 47 Q116 43 124 47" stroke="#111" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <ellipse class="mouth" cx="100" cy="82" rx="10" ry="6" fill="#5a1d1d"/>
+    </g>
+    ${glasses?`<g stroke="#111" stroke-width="3" fill="#fff3"><circle cx="84" cy="58" r="14"/><circle cx="116" cy="58" r="14"/><path d="M98 58h4" fill="none"/></g>`:''}
+    ${headphones?`<path d="M56 56 Q56 12 100 12 Q144 12 144 56" stroke="#111" stroke-width="7" fill="none"/><rect x="48" y="46" width="14" height="30" rx="6" fill="#111"/><rect x="138" y="46" width="14" height="30" rx="6" fill="#111"/>`:''}
+  </g></svg>`;
+}
+const RIAN ={shirt:'#1b2a4a',glasses:true,lanyard:true,hair:'#1d1a1a',pants:'#14161c'};
+const DODI ={shirt:'#6b6a64',skin:'#d9a878',hair:'#2a211d'};
+const BOS  ={shirt:'#14161c',blazer:true,glasses:true,lanyard:true,hair:'#171313'};
+const TEMAN={shirt:'#4a76b8',lanyard:true,hair:'#2a211d',skin:'#d9a878'};
+const GAMER={shirt:'#16181d',headphones:true,glasses:true,hair:'#171313'};
+
+/* ---------- Latar ---------- */
+const bgLot=`<div class="layer" style="background:linear-gradient(#f0dfc4,#d8c9ae 40%)"></div>
+  <div class="cloud" style="top:120px;width:200px;height:50px"></div><div class="cloud" style="top:230px;width:140px;height:36px;animation-delay:-12s"></div>
+  <div class="layer" style="top:260px;height:520px;background:var(--wall);bottom:auto;border-bottom:8px solid #8f8d88"></div>
+  <div class="layer" style="top:200px;left:430px;width:300px;height:140px;background:#a14a3a;clip-path:polygon(0 100%,50% 0,100% 100%)"></div>
+  <div class="layer sway" style="left:-40px;top:300px;width:240px;height:420px;background:radial-gradient(circle at 50% 30%,#4f8a3a 0 40%,transparent 41%)"></div>
+  <div class="layer" style="top:760px;background:linear-gradient(var(--grass),var(--grass2))"></div>
+  <div class="layer" style="top:760px;background:repeating-linear-gradient(95deg,transparent 0 14px,#ffffff12 14px 16px)"></div>`;
+const bgOffice=`<div class="layer" style="background:#cfd2d6"></div>
+  <div class="layer" style="background:repeating-linear-gradient(90deg,#b9bdc3 0 40px,#c4c8cd 40px 80px);height:760px;bottom:auto"></div>
+  <div class="layer" style="left:60px;top:240px;width:260px;height:320px;background:linear-gradient(#a9dcff,#e6f6ff);border:12px solid #eee;box-shadow:0 0 120px #fff"></div>
+  <div class="layer" style="top:760px;background:#7b5a3d"></div>
+  <div class="layer" style="left:380px;top:640px;width:340px;height:200px;background:#5b3f2a;border-radius:10px"></div>
+  <div class="layer" style="left:470px;top:520px;width:140px;height:100px;background:#222;border:6px solid #444;border-radius:6px"><div style="margin:6px;height:70%;background:linear-gradient(135deg,#2b6fff,#0c2a77)"></div></div>`;
+const bgRoom=`<div class="layer" style="background:#1f7a77"></div>
+  <div class="layer" style="top:760px;background:#2b2b30"></div>
+  <div class="layer" style="left:360px;top:300px;width:320px;height:200px;background:#10361d;border:8px solid #000;border-radius:6px;overflow:hidden"><div style="position:absolute;inset:0;background:repeating-linear-gradient(90deg,#2f8f3f 0 30px,#37a049 30px 60px)"></div><div style="position:absolute;left:30%;top:20%;width:14px;height:14px;background:#fff;border-radius:50%;animation:ball 2s linear infinite alternate"></div></div>
+  <style>@keyframes ball{to{transform:translate(120px,70px)}}</style>
+  <div class="layer" style="left:40px;top:260px;width:160px;height:400px;background:#0f5a58;border:6px solid #0b3f3e"></div>`;
+
+/* ---------- Timeline ---------- */
+// cue: [waktu(s), fungsi]. say: [waktu, teks, siapa(optional)]
+const S=[
+ {id:'lot1',dur:16,bg:bgLot,
+  chars:{rian:[RIAN,60,300],dodi:[DODI,380,300]},
+  cues:[
+   [0.2,c=>pos(c.dodi,{x:-300})],[0.3,c=>pos(c.dodi,{x:0})],
+   [4.2,c=>{c.dodi.insertAdjacentHTML('beforeend',`<div class="pop" style="position:absolute;left:-30px;top:200px;font-size:70px">🍭</div>`)}],
+  ],
+  say:[[0.6,'Hei, lama gak ketemu! Gimana kabarnya?','dodi'],[3.4,'Nih, buat lu. Permen aja dulu…','dodi'],[6.5,'Males gue meminjemin lu.','rian'],[9,'Lupa daratan lu.','rian'],[12,'Yang mau temenan sama lu pas SMA…','dodi'],[14.5,'…cuma gue doang.','dodi']]},
+ {id:'lot2',dur:12,bg:bgLot,
+  chars:{rian:[RIAN,60,300],dodi:[DODI,380,300]},
+  cues:[[2,c=>c.rian.classList.add('shake')],[4,c=>c.rian.classList.remove('shake')]],
+  say:[[0.3,'Lu dapat kerja juga?','dodi'],[3,'Lu kira kenal orang dalam?','rian'],[6,'Gue di polisi sekarang.','rian'],[9,'Banyak relasinya… cuma ganteng doang.','dodi']]},
+ {id:'phone',dur:12,bg:bgLot,
+  chars:{rian:[RIAN,200,300]},
+  cues:[
+   [0.2,c=>c.rian.insertAdjacentHTML('beforeend',`<div class="pop" style="position:absolute;left:-10px;top:50px;font-size:60px">📱</div>`)],
+   [5,c=>{c.rian.style.transform='rotate(-80deg) translateY(160px)'}],
+   [5.3,()=>flash(0.9)],
+  ],
+  say:[[0.3,'Halo? Iya… tunggu, ya.','rian'],[3,'Saya kenal orang yang cocok!','rian'],[5.4,'WAAAA—!','rian']]},
+ {id:'sun',dur:5,bg:'<div class="layer" style="background:#000"></div>',
+  extra:`<div class="layer" style="display:grid;place-items:center"><div style="width:300px;height:300px;border-radius:50%;background:radial-gradient(#fff,#ffd34d 40%,#ff7a00 70%);box-shadow:0 0 120px 60px #ff9d2e;animation:pulse 1s ease-in-out infinite alternate"></div></div><style>@keyframes pulse{to{transform:scale(1.18)}}</style>`,
+  say:[]},
+ {id:'office',dur:15,bg:bgOffice,
+  chars:{bos:[BOS,330,300],teman:[TEMAN,60,300]},
+  cues:[[0.2,c=>pos(c.bos,{x:-200})],[0.5,c=>pos(c.bos,{x:0})]],
+  say:[[0.5,'Saya kenal orang yang cocok.','bos'],[3.5,'Dia anak baik. Dua hari nggak ada kabar.','bos'],[7,'Ehem… maaf, Pak.','teman'],[10,'Dia sakit, Bos. Katanya.','teman'],[12.5,'Dia ibu ngehambat kegiatan kita.','bos']]},
+ {id:'game',dur:14,bg:bgRoom,
+  chars:{gamer:[GAMER,210,300]},
+  cues:[[0.2,c=>c.gamer.insertAdjacentHTML('beforeend',`<div style="position:absolute;left:90px;top:230px;font-size:64px">🎮</div>`)]],
+  say:[[0.5,'Atau Bos sakit?','gamer'],[3,'Males gua ke kantor.','gamer'],[6,'Saya udah ngasih kamu kesempatan.','bos'],[9.5,'Kamu ke sini.','bos'],[12,'Ngerusak kepercayaan saya.','bos']]},
+ {id:'end',dur:14,bg:bgLot,
+  chars:{rian:[RIAN,200,420]},
+  cues:[
+   [0.2,c=>{c.rian.style.transform='rotate(90deg)'}],
+   [5,c=>{c.rian.remove()}],
+   [6,()=>title()],
+  ],
+  say:[[1,'…Nggak semua orang…','rian'],[3,'bisa dibantu.','rian']]}
+];
+
+/* ---------- Mesin ---------- */
+const stage=document.getElementById('stage'),scenesEl=document.getElementById('scenes'),sub=document.getElementById('sub');
+const flashEl=document.getElementById('flash');
+let timers=[],cur=0,paused=false,startTs=0,elapsed=0,raf=0,currentCues=[],currentSay=[],ctx={chars:{}};
+
+function fit(){const s=Math.min(innerWidth/720,(innerHeight-50)/1280);stage.style.transform=`scale(${s})`}
+addEventListener('resize',fit);fit();
+
+function pos(el,{x=0}){el.style.translate=`${x}px 0`}
+function flash(d=.6){flashEl.style.transition='none';flashEl.style.opacity=1;requestAnimationFrame(()=>{flashEl.style.transition=`opacity ${d}s`;flashEl.style.opacity=0})}
+function title(){
+  const el=document.createElement('div');
+  el.innerHTML=`<div class="title pop"><h1><em>GAK</em><b>SEMUA</b> ORANG<br>BISA <b>DIBANTU</b></h1></div>
+  <div class="credits">Director · Contoh Sutradara<br>Producer · Contoh Produser<br>Videographer · Contoh Kameraman<small>Animasi ilustrasi · terinspirasi video referensi</small></div>`;
+  el.style.cssText='position:absolute;inset:0;z-index:25';
+  scenesEl.appendChild(el);
+}
+
+function build(i){
+  const s=S[i],el=document.createElement('div');
+  el.className='scene';el.innerHTML=s.bg+(s.extra||'');
+  ctx={chars:{}};
+  for(const [k,[cfg,left,bottom]] of Object.entries(s.chars||{})){
+    const c=document.createElement('div');c.className='char';c.style.left=left+'px';c.style.bottom=bottom+'px';
+    c.innerHTML=char(cfg);el.appendChild(c);ctx.chars[k]=c;
+  }
+  scenesEl.innerHTML='';scenesEl.appendChild(el);
+  requestAnimationFrame(()=>el.classList.add('on'));
+  currentCues=(s.cues||[]).map(([t,f])=>({t,f,done:false}));
+  currentSay=(s.say||[]).map(([t,txt,who])=>({t,txt,who,done:false}));
+  sub.innerHTML='';
+}
+
+function tick(now){
+  if(paused)return;
+  const t=(now-startTs)/1000+elapsed,s=S[cur];
+  for(const c of currentCues)if(!c.done&&t>=c.t){c.done=true;c.f(ctx.chars)}
+  let active=null;
+  currentSay.forEach(l=>{if(t>=l.t){active=l}});
+  currentSay.forEach(l=>{ if(active===l){ if(!l.done){l.done=true;sub.innerHTML=`<span>${l.txt}</span>`}} });
+  if(active){
+    const ends=active.t+Math.max(2.2,active.txt.length*.09);
+    for(const [k,c] of Object.entries(ctx.chars))c.classList.toggle('talk',k===active.who&&t<ends);
+    if(t>ends)sub.innerHTML='';
+  }
+  if(t>=s.dur){next();return}
+  raf=requestAnimationFrame(tick);
+}
+function go(i){cancelAnimationFrame(raf);cur=i;elapsed=0;build(i);startTs=performance.now();raf=requestAnimationFrame(tick)}
+function next(){if(cur+1<S.length)go(cur+1);else{sub.innerHTML='';}}
+function toggle(){
+  if(!paused){paused=true;elapsed+=(performance.now()-startTs)/1000;cancelAnimationFrame(raf);btnPlay.textContent='▶ Lanjut'}
+  else{paused=false;startTs=performance.now();raf=requestAnimationFrame(tick);btnPlay.textContent='⏸ Jeda'}
+}
+const btnPlay=document.getElementById('btnPlay');
+btnPlay.onclick=toggle;
+document.getElementById('btnRe').onclick=()=>{paused=false;btnPlay.textContent='⏸ Jeda';go(0)};
+document.getElementById('start').onclick=e=>{e.currentTarget.remove();go(0)};
+window.__go=go; // untuk pengujian
+</script>
+</body>
+</html>
