@@ -1,0 +1,69 @@
+<!doctype html><html lang="id"><head><meta charset="utf-8"><style>
+*{box-sizing:border-box;margin:0}
+body{background:#222;font-family:system-ui,"Inter",sans-serif}
+.s{width:1080px;height:1350px;padding:90px 80px;display:flex;flex-direction:column;position:relative;color:#f8fafc;background:#0f172a;overflow:hidden}
+.s.alt{background:#f8fafc;color:#0f172a}
+.tag{font-size:28px;font-weight:700;letter-spacing:2px;color:#22d3ee;text-transform:uppercase}
+.alt .tag{color:#0891b2}
+.main{flex:1;display:flex;flex-direction:column;justify-content:center}
+h1{font-size:92px;line-height:1.05;font-weight:800}
+h2{font-size:70px;line-height:1.1;font-weight:800;margin-bottom:44px}
+p{font-size:42px;line-height:1.4;color:#cbd5e1}
+.alt p{color:#334155}
+em{font-style:normal;color:#22d3ee}.alt em{color:#0891b2}
+.big{font-size:260px;font-weight:900;line-height:1;color:#22d3ee}
+.item{display:flex;gap:28px;align-items:flex-start;margin-bottom:38px}
+.num{flex:none;width:76px;height:76px;border-radius:50%;background:#22d3ee;color:#0f172a;font-size:40px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.item p{color:inherit;font-size:40px}
+.foot{display:flex;justify-content:space-between;font-size:28px;color:#64748b}
+.flow{display:flex;flex-direction:column;gap:0}
+.step{background:#1e293b;border-radius:22px;padding:26px 34px;font-size:38px;display:flex;gap:24px;align-items:center}
+.step b{color:#22d3ee;font-size:34px;min-width:50px}
+.arrow{text-align:center;color:#22d3ee;font-size:36px;line-height:1.1}
+.box{background:#0f172a;color:#f8fafc;border-radius:26px;padding:34px 40px;font-size:40px;margin-top:30px;line-height:1.4}
+.btn{display:inline-block;margin-top:40px;background:#22d3ee;color:#0f172a;font-weight:800;font-size:44px;padding:28px 48px;border-radius:20px}
+</style></head><body>
+
+<div class="s" id="s1"><div class="tag">AI Automation untuk Bisnis</div>
+<div class="main"><div class="big">60</div><h1>jam per bulan<br>habis untuk <em>membalas chat yang sama.</em></h1>
+<p style="margin-top:44px">Hitungannya: 30 chat × 5 menit × 24 hari kerja. Itu lebih dari 7 hari kerja penuh.</p></div>
+<div class="foot"><span>Geser →</span><span>1/6</span></div></div>
+
+<div class="s alt" id="s2"><div class="tag">Masalah Nyata</div>
+<div class="main"><h2>Hari-hari pemilik bisnis terasa seperti ini:</h2>
+<div class="item"><div class="num">1</div><p>Pesanan masuk lewat WhatsApp, lalu dicatat manual ke Excel</p></div>
+<div class="item"><div class="num">2</div><p>Invoice diketik ulang satu per satu</p></div>
+<div class="item"><div class="num">3</div><p>Lupa follow-up pelanggan yang sudah tanya harga</p></div>
+<p style="margin-top:20px"><b>Kamu bukan kurang rajin.</b> Kamu terlalu sibuk dengan kerjaan yang berulang.</p></div>
+<div class="foot"><span>Geser →</span><span>2/6</span></div></div>
+
+<div class="s" id="s3"><div class="tag">Kesalahan Umum</div>
+<div class="main"><h2>3 kesalahan saat semuanya serba <em>manual</em></h2>
+<div class="item"><div class="num">1</div><p>Menyalin data yang sama ke 3 tempat berbeda, rawan salah ketik</p></div>
+<div class="item"><div class="num">2</div><p>Mengandalkan ingatan untuk follow-up, akhirnya ada pelanggan yang terlewat</p></div>
+<div class="item"><div class="num">3</div><p>Mengira otomatisasi itu mahal dan ribet, padahal banyak yang bisa dimulai kecil</p></div></div>
+<div class="foot"><span>Geser →</span><span>3/6</span></div></div>
+
+<div class="s alt" id="s4"><div class="tag">Solusinya</div>
+<div class="main"><h2>AI Automation = asisten yang <em>kerja 24 jam</em></h2>
+<p>Tugas berulang dikerjakan otomatis oleh tools seperti n8n, Make, dan ChatGPT. Kamu cukup atur sekali.</p>
+<div class="box"><b>Aturan gampang:</b><br>Kalau satu tugas kamu kerjakan lebih dari 3 kali seminggu dengan langkah yang sama, itu kandidat untuk diotomatisasi.</div></div>
+<div class="foot"><span>Geser →</span><span>4/6</span></div></div>
+
+<div class="s" id="s5"><div class="tag">Contoh Workflow</div>
+<div class="main"><h2 style="font-size:60px;margin-bottom:30px">Pesanan masuk, <em>tanpa kamu ketik ulang</em></h2>
+<div class="flow">
+<div class="step"><b>1</b>Pelanggan isi form pesanan</div><div class="arrow">↓</div>
+<div class="step"><b>2</b>n8n / Make menangkap datanya</div><div class="arrow">↓</div>
+<div class="step"><b>3</b>Data masuk Google Sheets otomatis</div><div class="arrow">↓</div>
+<div class="step"><b>4</b>ChatGPT menulis balasan konfirmasi</div><div class="arrow">↓</div>
+<div class="step"><b>5</b>Terkirim ke WhatsApp/email + kamu dapat notifikasi</div></div>
+<p style="margin-top:30px;font-size:36px">Dari ±10 menit per pesanan menjadi hitungan detik (contoh ilustrasi).</p></div>
+<div class="foot"><span>Geser →</span><span>5/6</span></div></div>
+
+<div class="s alt" id="s6"><div class="tag">Langkah Selanjutnya</div>
+<div class="main"><h2>Mulai dari <em>1 pekerjaan</em> yang paling bikin capek</h2>
+<p>📌 <b>Simpan</b> postingan ini sebagai panduan kecil.<br><br>💬 Tulis di komentar: kerjaan manual apa yang paling menyita waktumu?<br><br>📩 Mau dibantu otomatisasi? <b>DM kata "OTOMATIS".</b></p>
+<div><span class="btn">Simpan &amp; Kirim DM</span></div></div>
+<div class="foot"><span>Terima kasih sudah membaca</span><span>6/6</span></div></div>
+</body></html>
