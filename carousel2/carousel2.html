@@ -1,0 +1,115 @@
+<!doctype html><html lang="id"><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--lime:#ff3d8b;--limeD:#ff3d8b;--ink:#0f1b3d;--blue:#2563eb;--soft:#eaf0ff}
+*{box-sizing:border-box;margin:0}
+body{background:#444;font-family:Inter,system-ui,sans-serif}
+.s{width:1080px;height:1350px;position:relative;overflow:hidden;padding:80px 76px;display:flex;flex-direction:column;background:#fff;color:var(--ink)}
+.s.c{background:#fff;color:var(--ink)}
+.logo{display:flex;align-items:center;gap:14px;font-weight:700;font-size:26px;letter-spacing:2px;z-index:3}
+.logo i{width:34px;height:34px;border-radius:10px;border:3px solid var(--blue);display:block;position:relative}
+.logo i:after{content:"";position:absolute;inset:7px;background:var(--lime);border-radius:3px}
+
+.top{display:flex;justify-content:space-between;align-items:flex-start;z-index:3}
+.top small{font-size:26px;text-align:right;line-height:1.35;opacity:.85}
+h1{font-family:"Bebas Neue",Impact,sans-serif;font-weight:400;text-transform:uppercase;font-size:210px;line-height:.9;letter-spacing:1px;z-index:3;position:relative}
+h1 em{font-style:normal;color:var(--lime)}.c h1 em{color:var(--limeD)}
+.body{font-size:36px;line-height:1.4;font-weight:500;max-width:620px;z-index:3;position:relative}
+.main{flex:1;display:flex;flex-direction:column;justify-content:center;gap:40px;position:relative}
+.foot{display:flex;justify-content:space-between;align-items:flex-end;z-index:3;position:relative}
+.foot p{font-size:30px;line-height:1.35;max-width:560px;opacity:.9}
+.go{width:92px;height:92px;border-radius:50%;background:var(--lime);display:flex;align-items:center;justify-content:center;flex:none}
+.go svg{width:44px;height:44px}
+.pg{position:absolute;top:84px;right:76px;font-size:26px;opacity:.6;z-index:3}
+/* s1 */
+.clock{position:absolute;right:70px;top:190px;width:430px;height:430px;border-radius:50%;border:38px solid var(--blue);z-index:1}
+.clock:before,.clock:after{content:"";position:absolute;left:50%;top:50%;background:var(--lime);border-radius:10px;transform-origin:50% 100%}
+.clock:before{width:16px;height:150px;margin-left:-8px;margin-top:-150px;transform:rotate(25deg)}
+.clock:after{width:16px;height:110px;margin-left:-8px;margin-top:-110px;transform:rotate(-70deg)}
+.big60{font-family:"Bebas Neue";font-size:520px;line-height:.8;color:var(--lime)}
+/* s2 chats */
+.bub{position:absolute;font-size:38px;font-weight:700;padding:26px 38px;border-radius:34px;z-index:2;box-shadow:0 16px 40px rgba(0,0,0,.25)}
+.bd{background:var(--blue);color:#fff}.bl{background:var(--lime);color:#fff}
+/* s3 */
+.row{display:flex;gap:28px;align-items:center;background:var(--soft);border-radius:30px;padding:30px 36px;margin-bottom:22px;font-size:36px;line-height:1.3;font-weight:500}
+.row b{font-family:"Bebas Neue";font-size:96px;color:var(--lime);font-weight:400;line-height:1;min-width:60px}
+/* s4 */
+.chip{display:inline-block;background:var(--blue);color:#fff;border-radius:60px;padding:18px 36px;font-size:34px;font-weight:700;margin:0 14px 14px 0}
+.chip.l{background:var(--lime);color:#fff}
+.rule{background:var(--blue);color:#fff;border-radius:34px;padding:38px 44px;font-size:36px;line-height:1.4}
+.rule b{color:#ffd6e8}
+/* s5 */
+.node{display:flex;align-items:center;gap:26px;background:var(--soft);border-radius:26px;padding:22px 32px;font-size:34px;font-weight:500;position:relative}
+.node b{background:var(--lime);color:#fff;width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;flex:none}
+.link{width:4px;height:22px;background:var(--lime);margin-left:58px}
+/* s6 */
+.arc{position:absolute;right:-540px;top:430px;opacity:.7;border-color:var(--blue);width:900px;height:900px;border-radius:50%;border:10px solid var(--lime);box-shadow:0 0 70px 6px rgba(255,61,139,.45),inset 0 0 60px rgba(255,61,139,.25);z-index:1}
+.pill{display:inline-flex;align-items:center;gap:18px;background:var(--lime);color:#fff;font-weight:800;font-size:40px;padding:26px 44px;border-radius:70px}
+.cta li{list-style:none;font-size:38px;font-weight:500;margin-bottom:22px;display:flex;gap:20px;align-items:center}
+.cta li b{color:var(--lime);font-family:"Bebas Neue";font-size:60px;font-weight:400}
+
+.num2{font-family:"Bebas Neue";font-size:150px;line-height:.85;color:var(--lime)}
+.ba{border-radius:30px;padding:28px 36px;font-size:33px;line-height:1.4;font-weight:500}
+.ba small{display:block;font-size:24px;font-weight:700;letter-spacing:2px;margin-bottom:8px;text-transform:uppercase}
+.ba.m{background:var(--soft);color:var(--ink)}.ba.m small{color:#6b7aa6}
+.ba.a{background:var(--blue);color:#fff}.ba.a small{color:#ffd6e8}
+.tools{font-size:28px;font-weight:700;color:var(--blue)}
+.two{background:var(--soft);border-radius:30px;padding:30px 36px;margin-bottom:22px}
+.two b{font-family:"Bebas Neue";font-size:60px;font-weight:400;color:var(--lime);display:block;line-height:1}
+.two h3{font-family:"Bebas Neue";font-size:64px;font-weight:400;line-height:1;margin:6px 0 10px}
+.two p{font-size:30px;line-height:1.35;font-weight:500}
+.two p span{color:var(--blue);font-weight:700}
+</style></head><body><svg width="0" height="0"><defs><symbol id="ar" viewBox="0 0 24 24"><path d="M4 12h15m-6-6 6 6-6 6" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></symbol></defs></svg>
+<div class="s" id="s1">
+<div class="top"><div class="logo"><i></i>AI AUTOMATION</div><small>Untuk UMKM<br>dan freelancer.</small></div>
+<div class="main" style="justify-content:flex-start;padding-top:50px;gap:0">
+<div class="big60" style="font-size:560px">5</div>
+<h1 style="font-size:175px;margin-top:20px">KERJAAN YANG<br><em>BISA OTOMATIS</em><br>HARI INI.</h1></div>
+<div class="foot"><p>Mulai dari yang paling sering diulang. Geser untuk contohnya.</p><div class="go"><svg><use href="#ar"/></svg></div></div></div>
+<div class="s" id="s2">
+<div class="top"><div class="logo"><i></i>AI AUTOMATION</div><small>Kerjaan ke-1 dari 5</small></div>
+<div class="main" style="gap:26px">
+<div class="num2">01</div>
+<h1 style="font-size:150px">BALAS CHAT<br><em>YANG SAMA</em></h1>
+<div class="ba m"><small>Cara manual</small>Mengetik ulang jawaban harga, jam buka, dan cara pesan berkali-kali.</div>
+<div class="ba a"><small>Pakai otomatisasi</small>ChatGPT menjawab pertanyaan umum. Yang rumit baru diteruskan ke kamu.</div>
+<div class="tools">ChatGPT + WhatsApp + n8n</div></div>
+<div class="foot"><p></p><div class="go"><svg><use href="#ar"/></svg></div></div></div>
+<div class="s" id="s3">
+<div class="top"><div class="logo"><i></i>AI AUTOMATION</div><small>Kerjaan ke-2 dari 5</small></div>
+<div class="main" style="gap:26px">
+<div class="num2">02</div>
+<h1 style="font-size:150px">CATAT PESANAN<br><em>& REKAP</em></h1>
+<div class="ba m"><small>Cara manual</small>Menyalin pesanan dari chat ke Excel, lalu merekap manual di akhir bulan.</div>
+<div class="ba a"><small>Pakai otomatisasi</small>Form pesanan masuk ke Google Sheets otomatis. Rekap langsung tersusun.</div>
+<div class="tools">Form + Google Sheets + Make</div></div>
+<div class="foot"><p></p><div class="go"><svg><use href="#ar"/></svg></div></div></div>
+<div class="s" id="s4">
+<div class="top"><div class="logo"><i></i>AI AUTOMATION</div><small>Kerjaan ke-3 dari 5</small></div>
+<div class="main" style="gap:26px">
+<div class="num2">03</div>
+<h1 style="font-size:150px">FOLLOW-UP<br><em>& TAGIHAN</em></h1>
+<div class="ba m"><small>Cara manual</small>Mengingat-ingat siapa yang belum bayar atau belum dibalas.</div>
+<div class="ba a"><small>Pakai otomatisasi</small>Pengingat terkirim otomatis sesuai jadwal. Tidak ada yang terlewat.</div>
+<div class="tools">Google Sheets + n8n + WhatsApp/email</div></div>
+<div class="foot"><p></p><div class="go"><svg><use href="#ar"/></svg></div></div></div>
+<div class="s" id="s5">
+<div class="top"><div class="logo"><i></i>AI AUTOMATION</div><small>Dua lagi.</small></div>
+<div class="main" style="gap:30px">
+<h1 style="font-size:165px">MASIH ADA<br><em>2 LAGI.</em></h1>
+<div>
+<div class="two"><b>04</b><h3>JADWAL KONTEN</h3><p>ChatGPT bantu ide dan draft caption. Posting <span>terjadwal otomatis</span>, tidak perlu online tiap hari.</p></div>
+<div class="two"><b>05</b><h3>LAPORAN MINGGUAN</h3><p>Data penjualan dirangkum dan <span>dikirim ke email atau WhatsApp</span> tiap Senin pagi.</p></div></div></div>
+<div class="foot"><p>Satu per satu kecil. Kalau digabung, waktumu kembali.</p><div class="go"><svg><use href="#ar"/></svg></div></div></div>
+
+<div class="s" id="s6">
+<div class="top"><div class="logo"><i></i>AI AUTOMATION</div><small>Siap mulai?</small></div>
+<div class="arc"></div>
+<div class="main">
+<h1 style="font-size:140px">PILIH <em>1</em> DULU.<br>OTOMATISKAN.<br>LANJUT YANG LAIN.</h1>
+<ul class="cta">
+<li><b>01</b>Simpan postingan ini</li>
+<li><b>02</b>Komen nomornya: yang mana duluan?</li>
+<li><b>03</b>Mau dibantu? DM aku</li></ul></div>
+<div class="foot"><span class="pill">DM: "OTOMATIS" <svg width="40" height="40" style="width:40px;height:40px"><use href="#ar"/></svg></span><span style="font-size:26px;opacity:.6">6/6</span></div></div>
+</body></html>
