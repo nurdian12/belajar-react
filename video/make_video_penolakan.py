@@ -51,6 +51,12 @@ ST = [2.0, 3.9, 5.8, 7.7]          # awal tiap penolakan (detik)
 B_STOP = [300, 300, 300, 215]      # titik berhenti siluet di angle B
 B_HERO_X = 150
 RING_RX = 120
+IMP_A = [s + 1.25 for s in ST]     # momen "kena" tiap penolakan di angle A
+IMP_B = [s + 1.8 for s in ST[:3]]  # momen siluet berbalik pergi di angle B
+BURST = 9.5                        # momen bertemu yang cocok di angle B
+TEARS = [7.3 + 0.55 * i + 0.13 * (i % 3) for i in range(9)]  # tetes air mata
+BLUE_TEAR = (130, 180, 255)
+RED = (255, 80, 90)
 
 
 def clamp(x, a=0.0, b=1.0):
@@ -120,9 +126,10 @@ def paste_glow(panel, cx, cy, intensity):
 
 # ------------------------------------------------------------------ tokoh
 def fig_layer(x, fy, col, f=1, walk=None, lean=0.0, head=0.0, arm_f=70, arm_b=-8,
-              sit=0.0, sc=1.15, lamp=None):
+              sit=0.0, sc=1.15, lamp=None, face=None):
     """Gambar stickman di layer RGBA transparan. lamp=None / warna lentera.
-    Mengembalikan (layer, posisi lentera)."""
+    face: None | hope | sad | hit | calm | happy.
+    Mengembalikan (layer, posisi lentera, posisi kepala)."""
     lay = Image.new("RGBA", (PW * S, PH * S), (0, 0, 0, 0))
     d = ImageDraw.Draw(lay)
     L, B, R = 40 * sc, 36 * sc, 14 * sc
@@ -154,6 +161,37 @@ def fig_layer(x, fy, col, f=1, walk=None, lean=0.0, head=0.0, arm_f=70, arm_b=-8
         if front:
             hand_f = hnd
     d.ellipse([(hd[0] - R) * S, (hd[1] - R) * S, (hd[0] + R) * S, (hd[1] + R) * S], fill=col)
+    if face:
+        ink = (28, 30, 42, 255)
+
+        def ln(a, b, w=1.5):
+            d.line([(a[0] * S, a[1] * S), (b[0] * S, b[1] * S)], fill=ink, width=int(w * S))
+
+        e1 = (hd[0] + f * R * 0.12, hd[1] - R * 0.18)
+        e2 = (hd[0] + f * R * 0.62, hd[1] - R * 0.18)
+        mc = (hd[0] + f * R * 0.38, hd[1] + R * 0.42)
+        if face in ("hope", "sad", "happy"):
+            for e in (e1, e2):
+                d.ellipse([(e[0] - 1.7) * S, (e[1] - 1.7) * S, (e[0] + 1.7) * S, (e[1] + 1.7) * S],
+                          fill=ink)
+        else:  # mata terpejam
+            for e in (e1, e2):
+                ln((e[0] - 2.2, e[1]), (e[0] + 2.2, e[1] + (0.0 if face == "hit" else 0.0)))
+        if face == "sad":
+            ln((e1[0] - 2.5 * f, e1[1] - 3.6), (e1[0] + 2.5 * f, e1[1] - 5.4), 1.2)
+            ln((e2[0] - 2.5 * f, e2[1] - 5.4), (e2[0] + 2.5 * f, e2[1] - 3.6), 1.2)
+        if face == "hit":
+            ln((e1[0] - 3, e1[1] - 3), (e1[0] + 3, e1[1] - 1), 1.2)
+            ln((e2[0] - 3, e2[1] - 1), (e2[0] + 3, e2[1] - 3), 1.2)
+            d.ellipse([(mc[0] - 2) * S, (mc[1] - 1.5) * S, (mc[0] + 2) * S, (mc[1] + 2.5) * S],
+                      outline=ink, width=int(1.3 * S))
+        else:
+            box = [(mc[0] - 3.6) * S, (mc[1] - 2.6) * S, (mc[0] + 3.6) * S, (mc[1] + 2.6) * S]
+            if face == "sad":
+                d.arc([box[0], box[1] + 3 * S, box[2], box[3] + 3 * S], 200, 340, fill=ink,
+                      width=int(1.4 * S))
+            else:
+                d.arc(box, 20, 160, fill=ink, width=int(1.4 * S))
     lamp_pos = None
     if lamp is not None and hand_f is not None:
         lx, ly = hand_f[0] + f * 3 * sc, hand_f[1] + 7 * sc
@@ -162,7 +200,7 @@ def fig_layer(x, fy, col, f=1, walk=None, lean=0.0, head=0.0, arm_f=70, arm_b=-8
         d.line([(lx - 3 * sc) * S, (ly - 6 * sc) * S, (hand_f[0]) * S, (hand_f[1]) * S],
                fill=col, width=max(2, S))
         lamp_pos = (lx, ly)
-    return lay, lamp_pos
+    return lay, lamp_pos, hd
 
 
 def put(panel, lay, alpha=1.0):
@@ -191,6 +229,144 @@ def ring(panel, cx, rx, k):
     for i in range(0, 360, 24):
         d.arc(box, i, i + 12, fill=AMBER + (255,), width=2 * S)
     put(panel, lay, 0.35 + 0.5 * k)
+
+
+# ------------------------------------------------------------------ efek emosi
+def blank():
+    return Image.new("RGBA", (PW * S, PH * S), (0, 0, 0, 0))
+
+
+def pulse(dt, dur=0.45):
+    return (1 - dt / dur) ** 2 if 0 <= dt < dur else 0.0
+
+
+def overlay(p, color, alpha):
+    if alpha > 0.005:
+        p.paste(Image.blend(p, Image.new("RGB", p.size, color), clamp(alpha)))
+
+
+def _vignette():
+    n = (PW * S, PH * S)
+    yy, xx = np.mgrid[0:n[1], 0:n[0]]
+    r = np.hypot((xx - n[0] / 2) / (n[0] / 2), (yy - n[1] / 2) / (n[1] / 2))
+    return np.clip((r - 0.45) / 0.75, 0, 1) ** 1.5
+
+
+VIG = _vignette()
+
+
+def vignette(p, k, color=(4, 6, 18)):
+    if k > 0.01:
+        m = Image.fromarray((VIG * 255 * clamp(k)).astype(np.uint8), "L")
+        p.paste(Image.new("RGB", p.size, color), (0, 0), m)
+
+
+def shock(p, cx, cy, dt, color, rmax=95, dur=0.6):
+    if 0 <= dt < dur:
+        lay = blank()
+        r = lerp(8, rmax, ease(dt / dur))
+        ImageDraw.Draw(lay).ellipse([(cx - r) * S, (cy - r) * S, (cx + r) * S, (cy + r) * S],
+                                    outline=color + (255,), width=int(3 * S))
+        put(p, lay, 1 - dt / dur)
+
+
+def xmark(p, cx, cy, dt):
+    if 0 <= dt < 1.0:
+        s = 9 * ease(dt / 0.15)
+        lay = blank()
+        d = ImageDraw.Draw(lay)
+        w = int(3.2 * S)
+        d.line([((cx - s) * S, (cy - s) * S), ((cx + s) * S, (cy + s) * S)], fill=RED + (255,), width=w)
+        d.line([((cx - s) * S, (cy + s) * S), ((cx + s) * S, (cy - s) * S)], fill=RED + (255,), width=w)
+        put(p, lay, 1 - clamp((dt - 0.5) / 0.5))
+
+
+def tears(p, hd, f, t):
+    lay = blank()
+    d = ImageDraw.Draw(lay)
+    for t0 in TEARS:
+        u = (t - t0) / 0.9
+        if 0 <= u < 1:
+            x = hd[0] + f * 8.5
+            y = hd[1] + 2 + 75 * u * u
+            r = 2.2
+            d.ellipse([(x - r) * S, (y - r * 1.4) * S, (x + r) * S, (y + r) * S],
+                      fill=BLUE_TEAR + (int(255 * (1 - u)),))
+    put(p, lay)
+
+
+def rain(p, k, t):
+    n = int(34 * clamp(k))
+    if n <= 0:
+        return
+    lay = blank()
+    d = ImageDraw.Draw(lay)
+    for j in range(n):
+        x = (j * 53 + 11) % PW
+        y = (t * 250 + j * 97) % (PH + 20) - 10
+        d.line([(x * S, y * S), ((x - 4) * S, (y + 14) * S)], fill=(140, 160, 230, 120), width=S)
+    put(p, lay)
+
+
+def broken_heart(p, cx, cy, s, r, fall):
+    """Hati yang retak tiap kali ditolak, lalu pecah jatuh di penolakan terakhir."""
+    lay = blank()
+    d = ImageDraw.Draw(lay)
+    pts = []
+    for i in range(64):
+        a = i / 64 * 2 * math.pi
+        pts.append(((cx + 16 * math.sin(a) ** 3 * s) * S,
+                    (cy - (13 * math.cos(a) - 5 * math.cos(2 * a) - 2 * math.cos(3 * a)
+                           - math.cos(4 * a)) * s) * S))
+    d.polygon(pts, fill=lerp_col(CORAL, (120, 92, 112), clamp(r / 3.5)) + (255,))
+    if r > 0.5:
+        zz = [(cx, cy - 20 * s), (cx - 3.5 * s, cy - 8 * s), (cx + 3.5 * s, cy),
+              (cx - 2.5 * s, cy + 8 * s), (cx, cy + 20 * s)]
+        d.line([(x * S, y * S) for x, y in zz], fill=(0, 0, 0, 0), width=int(2.2 * S))
+    gap = (1.0 + 1.2 * min(r, 3.6)) * S + fall * 45 * S
+    dy = fall * 70 * S
+    left = lay.crop((0, 0, int(cx * S), PH * S))
+    right = lay.crop((int(cx * S), 0, PW * S, PH * S))
+    out = blank()
+    out.paste(left, (int(-gap), int(dy)), left)
+    out.paste(right, (int(cx * S + gap), int(dy)), right)
+    put(p, out, 1 - fall)
+
+
+SPARKS = []
+_rs = np.random.RandomState(8)
+for _ in range(30):
+    SPARKS.append((_rs.uniform(0, 2 * math.pi), _rs.uniform(70, 170), _rs.uniform(2, 3.6)))
+
+
+def sparks(p, cx, cy, dt):
+    if 0 <= dt < 1.1:
+        lay = blank()
+        d = ImageDraw.Draw(lay)
+        for ang, sp, sz in SPARKS:
+            x = cx + math.cos(ang) * sp * dt
+            y = cy + math.sin(ang) * sp * dt + 90 * dt * dt
+            d.ellipse([(x - sz) * S, (y - sz) * S, (x + sz) * S, (y + sz) * S],
+                      fill=(255, 214, 120, int(255 * (1 - dt / 1.1))))
+        put(p, lay)
+
+
+def mini_hearts(p, t):
+    for i in range(5):
+        u = (t - (10.3 + 0.6 * i)) / 1.8
+        if 0 <= u < 1:
+            heart(p, 150 + 22 * i + 8 * math.sin(u * 6 + i), 200 - 80 * u, 0.36,
+                  math.sin(math.pi * u))
+
+
+def ring_pulse(p, cx, dt):
+    if 0 <= dt < 0.9:
+        lay = blank()
+        k = ease(dt / 0.9)
+        rx, ry = lerp(60, 175, k), lerp(8, 26, k)
+        ImageDraw.Draw(lay).ellipse([(cx - rx) * S, (FLOOR + 2 - ry) * S, (cx + rx) * S,
+                                     (FLOOR + 2 + ry) * S], outline=AMBER + (255,), width=int(2.4 * S))
+        put(p, lay, 1 - dt / 0.9)
 
 
 # ------------------------------------------------------------------ status per panel
@@ -241,7 +417,8 @@ def hero_A_state(t):
             x = lerp(xs[k], xs[k + 1], ease(u))
             walk = t * 9.5 if 0 < u < 1 else None
     r = sum(ease((t - (ST[k] + 1.4)) / 1.0) for k in range(4))
-    return x, walk, r
+    hit = sum(pulse(t - m) for m in IMP_A)
+    return x - 16 * hit, walk, r, hit
 
 
 A_TEXT = [(0.0, ""), (2.1, "KENAPA BUKAN AKU?"), (4.6, "AKU KURANG APA?"),
@@ -264,47 +441,75 @@ def scale_col(c, k):
 
 # ------------------------------------------------------------------ panel
 def panel_A(t):
+    """Kembalikan (gambar, shake dx, dy)."""
     p = BG.copy()
-    x, walk, r = hero_A_state(t)
+    x, walk, r, hit = hero_A_state(t)
     sit = ease((t - 10.4) / 0.8)
-    hero, lamp = fig_layer(x, FLOOR, WHITE, f=1, walk=walk, lean=0.04 * r, head=0.12 * r,
-                           arm_f=lerp(70, 40, r / 4), sit=sit, lamp=(255, 214, 120))
-    paste_glow(p, lamp[0], lamp[1], lerp(1.0, 0.18, r / 4))
+    face = "hit" if hit > 0.05 else ("sad" if r > 0.5 else "hope")
+    hero, lamp, hd = fig_layer(x, FLOOR, WHITE, f=1, walk=walk, lean=0.04 * r - 0.25 * hit,
+                               head=0.12 * r, arm_f=lerp(70, 40, r / 4) + 35 * hit, sit=sit,
+                               lamp=(255, 214, 120), face=face)
+    flick = 1 - 0.75 * min(1.0, hit * 1.6)
+    paste_glow(p, lamp[0], lamp[1], lerp(1.0, 0.18, r / 4) * flick)
     for k in range(4):
         sx, sy, f, sc, al, w = silhouette_A(k, t)
         if al > 0.01:
-            lay, _ = fig_layer(sx, sy, SIL, f=f, walk=w, sc=sc, arm_f=15, arm_b=-8)
+            lay, _, shd = fig_layer(sx, sy, SIL, f=f, walk=w, sc=sc, arm_f=15, arm_b=-8)
             put(p, lay, al)
+            xmark(p, SIL_X[k], 215, t - IMP_A[k])
     put(p, hero)
-    return p
+    for m in IMP_A:
+        shock(p, x + 8, 300, t - m, RED)
+    fall = ease((t - (IMP_A[3] + 0.5)) / 0.9)
+    if r > 0.15 and fall < 1:
+        broken_heart(p, x - 4, hd[1] - 44, 1.0, r, fall)
+    if t > TEARS[0]:
+        tears(p, hd, 1, t)
+    rain(p, (r - 0.3) / 2.5, t)
+    vignette(p, 0.75 * clamp(r / 4) + 0.35 * hit)
+    overlay(p, (200, 40, 55), 0.30 * sum(pulse(t - m, 0.35) for m in IMP_A))
+    return p, 9 * hit * math.sin(t * 90), 5 * hit * math.cos(t * 77)
 
 
 def panel_B(t):
     p = BG.copy()
     close = ease((t - 9.3) / 0.8)
+    happy = t >= BURST
     ring(p, B_HERO_X, RING_RX, close)
-    hero, lamp = fig_layer(B_HERO_X, FLOOR, WHITE, f=1, arm_f=lerp(66, 78, close),
-                           lamp=(255, 214, 120))
-    paste_glow(p, lamp[0], lamp[1], 1.0 + 0.7 * close)
+    for m in IMP_B:
+        ring_pulse(p, B_HERO_X, t - m)
+    hero, lamp, hd = fig_layer(B_HERO_X, FLOOR, WHITE, f=1, arm_f=lerp(66, 78, close),
+                               lamp=(255, 214, 120), face="happy" if happy else "calm")
+    paste_glow(p, lamp[0], lamp[1], 1.0 + 0.7 * close + 0.5 * pulse(t - BURST, 0.6))
     for k in range(4):
         sx, sy, f, sc, al, w = silhouette_B(k, t)
         if al > 0.01 and sx < PW + 40:
             lit = k == 3 and close > 0
-            lay, _ = fig_layer(sx, sy, lerp_col(SIL, (230, 230, 238), close) if lit else SIL,
-                               f=f, walk=w, sc=sc, arm_f=15, arm_b=-8)
+            lay, _, _ = fig_layer(sx, sy, lerp_col(SIL, (230, 230, 238), close) if lit else SIL,
+                                  f=f, walk=w, sc=sc, arm_f=15, arm_b=-8,
+                                  face="happy" if lit and happy else None)
             put(p, lay, al)
     put(p, hero)
+    shock(p, 182, 300, t - BURST, (255, 214, 140), rmax=150, dur=0.8)
+    sparks(p, 182, 290, t - BURST)
     hu = ease((t - 9.7) / 0.5)
     if hu > 0:
-        heart(p, 182, 160 + 3 * math.sin(t * 5), 0.85, hu)
-    return p
+        beat = 1 + 0.14 * abs(math.sin(t * 6))
+        heart(p, 182, 160 + 3 * math.sin(t * 5), 0.85 * beat, hu)
+    mini_hearts(p, t)
+    overlay(p, (255, 205, 120), 0.28 * pulse(t - BURST, 0.5))
+    return p, 0.0, 0.0
 
 
 def lerp_col(a, b, u):
     return tuple(int(lerp(x, y, u)) for x, y in zip(a, b))
 
 
-def finish_panel(img, label, texts, t, st_col, st_col2=None, t2=None):
+def finish_panel(scene, label, texts, t, st_col, st_col2=None, t2=None):
+    img, dx, dy = scene
+    if abs(dx) + abs(dy) > 0.1:
+        img = img.transform(img.size, Image.AFFINE, (1, 0, -dx * S, 0, 1, -dy * S),
+                            resample=Image.BILINEAR, fillcolor=(4, 6, 14))
     p = img.resize((PW, PH), Image.LANCZOS)
     d = ImageDraw.Draw(p)
     d.text((14, 20), label, font=F_LBL, fill=WHITE, anchor="lm")
@@ -420,16 +625,55 @@ def make_audio(path):
             add(tt, tone(95, 0.09, 0.05, 40))
             tt += 0.34
 
+    def lowpass_noise(dur, amp, k=60):
+        m = int(sr * dur)
+        return amp * np.convolve(rs.randn(m), np.ones(k) / k, mode="same")
+
+    def heartbeat(t0, amp=0.35, f=62):
+        add(t0, tone(f, 0.18, amp, 22))
+        add(t0 + 0.17, tone(f * 0.85, 0.2, amp * 0.7, 20))
+
+    # hujan di angle A makin deras tiap ditolak
+    m = int(sr * (12.0 - ST[1]))
+    add(ST[1], lowpass_noise(12.0 - ST[1], 0.05, 6) * np.linspace(0, 1, m) ** 1.5)
+
     for k in range(4):
         steps(ST[k], 1.0)                    # langkah tokoh A dan siluet B
-        add(ST[k] + 1.4, sweep(340, 190, 0.45, 0.09))   # ditolak (A)
-        if k < 3:
-            add(ST[k] + 1.9, tone(880, 0.6, 0.035, 5))   # tersaring (B)
-    add(9.7, tone(523.3, 1.6, 0.06, 2.2))
-    add(9.7, tone(659.3, 1.6, 0.05, 2.2))
-    add(9.7, tone(784.0, 1.6, 0.05, 2.2))
-    add(12.0, tone(50, 1.2, 0.5, 3.5))
-    add(12.0, burst(0.25, 0.2))
+        h = IMP_A[k]                         # ---- ditolak, kena di angle A
+        add(h, tone(52, 0.7, 0.7, 6))        # dentuman dada
+        add(h, burst(0.16, 0.22))            # retakan kaca
+        add(h, tone(2637, 0.25, 0.03, 18))
+        add(h + 0.02, tone(3322, 0.2, 0.025, 20))
+        add(h, sweep(380, 150, 0.5, 0.1))    # nada jatuh
+        heartbeat(h + 0.45, 0.28 - 0.04 * k, 55)
+        heartbeat(h + 0.95, 0.2 - 0.03 * k, 52)
+        if k < 3:                            # ---- tersaring di angle B
+            b_ = IMP_B[k]
+            m = int(sr * 0.5)
+            add(b_ - 0.1, lowpass_noise(0.5, 0.09, 12) * np.sin(np.linspace(0, np.pi, m)))
+            add(b_, tone(880, 0.7, 0.04, 5))
+            add(b_ + 0.1, tone(1318, 0.6, 0.025, 6))
+    for tt in TEARS:                         # tetes air mata
+        add(tt + 0.7, tone(1500, 0.12, 0.05, 30) * np.linspace(1, 0.4, int(sr * 0.12)))
+    add(10.4, lowpass_noise(0.9, 0.12, 30) * np.linspace(1, 0, int(sr * 0.9)))   # hela napas
+    for i, fq in enumerate((440.0, 392.0, 329.6)):                            # nada sedih
+        add(10.5 + i * 0.45, tone(fq, 1.6, 0.045, 2.6))
+    heartbeat(BURST - 0.5, 0.35, 66)         # ---- bertemu yang cocok
+    heartbeat(BURST - 0.1, 0.38, 70)
+    add(BURST, tone(110, 0.8, 0.35, 5))
+    for i, fq in enumerate((1046.5, 1318.5, 1568.0, 2093.0, 2637.0)):         # kilau
+        add(BURST + 0.05 + i * 0.07, tone(fq, 1.0, 0.035, 4))
+    add(9.7, tone(523.3, 1.8, 0.06, 2.0))
+    add(9.7, tone(659.3, 1.8, 0.05, 2.0))
+    add(9.7, tone(784.0, 1.8, 0.05, 2.0))
+    for i in range(5):                       # hati kecil melayang
+        add(10.3 + 0.6 * i + 0.3, tone(1760, 0.35, 0.015, 8))
+    m = int(sr * 1.5)                        # riser menuju punchline
+    x_ = np.arange(m) / sr
+    ph = 2 * np.pi * np.cumsum(180 + 600 * (x_ / 1.5) ** 1.6) / sr
+    add(10.5, 0.07 * np.sin(ph) * np.linspace(0, 1, m) ** 1.5)
+    add(12.0, tone(50, 1.4, 0.55, 3.2))
+    add(12.0, burst(0.28, 0.22))
     for fq in (261.6, 329.6, 392.0, 523.3):
         add(12.1, tone(fq, 7.0, 0.05, 0.45, attack=0.5))
     add(13.0, tone(1568, 1.5, 0.02, 2.5))
