@@ -24,8 +24,8 @@ RAKA = dict(name="Raka", shirt=(78, 124, 196), pants=(86, 120, 170), hair=(24, 2
 BIMA = dict(name="Bima", shirt=(34, 34, 40), pants=(86, 120, 170), hair=(24, 24, 28), glasses=False, pitch=165)
 CH = {"raka": RAKA, "bima": BIMA}
 
-LINE_MIN, PER_CHAR, GAP = 1.6, 0.068, 0.35
-SPECIAL = {"narr": 3.1, "ride": 5.0, "credits": 6.0}
+LINE_MIN, PER_CHAR, GAP = 1.3, 0.06, 0.12
+SPECIAL = {"ride": 3.4, "credits": 5.0}
 
 VOICE_DIR = os.environ.get("VOICE_DIR", os.path.join(os.path.dirname(os.path.abspath(__file__)), EP.VOICE_SUBDIR))
 
@@ -45,7 +45,9 @@ def build_timeline():
             vf = voice_file(idx, who) if who and view != "narr" and text else None
             vlen = audio_len(vf) if vf else None
             if vlen:
-                d = max(1.2, vlen + 0.2 + GAP)
+                d = max(0.9, vlen + 0.06 + GAP)
+            elif view == "narr":
+                d = max(2.0, 0.8 + 0.055 * len(text))
             else:
                 d = SPECIAL.get(view, max(LINE_MIN, 0.5 + PER_CHAR * len(text)) + GAP)
             tl.append(dict(seq=seq, who=who, text=text, view=view, t0=t, t1=t + d, voice=vf, vlen=vlen))
@@ -334,8 +336,8 @@ def render_frame(n):
     d = ImageDraw.Draw(img)
 
     who = e["who"]
-    talk_end = (0.1 + e["vlen"] + 0.05) if e.get("vlen") else (e["t1"] - e["t0"] - GAP * 0.8)
-    talking = who is not None and view != "narr" and lt < talk_end and lt > 0.08
+    talk_end = (0.06 + e["vlen"]) if e.get("vlen") else (e["t1"] - e["t0"] - GAP * 0.8)
+    talking = who is not None and view != "narr" and lt < talk_end and lt > 0.04
 
     def cart_here():
         draw_cart(d, 700, 640, 0.9)
@@ -362,7 +364,7 @@ def render_frame(n):
         draw_box(d, e["text"])
     elif seq == "road":
         # motor lewat
-        px = lerp(1180, -260, clamp(lt / 5.0))
+        px = lerp(1180, -260, clamp(lt / 3.4))
         py = 560
         d.rounded_rectangle([(px - 90) * S, (py - 80) * S, (px + 70) * S, (py - 40) * S], 14 * S, fill=(248, 190, 40), outline=INK, width=3 * S)
         d.rounded_rectangle([(px - 10) * S, (py - 110) * S, (px + 20) * S, (py - 80) * S], 8 * S, fill=(248, 190, 40), outline=INK, width=3 * S)
@@ -439,7 +441,7 @@ def make_audio(path):
             raw = subprocess.run(["ffmpeg", "-v", "error", "-i", e["voice"], "-af", flt, "-ac", "1", "-ar", str(sr), "-f", "f32le", "-"],
                                  capture_output=True).stdout
             v = np.frombuffer(raw, dtype=np.float32)
-            n0 = int((e["t0"] + 0.1) * sr)
+            n0 = int((e["t0"] + 0.06) * sr)
             n1 = min(N, n0 + len(v))
             y[n0:n1] += v[: n1 - n0] * 0.9
             continue

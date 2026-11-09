@@ -36,7 +36,9 @@ PRESET = {
 EMO = render.EP.EMO
 
 # Mastering: kompresor + EQ supaya lantang, jelas, dan konsisten
-MASTER = ("highpass=f=90,equalizer=f=250:t=q:w=1:g=-2,equalizer=f=3200:t=q:w=1.2:g=3.5,"
+MASTER = ("silenceremove=start_periods=1:start_threshold=-45dB:stop_periods=-1:stop_duration=0.3:stop_threshold=-45dB:stop_silence=0.1,"
+          "areverse,silenceremove=start_periods=1:start_threshold=-45dB,areverse,"
+          "highpass=f=90,equalizer=f=250:t=q:w=1:g=-2,equalizer=f=3200:t=q:w=1.2:g=3.5,"
           "acompressor=threshold=-20dB:ratio=3.5:attack=4:release=90:makeup=4,"
           "loudnorm=I=-15:TP=-1.5:LRA=7")
 
@@ -54,6 +56,7 @@ async def one(i, who, text, out):
     v = VOICES[who]
     preset, text = EMO.get(i, ("santai", text))
     dp, dr, dv = PRESET[preset]
+    text = text.replace("...", ",") if len(text) > 8 else text   # titik tiga -> jeda pendek
     base_p, base_r = int(v["pitch"][:-2]), int(v["rate"][:-1])
     kw = {}
     proxy = os.environ.get("HTTPS_PROXY")
