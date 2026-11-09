@@ -88,6 +88,7 @@ Kalau kamu suka, bagikan ke temen yang selalu ada buat kamu (dan yang selalu ngi
 - Eps 1: "Siapa di sini yang jadi Bima di circle-nya? 🙋"
 - Eps 2: "Tag temen kamu yang minta jadi kameramen gratis 😭"
 - Eps 3: "Temen kamu yang paling bawel ngingetin apa? Tulis di sini 👇"
+- Eps 4: "Temen kamu yang cuma muncul pas ada maunya? Tag di sini, jangan kasih tau 😭"
 
 ---
 

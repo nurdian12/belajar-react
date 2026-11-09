@@ -1,0 +1,97 @@
+"""Episode 4 - Temen yang Selalu Ada (pas Ada Maunya)"""
+CAPTION = "Temen yang selalu\nada (pas ada maunya)!"
+CREDIT_TITLE = "Temen yang selalu ada\n(pas ada maunya)!"
+VOICE_SUBDIR = "voice_ep4"
+GESTURE = 0.25
+THUMB = dict(line1="TEMEN YANG SELALU", line2="ADA", badge="(pas ada maunya)", eps="EPS. 4",
+             bubbleL="Bim, anterin\ngue dong!", bubbleR="Lu muncul\npas butuh!", bg="park")
+
+SEQS = [
+    ("park", [
+        ("bima", "Rak, tumben lu chat gue tiga kali sehari.", "wide"),
+        ("raka", "Namanya juga temen. Harus sering komunikasi.", "close"),
+        ("bima", "Minggu lalu lu nggak chat sama sekali.", "close"),
+        ("raka", "Lagi sibuk, Bim. Sibuk mikirin lu.", "close"),
+        ("bima", "Pas gue baru beli motor, lu langsung muncul.", "close"),
+        ("raka", "Kebetulan doang itu.", "wide"),
+        ("bima", "Lu nanya motornya cc berapa. Terus nanya kunci cadangan.", "close"),
+        ("raka", "Itu bentuk perhatian, Bim.", "close"),
+    ]),
+    ("warung", [
+        ("raka", "Bim, besok anterin gue ke bandara ya.", "wide"),
+        ("bima", "Jam berapa?", "close"),
+        ("raka", "Jam empat pagi. Tapi lu nggak usah nunggu.", "close"),
+        ("bima", "Gue nggak nunggu. Gue pulang tidur.", "close"),
+        ("raka", "Jangan gitu dong. Kita kan temen.", "close"),
+        ("bima", "Temen itu dua arah, Rak.", "close"),
+        ("raka", "Dua arah? Bandaranya kan cuma satu arah.", "wide"),
+        ("bima", "Gue lagi serius.", "close"),
+        ("raka", "Iya, iya. Gue dengerin.", "close"),
+        ("bima", "Terakhir gue pindahan, lu ke mana?", "wide"),
+    ]),
+    ("garasi", [
+        ("bima", "Nih, catatan. Gue udah nganterin lu enam kali.", "wide"),
+        ("raka", "Lu ngitung?", "close"),
+        ("bima", "Gue catat. Dan gue cuma minta satu kali.", "close"),
+        ("raka", "Apa itu?", "close"),
+        ("bima", "Bantuin gue pindahan hari Minggu.", "close"),
+        ("raka", "Minggu? Gue ada acara.", "close"),
+        ("bima", "Acara apa? Tidur?", "wide"),
+    ]),
+    ("stairs", [
+        (None, "Temen yang baik bukan yang selalu ada pas butuh,", "narr"),
+        (None, "tapi yang juga ada pas kita lagi susah.", "narr"),
+        (None, "Support itu jalan dua arah.", "narr"),
+        (None, "Kalau cuma datang pas ada maunya,", "narr"),
+        (None, "itu bukan temenan, itu antar-jemput.", "narr"),
+    ]),
+    ("road", [(None, "", "ride")]),
+    ("phone", [
+        ("raka", "Bim, gue udah di depan kosan lu.", "helmet"),
+        ("bima", "☎ Jam enam pagi? Mau ngapain?", "helmet"),
+        ("raka", "Mau bantuin lu pindahan.", "helmet"),
+        ("bima", "☎ Serius? Hari Minggu masih lama.", "helmet"),
+        ("raka", "Gue datang sehari lebih awal. Biar impas.", "helmet"),
+        ("bima", "☎ Terus lu bawa apa?", "helmet"),
+        ("raka", "Gue bawa diri. Sama minta tumpangan pulang.", "helmet"),
+        ("bima", "☎ Rak!", "helmet"),
+    ]),
+    ("credits", [(None, "", "credits")]),
+]
+
+# index baris global -> (preset, teks ucapan)
+EMO = {
+    0:  ("sarkas",   "Rak, tumben lu chat gue, tiga kali sehari."),
+    1:  ("bangga",   "Namanya juga temen! Harus sering komunikasi."),
+    2:  ("tegas",    "Minggu lalu lu nggak chat sama sekali."),
+    3:  ("yakin",    "Lagi sibuk, Bim. Sibuk, mikirin lu."),
+    4:  ("tegas",    "Pas gue baru beli motor, lu langsung muncul."),
+    5:  ("protes",   "Kebetulan doang itu!"),
+    6:  ("sarkas",   "Lu nanya motornya cc berapa. Terus nanya, kunci cadangan."),
+    7:  ("yakin",    "Itu bentuk perhatian, Bim."),
+    8:  ("santai",   "Bim, besok anterin gue ke bandara ya."),
+    9:  ("ragu",     "Jam berapa?"),
+    10: ("santai",   "Jam empat pagi. Tapi lu nggak usah nunggu."),
+    11: ("sarkas",   "Gue nggak nunggu. Gue pulang tidur."),
+    12: ("protes",   "Jangan gitu dong! Kita kan temen."),
+    13: ("tegas",    "Temen itu dua arah, Rak."),
+    14: ("kaget",    "Dua arah? Bandaranya kan cuma satu arah!"),
+    15: ("tegas",    "Gue lagi serius."),
+    16: ("pasrah",   "Iya, iya. Gue dengerin."),
+    17: ("tegas",    "Terakhir gue pindahan, lu ke mana?"),
+    18: ("tegas",    "Nih, catatan. Gue udah nganterin lu, enam kali."),
+    19: ("kaget",    "Lu ngitung?!"),
+    20: ("hangat",   "Gue catat. Dan gue cuma minta satu kali."),
+    21: ("ragu",     "Apa itu?"),
+    22: ("tegas",    "Bantuin gue pindahan, hari Minggu."),
+    23: ("ragu",     "Minggu? Gue... ada acara."),
+    24: ("sarkas",   "Acara apa? Tidur?"),
+    31: ("santai",   "Bim, gue udah di depan kosan lu."),
+    32: ("kaget",    "Jam enam pagi? Mau ngapain?"),
+    33: ("hangat",   "Mau bantuin lu pindahan."),
+    34: ("kaget",    "Serius? Hari Minggu masih lama."),
+    35: ("bangga",   "Gue datang sehari lebih awal. Biar impas!"),
+    36: ("sarkas",   "Terus lu bawa apa?"),
+    37: ("santai",   "Gue bawa diri. Sama minta tumpangan pulang."),
+    38: ("protes",   "Rak!"),
+}

@@ -39,7 +39,7 @@ def main(out):
 
     # badge merah
     d.rounded_rectangle([330 * S, 590 * S, 950 * S, 700 * S], 26 * S, fill=(226, 44, 44), outline=(255, 255, 255), width=6 * S)
-    d.text((640 * S, 645 * S), T["badge"], font=r.font(FB, (70 if len(T["badge"]) < 16 else 42) * S), fill=(255, 255, 255), anchor="mm", stroke_width=3 * S, stroke_fill=(120, 10, 10))
+    d.text((640 * S, 645 * S), T["badge"], font=r.font(FB, (70 if len(T["badge"]) < 14 else 60 if len(T["badge"]) <= 18 else 42) * S), fill=(255, 255, 255), anchor="mm", stroke_width=3 * S, stroke_fill=(120, 10, 10))
 
     # label episode
     d.rounded_rectangle([24 * S, 640 * S, 200 * S, 696 * S], 14 * S, fill=(20, 20, 26))
