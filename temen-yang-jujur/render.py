@@ -68,16 +68,34 @@ SEQS = [
 LINE_MIN, PER_CHAR, GAP = 1.6, 0.068, 0.35
 SPECIAL = {"narr": 3.1, "ride": 5.0, "credits": 6.0}
 
+VOICE_DIR = os.environ.get("VOICE_DIR", os.path.join(os.path.dirname(os.path.abspath(__file__)), "voice"))
+
+def voice_file(idx, who):
+    p = os.path.join(VOICE_DIR, f"{idx:03d}_{who}.mp3")
+    return p if os.path.exists(p) else None
+
+def audio_len(path):
+    out = subprocess.run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", path],
+                         capture_output=True, text=True).stdout.strip()
+    return float(out)
+
 def build_timeline():
-    tl, t = [], 0.0
+    tl, t, idx = [], 0.0, 0
     for seq, lines in SEQS:
         for who, text, view in lines:
-            d = SPECIAL.get(view, max(LINE_MIN, 0.5 + PER_CHAR * len(text)) + GAP)
-            tl.append(dict(seq=seq, who=who, text=text, view=view, t0=t, t1=t + d))
+            vf = voice_file(idx, who) if who and view != "narr" and text else None
+            vlen = audio_len(vf) if vf else None
+            if vlen:
+                d = max(1.2, vlen + 0.2 + GAP)
+            else:
+                d = SPECIAL.get(view, max(LINE_MIN, 0.5 + PER_CHAR * len(text)) + GAP)
+            tl.append(dict(seq=seq, who=who, text=text, view=view, t0=t, t1=t + d, voice=vf, vlen=vlen))
             t += d
+            idx += 1
     return tl, t
 
 TL, TOTAL = build_timeline()
+HAS_VOICE = any(e.get('voice') for e in TL)
 NFRAMES = int(TOTAL * FPS)
 
 # ------------------------------------------------------------------ util
@@ -325,7 +343,8 @@ def render_frame(n):
     d = ImageDraw.Draw(img)
 
     who = e["who"]
-    talking = who is not None and view != "narr" and lt < (e["t1"] - e["t0"] - GAP * 0.8) and lt > 0.12
+    talk_end = (0.1 + e["vlen"] + 0.05) if e.get("vlen") else (e["t1"] - e["t0"] - GAP * 0.8)
+    talking = who is not None and view != "narr" and lt < talk_end and lt > 0.08
 
     def cart_here():
         draw_cart(d, 700, 640, 0.9)
@@ -408,15 +427,24 @@ def make_audio(path):
         n0 = int(tt * sr)
         L = int(0.35 * sr)
         x = np.arange(L) / sr
-        pl = np.sin(2 * np.pi * f * x) * np.exp(-x * 9) * 0.07
+        pl = np.sin(2 * np.pi * f * x) * np.exp(-x * 9) * (0.035 if HAS_VOICE else 0.07)
         y[n0:n0 + L] += pl[: max(0, min(L, N - n0))]
         if k % 8 == 0:
-            b = np.sin(2 * np.pi * ch[0] / 2 * x) * np.exp(-x * 3) * 0.08
+            b = np.sin(2 * np.pi * ch[0] / 2 * x) * np.exp(-x * 3) * (0.04 if HAS_VOICE else 0.08)
             y[n0:n0 + L] += b[: max(0, min(L, N - n0))]
         tt += step
         k += 1
-    # blip suara
+    # suara asli (Edge TTS) bila ada, selain itu bunyi blip
     for e in TL:
+        if e.get("voice"):
+            flt = "highpass=f=400,lowpass=f=3400,volume=1.2" if e["text"].startswith("\u260e") else "volume=1.0"
+            raw = subprocess.run(["ffmpeg", "-v", "error", "-i", e["voice"], "-af", flt, "-ac", "1", "-ar", str(sr), "-f", "f32le", "-"],
+                                 capture_output=True).stdout
+            v = np.frombuffer(raw, dtype=np.float32)
+            n0 = int((e["t0"] + 0.1) * sr)
+            n1 = min(N, n0 + len(v))
+            y[n0:n1] += v[: n1 - n0] * 0.9
+            continue
         if e["who"] and e["view"] != "narr" and e["text"]:
             f0 = CH[e["who"]]["pitch"]
             n0, n1 = int((e["t0"] + 0.12) * sr), int((e["t1"] - GAP * 0.8) * sr)
