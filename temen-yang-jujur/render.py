@@ -246,7 +246,9 @@ def draw_char(d, x, y, s, cfg, t, talk=False, phone=False, helmet=False, arm_ges
         h = arm(1, 70, 172)
         d.rounded_rectangle([h[0] - R(2), h[1] - R(10), h[0] + R(20), h[1] + R(28)], R(5), fill=(40, 44, 54), outline=INK, width=ow)
     elif talk and arm_gesture:
-        arm(1, 42 + 22 * math.sin(w * 1.7), 110 + 38 * math.sin(w * 1.7 + 1))
+        g = getattr(EP, "GESTURE", 1.0)                      # 1.0 = penuh, kecil = kalem
+        sp = 1.7 if g >= 1 else 1.0                            # gerak lebih lambat saat kalem
+        arm(1, 10 + g * (32 + 22 * math.sin(w * sp)), 18 + g * (92 + 38 * math.sin(w * sp + 1)))
     else:
         arm(1, 10 + 4 * math.sin(w * 0.5 + 2), 18)
 

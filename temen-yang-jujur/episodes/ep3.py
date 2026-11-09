@@ -1,0 +1,97 @@
+"""Episode 3 - Temen yang Selalu Ngingetin (tapi Bawel)"""
+CAPTION = "Temen yang selalu\nngingetin (tapi bawel)!"
+CREDIT_TITLE = "Temen yang selalu ngingetin\n(tapi bawel)!"
+VOICE_SUBDIR = "voice_ep3"
+GESTURE = 0.25      # 1.0 = gerak tangan penuh (ep1/ep2), makin kecil makin kalem
+THUMB = dict(line1="TEMEN YANG SELALU", line2="NGINGETIN", badge="(tapi BAWEL!)", eps="EPS. 3",
+             bubbleL="Tanggal\nSEPULUH?!", bubbleR="Gue udah\nngingetin!", bg="park")
+
+SEQS = [
+    ("park", [
+        ("raka", "Bim, HP gue bunyi terus dari pagi.", "wide"),
+        ("bima", "Itu alarm dari gue.", "close"),
+        ("raka", "Alarm dari lu? Kok bisa?", "close"),
+        ("bima", "Gue pasang di HP lu. Pas lu tidur.", "close"),
+        ("raka", "Itu nggak sopan, Bim!", "close"),
+        ("bima", "Lu lupa cicilan gerobak. Jatuh tempo tanggal sembilan.", "wide"),
+        ("raka", "Hah? Sekarang tanggal berapa?", "close"),
+        ("bima", "Tanggal sepuluh.", "close"),
+    ]),
+    ("warung", [
+        ("raka", "Tenang, gue bayar besok.", "wide"),
+        ("bima", "Besok kena denda lagi.", "close"),
+        ("raka", "Dendanya berapa?", "close"),
+        ("bima", "Lima puluh ribu. Lebih dari setengah modal lu.", "close"),
+        ("raka", "Kok lu hapal banget?", "close"),
+        ("bima", "Gue catat di kalender. Warna merah.", "close"),
+        ("raka", "Lu kayak emak gue.", "wide"),
+        ("bima", "Emak lu titip pesan. Katanya makan jangan telat.", "close"),
+        ("raka", "Loh, kalian ngobrol?", "close"),
+        ("bima", "Tiap minggu. Di grup keluarga.", "wide"),
+    ]),
+    ("garasi", [
+        ("bima", "Nih, gue bikinin jadwal.", "wide"),
+        ("raka", "Jadwal apa?", "close"),
+        ("bima", "Bayar cicilan, ganti oli, telepon ibu.", "close"),
+        ("raka", "Lengkap amat.", "close"),
+        ("bima", "Tinggal lu jalanin. Gue nggak bisa ngingetin selamanya.", "close"),
+        ("raka", "Kenapa nggak?", "close"),
+        ("bima", "Karena gue juga punya cicilan.", "wide"),
+    ]),
+    ("stairs", [
+        (None, "Temen yang ngingetin itu emang cerewet,", "narr"),
+        (None, "tapi cerewetnya karena peduli.", "narr"),
+        (None, "Mereka rela dibilang bawel,", "narr"),
+        (None, "daripada lihat kita jatuh,", "narr"),
+        (None, "gara-gara hal yang sebenernya bisa dicegah.", "narr"),
+    ]),
+    ("road", [(None, "", "ride")]),
+    ("phone", [
+        ("raka", "Bim, cicilan udah gue bayar.", "helmet"),
+        ("bima", "☎ Mantap. Dendanya?", "helmet"),
+        ("raka", "Lunas semua. Plus gue ganti nada alarm.", "helmet"),
+        ("bima", "☎ Alarm gue lu hapus?", "helmet"),
+        ("raka", "Nggak. Gue ganti jadi suara lu.", "helmet"),
+        ("bima", "☎ Hah? Suara gue?", "helmet"),
+        ("raka", "Iya. Biar tiap pagi kerasa ada yang peduli.", "helmet"),
+        ("bima", "☎ Geli, Rak. Tapi... sama-sama.", "helmet"),
+    ]),
+    ("credits", [(None, "", "credits")]),
+]
+
+# index baris global -> (preset, teks ucapan)
+EMO = {
+    0:  ("gelisah",  "Bim, HP gue bunyi terus dari pagi."),
+    1:  ("santai",   "Itu alarm dari gue."),
+    2:  ("kaget",    "Alarm dari lu?! Kok bisa?"),
+    3:  ("tegas",    "Gue pasang di HP lu. Pas lu tidur."),
+    4:  ("protes",   "Itu nggak sopan, Bim!"),
+    5:  ("tegas",    "Lu lupa cicilan gerobak. Jatuh tempo, tanggal sembilan."),
+    6:  ("kaget",    "Hah?! Sekarang tanggal berapa?"),
+    7:  ("tegas",    "Tanggal sepuluh."),
+    8:  ("santai",   "Tenang, gue bayar besok."),
+    9:  ("tegas",    "Besok kena denda lagi."),
+    10: ("ragu",     "Dendanya... berapa?"),
+    11: ("sarkas",   "Lima puluh ribu. Lebih dari setengah modal lu."),
+    12: ("kaget",    "Kok lu hapal banget?"),
+    13: ("tegas",    "Gue catat di kalender. Warna merah."),
+    14: ("protes",   "Lu kayak emak gue!"),
+    15: ("hangat",   "Emak lu titip pesan. Katanya, makan jangan telat."),
+    16: ("kaget",    "Loh, kalian ngobrol?!"),
+    17: ("santai",   "Tiap minggu. Di grup keluarga."),
+    18: ("bangga",   "Nih, gue bikinin jadwal."),
+    19: ("ragu",     "Jadwal apa?"),
+    20: ("tegas",    "Bayar cicilan, ganti oli, telepon ibu."),
+    21: ("santai",   "Lengkap amat."),
+    22: ("hangat",   "Tinggal lu jalanin. Gue nggak bisa ngingetin selamanya."),
+    23: ("ragu",     "Kenapa nggak?"),
+    24: ("sarkas",   "Karena gue juga punya cicilan."),
+    31: ("bangga",   "Bim, cicilan udah gue bayar!"),
+    32: ("santai",   "Mantap. Dendanya?"),
+    33: ("yakin",    "Lunas semua. Plus gue ganti nada alarm."),
+    34: ("kaget",    "Alarm gue lu hapus?!"),
+    35: ("hangat",   "Nggak. Gue ganti jadi suara lu."),
+    36: ("kaget",    "Hah?! Suara gue?"),
+    37: ("hangat",   "Iya. Biar tiap pagi, kerasa ada yang peduli."),
+    38: ("hangat",   "Geli, Rak. Tapi, sama-sama."),
+}
