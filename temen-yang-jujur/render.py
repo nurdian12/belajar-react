@@ -12,7 +12,9 @@ from PIL import Image, ImageDraw, ImageFont, ImageFilter
 W, H, FPS, S = 960, 720, 24, 2          # S = supersampling
 INK = (28, 28, 34)
 SKIN = (255, 248, 240)
-CAPTION = "Temen yang selalu\nsupport (tapi jujur)!"
+import importlib
+EP = importlib.import_module("episodes." + os.environ.get("EPISODE", "ep1"))
+CAPTION, SEQS = EP.CAPTION, EP.SEQS
 
 FB = "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf"
 FDJ = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
@@ -22,53 +24,10 @@ RAKA = dict(name="Raka", shirt=(78, 124, 196), pants=(86, 120, 170), hair=(24, 2
 BIMA = dict(name="Bima", shirt=(34, 34, 40), pants=(86, 120, 170), hair=(24, 24, 28), glasses=False, pitch=165)
 CH = {"raka": RAKA, "bima": BIMA}
 
-SEQS = [
-    ("park", [
-        ("raka", "Bim, gue kepikiran mau resign.", "wide"),
-        ("bima", "Hah? Serius lu?", "close"),
-        ("raka", "Serius. Gue mau buka usaha.", "close"),
-        ("bima", "Udah ada modal?", "close"),
-        ("raka", "Ada. Delapan puluh ribu.", "close"),
-        ("bima", "Hmm.", "wide"),
-        ("raka", "Tapi ide gue gila, Bim. Kopi literan, ada filosofinya.", "close"),
-        ("bima", "Kopi literan di sini udah ada empat puluh.", "close"),
-        ("raka", "Beda! Punya gue ada quotes di tutupnya.", "close"),
-        ("bima", "Ya ampun.", "wide"),
-    ]),
-    ("warung", [
-        ("raka", "Nih gerobaknya. Gue beli kemarin.", "wide"),
-        ("bima", "Lu udah beli duluan?!", "close"),
-        ("raka", "Cicilan, tenang. Dua belas bulan.", "close"),
-        ("bima", "Lu mau bayar pake apa, filosofi?", "close"),
-        ("raka", "Makanya gue mau resign, biar fokus.", "close"),
-        ("bima", "Tunggu, tunggu. Gue support lu.", "wide"),
-        ("bima", "Tapi jangan resign dulu. Kopi jalan, baru keluar.", "close"),
-        ("raka", "Kalau kopinya nggak jalan?", "close"),
-        ("bima", "Ya lu masih punya gaji, bisa traktir gue.", "close"),
-        ("raka", "Itu mah lu doang yang untung.", "wide"),
-    ]),
-    ("stairs", [
-        (None, "Temen yang bener-bener support,", "narr"),
-        (None, "bukan yang selalu bilang \"gas\",", "narr"),
-        (None, "tapi yang berani bilang \"pelan-pelan dulu\".", "narr"),
-        (None, "Soalnya mimpi butuh dukungan,", "narr"),
-        (None, "bukan cuma tepuk tangan.", "narr"),
-    ]),
-    ("road", [(None, "", "ride")]),
-    ("phone", [
-        ("raka", "Bim, gue udah ngomong sama bos.", "helmet"),
-        ("raka", "Gue nggak jadi resign. Ambil lembur dulu.", "helmet"),
-        ("raka", "Oh iya, gerobaknya gue taro di garasi lu, ya.", "helmet"),
-        ("bima", "☎ Hah? Garasi gue?!", "helmet"),
-        ("raka", "Makasih ya, Bim. Lu emang temen yang selalu support.", "helmet"),
-        ("bima", "☎ Cicilannya bayar sendiri ya.", "helmet"),
-    ]),
-    ("credits", [(None, "", "credits")]),
-]
 LINE_MIN, PER_CHAR, GAP = 1.6, 0.068, 0.35
 SPECIAL = {"narr": 3.1, "ride": 5.0, "credits": 6.0}
 
-VOICE_DIR = os.environ.get("VOICE_DIR", os.path.join(os.path.dirname(os.path.abspath(__file__)), "voice"))
+VOICE_DIR = os.environ.get("VOICE_DIR", os.path.join(os.path.dirname(os.path.abspath(__file__)), EP.VOICE_SUBDIR))
 
 def voice_file(idx, who):
     p = os.path.join(VOICE_DIR, f"{idx:03d}_{who}.mp3")
@@ -177,6 +136,38 @@ def draw_cart(d, x, y, sc=1.0):
         d.ellipse([X(wx - 34), Y(-70), X(wx + 34), Y(-2)], fill=INK)
         d.ellipse([X(wx - 14), Y(-50), X(wx + 14), Y(-22)], fill=(200, 200, 200))
 
+def bg_garasi():
+    img = Image.new("RGB", (W * S, H * S), (205, 201, 194))
+    d = ImageDraw.Draw(img)
+    d.rectangle([0, 540 * S, W * S, H * S], fill=(150, 148, 144))
+    d.rectangle([0, 534 * S, W * S, 546 * S], fill=(110, 108, 104))
+    # pintu rolling (kiri tengah)
+    d.rectangle([250 * S, 90 * S, 710 * S, 534 * S], fill=(186, 190, 196), outline=(120, 124, 130), width=4 * S)
+    for y in range(100, 534, 26):
+        d.line([(252 * S, y * S), (708 * S, y * S)], fill=(150, 154, 160), width=3 * S)
+    # rak + kardus (kiri)
+    d.rectangle([20 * S, 160 * S, 220 * S, 534 * S], fill=(122, 92, 62))
+    for y in (250, 340, 430):
+        d.rectangle([14 * S, y * S, 226 * S, (y + 10) * S], fill=(88, 64, 42))
+    for (x, y, w_, h_) in [(36, 190, 70, 58), (118, 200, 80, 48), (40, 280, 90, 58), (140, 290, 60, 48), (30, 370, 100, 58)]:
+        d.rectangle([x * S, y * S, (x + w_) * S, (y + h_) * S], fill=(196, 150, 96), outline=(120, 90, 56), width=2 * S)
+    # lampu neon
+    d.rounded_rectangle([320 * S, 40 * S, 640 * S, 58 * S], 8 * S, fill=(255, 252, 230))
+    return img
+
+def draw_ringlight(d, x, y, sc=1.0, on=True):
+    """tripod + ring light + HP. (x,y) = titik tanah."""
+    X = lambda u: (x + u * sc) * S
+    Y = lambda v: (y + v * sc) * S
+    for sx in (-70, 0, 70):
+        thick(d, (X(0), Y(-230)), (X(sx), Y(0)), 8 * sc * S, INK)
+    thick(d, (X(0), Y(-420)), (X(0), Y(-230)), 10 * sc * S, INK)
+    cx, cy = 0, -520
+    d.ellipse([X(cx - 120), Y(cy - 120), X(cx + 120), Y(cy + 120)], fill=(255, 250, 225) if on else (230, 230, 230), outline=INK, width=int(6 * sc * S))
+    d.ellipse([X(cx - 82), Y(cy - 82), X(cx + 82), Y(cy + 82)], fill=(60, 64, 72), outline=INK, width=int(4 * sc * S))
+    d.rounded_rectangle([X(cx - 26), Y(cy - 46), X(cx + 26), Y(cy + 46)], 8 * sc * S, fill=(30, 32, 38))
+    d.ellipse([X(cx - 8), Y(cy - 34), X(cx + 8), Y(cy - 18)], fill=(80, 120, 200))
+
 def bg_stairs():
     img = Image.new("RGB", (W * S, H * S), (210, 218, 214))
     d = ImageDraw.Draw(img)
@@ -215,7 +206,7 @@ def get_bg(name, offset=0):
     if name == "road":
         return bg_road(offset)
     if name not in _bg:
-        _bg[name] = {"park": bg_park, "warung": bg_warung, "stairs": bg_stairs, "phone": bg_park, "credits": bg_dark}[name]()
+        _bg[name] = {"park": bg_park, "warung": bg_warung, "garasi": bg_garasi, "syuting": bg_garasi, "stairs": bg_stairs, "phone": bg_park, "credits": bg_dark}[name]()
     return _bg[name].copy()
 
 # ------------------------------------------------------------------ karakter
@@ -349,15 +340,22 @@ def render_frame(n):
     def cart_here():
         draw_cart(d, 700, 640, 0.9)
 
-    if seq in ("park", "warung"):
+    if seq in ("park", "warung", "garasi", "syuting"):
+        garage = seq in ("garasi", "syuting")
         if view == "wide":
             if seq == "warung":
                 draw_cart(d, 600, 650, 0.78)
-            draw_char(d, 250 if seq == "park" else 200, 650, 0.9, RAKA, t, talk=(who == "raka" and talking))
-            draw_char(d, 700 if seq == "park" else 780, 650, 0.9, BIMA, t, talk=(who == "bima" and talking))
+            if garage:
+                draw_cart(d, 860, 640, 0.5)                      # gerobak kopi ngangkrak di pojok
+                draw_ringlight(d, 480, 660, 0.62, on=(seq == "syuting"))
+            draw_char(d, 250 if not seq == "warung" else 200, 650, 0.9, RAKA, t, talk=(who == "raka" and talking))
+            draw_char(d, 700 if not seq == "warung" else 780, 650, 0.9, BIMA, t, talk=(who == "bima" and talking))
         else:
             if seq == "warung":
                 draw_cart(d, 780, 740, 1.5) if who == "raka" else draw_cart(d, 180, 740, 1.5)
+            if garage:  # lingkar ring light di belakang kepala pembicara
+                d.ellipse([(480 - 235) * S, (500 - 235) * S, (480 + 235) * S, (500 + 235) * S], fill=(255, 250, 225), outline=INK, width=6 * S)
+                d.ellipse([(480 - 170) * S, (500 - 170) * S, (480 + 170) * S, (500 + 170) * S], fill=(196, 200, 206), outline=INK, width=4 * S)
             draw_char(d, 480, 1290, 2.4, CH[who], t, talk=talking)
     elif seq == "stairs":
         draw_char(d, 480, 640, 0.95, RAKA, t, talk=False)
@@ -381,7 +379,7 @@ def render_frame(n):
     if seq == "credits":
         a = clamp(lt / 1.0)
         c = int(255 * a)
-        d.text((W * S / 2, 250 * S), "Temen yang selalu support\n(tapi jujur)!", font=font(FB, 40 * S), fill=(c, c, c), anchor="mm", align="center", spacing=8 * S)
+        d.text((W * S / 2, 250 * S), EP.CREDIT_TITLE, font=font(FB, 40 * S), fill=(c, c, c), anchor="mm", align="center", spacing=8 * S)
         meta = ["Director: (isi nama sutradara)", "Producer: (isi nama produser)", "Animator: (isi nama animator)", "Song: (isi judul lagu)"]
         for k, m in enumerate(meta):
             d.text((W * S / 2, (370 + k * 38) * S), m, font=font(FB, 22 * S), fill=(int(c * .8),) * 3, anchor="mm")

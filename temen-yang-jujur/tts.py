@@ -33,34 +33,7 @@ PRESET = {
     "protes":   (+16, +6, +20),
     "lega":     (0, -6, +4),
 }
-EMO = {
-    0:  ("gelisah", "Bim... gue kepikiran, mau resign."),
-    1:  ("kaget",   "Hah?! Serius lu?"),
-    2:  ("yakin",   "Serius! Gue mau buka usaha."),
-    3:  ("tegas",   "Udah ada modal?"),
-    4:  ("bangga",  "Ada! Delapan puluh ribu."),
-    5:  ("sarkas",  "Hmm..."),
-    6:  ("semangat", "Tapi ide gue gila, Bim! Kopi literan... ada filosofinya!"),
-    7:  ("sarkas",  "Kopi literan di sini... udah ada empat puluh."),
-    8:  ("protes",  "Beda! Punya gue, ada quotes di tutupnya!"),
-    9:  ("pasrah",  "Ya ampun..."),
-    10: ("bangga",  "Nih, gerobaknya! Gue beli kemarin."),
-    11: ("kaget",   "Lu udah beli duluan?!"),
-    12: ("santai",  "Cicilan, tenang... dua belas bulan."),
-    13: ("sarkas",  "Lu mau bayar pake apa? Filosofi?"),
-    14: ("protes",  "Makanya gue mau resign! Biar fokus."),
-    15: ("hangat",  "Tunggu, tunggu. Gue support lu."),
-    16: ("tegas",   "Tapi jangan resign dulu. Kopi jalan, baru keluar."),
-    17: ("ragu",    "Kalau kopinya... nggak jalan?"),
-    18: ("santai",  "Ya lu masih punya gaji. Bisa traktir gue."),
-    19: ("protes",  "Itu mah lu doang yang untung!"),
-    26: ("lega",    "Bim, gue udah ngomong sama bos."),
-    27: ("tegas",   "Gue nggak jadi resign. Ambil lembur dulu."),
-    28: ("santai",  "Oh iya, gerobaknya gue taro di garasi lu, ya."),
-    29: ("kaget",   "Hah?! Garasi gue?!"),
-    30: ("hangat",  "Makasih ya, Bim. Lu emang temen yang selalu support."),
-    31: ("tegas",   "Cicilannya, bayar sendiri, ya."),
-}
+EMO = render.EP.EMO
 
 # Mastering: kompresor + EQ supaya lantang, jelas, dan konsisten
 MASTER = ("highpass=f=90,equalizer=f=250:t=q:w=1:g=-2,equalizer=f=3200:t=q:w=1.2:g=3.5,"
@@ -110,4 +83,4 @@ async def main(out_dir):
     await asyncio.gather(*(run(i, w, t) for i, w, t in lines()))
 
 if __name__ == "__main__":
-    asyncio.run(main(sys.argv[1] if len(sys.argv) > 1 else os.path.join(os.path.dirname(os.path.abspath(__file__)), "voice")))
+    asyncio.run(main(sys.argv[1] if len(sys.argv) > 1 else os.path.join(os.path.dirname(os.path.abspath(__file__)), render.EP.VOICE_SUBDIR)))
