@@ -534,6 +534,8 @@ def make_audio(path):
             n1 = min(N, n0 + len(v))
             y[n0:n1] += v[: n1 - n0] * 0.9
             continue
+        if os.environ.get("NO_BLIP"):
+            continue
         if e["who"] and e["view"] != "narr" and e["text"]:
             f0 = CH[e["who"]]["pitch"]
             n0, n1 = int((e["t0"] + 0.12) * sr), int((e["t1"] - GAP * 0.8) * sr)
