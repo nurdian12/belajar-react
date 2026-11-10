@@ -1,0 +1,181 @@
+<!doctype html><html lang="id"><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--pink:#ff3d8b;--blue:#2563eb;--ink:#0f1b3d;--soft:#eaf0ff}
+*{box-sizing:border-box;margin:0}
+body{background:#333}
+#stage{width:1080px;height:1920px;position:relative;overflow:hidden;background:#fff;font-family:Inter,sans-serif;color:var(--ink)}
+.blob{position:absolute;border-radius:50%;filter:blur(90px);opacity:.28}
+.sc{position:absolute;inset:0;padding:230px 80px 330px;opacity:0}
+.bebas{font-family:"Bebas Neue",Impact,sans-serif;font-weight:400;text-transform:uppercase;line-height:.92}
+.ln{overflow:hidden;display:block}.ln>span{display:block}
+.pk{color:var(--pink)}.bl{color:var(--blue)}
+#brand{position:absolute;top:84px;left:80px;display:flex;gap:14px;align-items:center;font-weight:800;font-size:28px;letter-spacing:3px;z-index:9}
+#brand i{width:36px;height:36px;border-radius:10px;border:3px solid var(--blue);position:relative}
+#brand i:after{content:"";position:absolute;inset:7px;background:var(--pink);border-radius:3px}
+#bar{position:absolute;left:0;bottom:0;height:10px;width:1080px;background:var(--pink);transform-origin:left;z-index:9}
+svg.car{display:block}
+.card{background:#fff;border-radius:28px;box-shadow:0 18px 50px rgba(15,27,61,.14)}
+/* s2 */
+.search{display:flex;align-items:center;gap:24px;padding:34px 40px;font-size:44px;font-weight:500;margin-top:50px}
+.typed{display:inline-block;overflow:hidden;white-space:nowrap;vertical-align:bottom}
+.res{padding:26px 36px;margin-top:22px}
+.res b{display:block;color:var(--blue);font-size:36px}.res span{font-size:26px;color:#6b7aa6}
+.res.no{border:5px dashed var(--pink);background:#fff0f6;box-shadow:none;font-size:42px;font-weight:800;color:var(--pink);text-align:center;padding:40px}
+/* s3 */
+.browser{width:900px;height:600px;margin:50px auto 0;overflow:hidden;position:relative}
+.bhead{height:70px;background:var(--soft);display:flex;align-items:center;gap:12px;padding:0 26px}
+.bhead i{width:18px;height:18px;border-radius:50%;background:#c7d3f5}.bhead i:first-child{background:var(--pink)}
+.url{margin-left:20px;flex:1;background:#fff;border-radius:30px;padding:10px 24px;font-size:24px;color:#6b7aa6}
+.hero{display:flex;padding:34px 40px;gap:20px;align-items:center;height:390px;background:linear-gradient(135deg,#fff,#eaf0ff)}
+.hero h3{font-family:"Bebas Neue";font-size:84px;font-weight:400;line-height:.95;text-transform:uppercase}
+.btn{display:inline-block;margin-top:22px;background:var(--pink);color:#fff;border-radius:40px;padding:16px 34px;font-weight:800;font-size:26px}
+.nav{height:70px;display:flex;justify-content:space-between;align-items:center;padding:0 40px;font-weight:800;font-size:26px}
+.phone{position:absolute;right:50px;top:690px;width:290px;height:560px;border-radius:44px;border:10px solid var(--ink);background:#fff;overflow:hidden;box-shadow:0 30px 70px rgba(15,27,61,.3)}
+.phone .ph{background:linear-gradient(160deg,#eaf0ff,#ffe3ef);height:100%;padding:34px 22px}
+.phone h4{font-family:"Bebas Neue";font-size:58px;font-weight:400;line-height:.95;text-transform:uppercase}
+/* s4 */
+.feat{display:flex;gap:30px;align-items:center;background:var(--soft);border-radius:30px;padding:34px 40px;margin-top:26px;font-size:42px;font-weight:700}
+.ck{flex:none;width:76px;height:76px;border-radius:50%;background:var(--pink);display:flex;align-items:center;justify-content:center}
+.ck svg{width:44px;height:44px}
+/* s5 */
+.chat{width:900px;height:780px;margin:40px auto 0;border-radius:44px;overflow:hidden;position:relative;background:linear-gradient(150deg,#e9c9ff,#ffd3ea 45%,#c9dcff 80%);box-shadow:0 30px 80px rgba(15,27,61,.25)}
+.chead{height:120px;background:rgba(255,255,255,.92);display:flex;align-items:center;gap:22px;padding:0 34px;font-size:38px;font-weight:700}
+.av{width:78px;height:78px;border-radius:50%;background:var(--ink);border:4px solid var(--blue);display:flex;align-items:center;justify-content:center}
+.msgs{padding:36px 34px;display:flex;flex-direction:column;gap:22px}
+.b{max-width:700px;padding:24px 32px;border-radius:30px;font-size:38px;line-height:1.3;font-weight:500}
+.b.o{align-self:flex-end;background:var(--ink);color:#fff;border-bottom-right-radius:8px}
+.b.i{align-self:flex-start;background:#fff;border-bottom-left-radius:8px;box-shadow:0 8px 24px rgba(0,0,0,.08)}
+.tk{color:#6aa8ff;font-size:28px;margin-left:12px}
+.badge{display:inline-block;background:var(--blue);color:#fff;border-radius:60px;padding:22px 44px;font-size:32px;font-weight:700}
+/* s6 */
+.pill{display:inline-flex;align-items:center;gap:20px;background:var(--pink);color:#fff;font-weight:800;font-size:60px;padding:40px 70px;border-radius:100px;box-shadow:0 20px 50px rgba(255,61,139,.45)}
+</style></head><body>
+<div id="stage">
+<div class="blob" id="b1" style="width:700px;height:700px;background:var(--pink);left:-250px;top:-150px"></div>
+<div class="blob" id="b2" style="width:800px;height:800px;background:var(--blue);right:-350px;bottom:-250px"></div>
+<div id="brand"><i></i>JASA WEBSITE</div>
+<div id="bar"></div>
+
+<!-- S1 -->
+<div class="sc" id="sc1">
+<h1 class="bebas" style="font-size:185px;margin-top:80px">
+<span class="ln"><span id="l1">Bisnis rental</span></span>
+<span class="ln"><span id="l2">mobil kamu</span></span>
+<span class="ln"><span id="l3" class="pk">belum punya</span></span>
+<span class="ln"><span id="l4" class="bl">website?</span></span></h1>
+<div id="car1" style="position:absolute;left:60px;bottom:360px"><svg class="car" width="640" height="235" viewBox="0 0 600 220"><use href="#carsvg"/></svg></div>
+</div>
+
+<!-- S2 -->
+<div class="sc" id="sc2">
+<h2 class="bebas" style="font-size:120px" id="s2t">Calon pelanggan<br><span class="pk">cari di Google</span></h2>
+<div class="card search" id="srch"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2.6" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><span class="typed" id="typed" style="width:640px">rental mobil terdekat</span></div>
+<div class="card res" id="r1"><b>Rental Mobil A</b><span>website resmi · pesan online</span></div>
+<div class="card res" id="r2"><b>Rental Mobil B</b><span>website resmi · pesan online</span></div>
+<div class="card res" id="r3"><b>Rental Mobil C</b><span>website resmi · pesan online</span></div>
+<div class="card res no" id="r4">Bisnis kamu? Tidak ketemu 😕</div>
+</div>
+
+<!-- S3 -->
+<div class="sc" id="sc3">
+<h2 class="bebas" style="font-size:130px;text-align:center" id="s3t">Punya <span class="pk">website</span><br>siap terima<br><span class="bl">pesanan 24 jam</span></h2>
+<div class="card browser" id="brw">
+<div class="bhead"><i></i><i></i><i></i><div class="url">namabisnis.com</div></div>
+<div class="nav"><span>Rental Mobil</span><span style="color:#6b7aa6;font-weight:500">Armada · Harga · Kontak</span></div>
+<div class="hero"><div><h3>Sewa mobil<br><span class="pk">nyaman &amp;</span><br>terpercaya</h3><span class="btn">Pesan via WhatsApp</span></div>
+<svg class="car" width="420" height="154" viewBox="0 0 600 220"><use href="#carsvg"/></svg></div>
+</div>
+<div class="phone" id="phn"><div class="ph"><div style="font-weight:800;font-size:22px;margin-bottom:18px">Rental Mobil</div><h4>Sewa<br><span class="pk">mudah</span><br>dari HP</h4><svg class="car" width="230" height="84" viewBox="0 0 600 220" style="margin-top:20px"><use href="#carsvg"/></svg><span class="btn" style="font-size:20px;padding:12px 24px">Pesan sekarang</span></div></div>
+</div>
+
+<!-- S4 -->
+<div class="sc" id="sc4" style="padding-top:300px">
+<h2 class="bebas" style="font-size:150px" id="s4t">Yang kamu<br><span class="pk">dapatkan</span></h2>
+<div style="margin-top:30px">
+<div class="feat" id="f1"><div class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg></div>Desain modern &amp; rapi</div>
+<div class="feat" id="f2"><div class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg></div>Tampil sempurna di HP</div>
+<div class="feat" id="f3"><div class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg></div>Loading cepat</div>
+<div class="feat" id="f4"><div class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg></div>Tombol WhatsApp langsung</div>
+</div></div>
+
+<!-- S5 -->
+<div class="sc" id="sc5" style="padding-top:200px">
+<h2 class="bebas" style="font-size:125px;text-align:center" id="s5t">Sudah dipercaya <span class="pk">klien</span></h2>
+<div class="chat" id="chat">
+<div class="chead"><div class="av"><svg width="46" height="22" viewBox="0 0 600 220"><use href="#carsvg"/></svg></div>elfayyad car'sy</div>
+<div class="msgs">
+<div class="b o" id="m1">gimana penjualan hari ini?<span class="tk">✓✓</span></div>
+<div class="b i" id="m2">Alhamdulillah.. Untuk bulan ini sudah 2 unit terjual kak</div>
+<div class="b o" id="m3">izin buat testimoni ya<span class="tk">✓✓</span></div>
+<div class="b i" id="m4">Silakan</div>
+</div></div>
+<div style="text-align:center;margin-top:44px" id="bdg"><span class="badge">Website rental: elfayyad.prosyariah.my.id</span>
+<div style="font-size:26px;color:#6b7aa6;margin-top:18px">Testimoni dibagikan dengan izin klien</div></div>
+</div>
+
+<!-- S6 -->
+<div class="sc" id="sc6" style="text-align:center">
+<h1 class="bebas" style="font-size:190px;margin-top:100px"><span class="ln"><span id="c1">Mau website</span></span><span class="ln"><span id="c2" class="pk">seperti ini?</span></span></h1>
+<p id="c3" style="font-size:44px;margin-top:40px;line-height:1.4">Ceritakan bisnismu,<br>kita bahas bareng.</p>
+<div style="margin-top:80px" id="c4"><span class="pill" id="pl">DM: "WEBSITE"</span></div>
+<div id="c5" style="font-size:36px;font-weight:800;letter-spacing:4px;margin-top:90px;color:var(--blue)">JASA PEMBUATAN WEBSITE</div>
+</div>
+
+<svg width="0" height="0" style="position:absolute"><defs>
+<g id="carsvg">
+<path d="M30 150 Q30 120 70 112 L150 105 Q190 60 260 58 L390 58 Q440 62 480 105 L545 118 Q575 124 575 150 L575 168 L30 168 Z" fill="#0f1b3d"/>
+<path d="M175 105 Q205 72 262 70 L330 70 L330 105 Z M345 70 L390 70 Q420 74 445 105 L345 105 Z" fill="#9db8ff"/>
+<rect x="40" y="132" width="535" height="6" fill="#d4b24c"/>
+<rect x="540" y="124" width="30" height="14" rx="5" fill="#ffe27a"/>
+<g class="wh"><circle cx="140" cy="170" r="36" fill="#0b1226"/><circle cx="140" cy="170" r="18" fill="#c7d3f5"/><path d="M140 140v60M110 170h60" stroke="#0b1226" stroke-width="5"/></g>
+<g class="wh"><circle cx="460" cy="170" r="36" fill="#0b1226"/><circle cx="460" cy="170" r="18" fill="#c7d3f5"/><path d="M460 140v60M430 170h60" stroke="#0b1226" stroke-width="5"/></g>
+</g></defs></svg>
+</div>
+<script>
+const anims=[];const EO='cubic-bezier(.2,.8,.2,1)',POP='cubic-bezier(.34,1.56,.64,1)';
+const $=id=>document.getElementById(id);
+function an(el,kf,t0,d,ease=EO){const a=el.animate(kf,{delay:t0*1000,duration:d*1000,fill:'both',easing:ease});a.pause();anims.push(a);return a}
+function scene(id,a,b){const tot=b-a,f=.35/tot;an($(id),[{opacity:0,offset:0},{opacity:1,offset:f},{opacity:1,offset:1-f},{opacity:0,offset:1}],a,tot,'linear')}
+const up=(el,t,d=.7)=>an(el,[{opacity:0,transform:'translateY(70px)'},{opacity:1,transform:'none'}],t,d);
+const mask=(el,t,d=.7)=>an(el,[{transform:'translateY(110%)'},{transform:'none'}],t,d);
+const pop=(el,t,d=.6)=>an(el,[{opacity:0,transform:'scale(.5)'},{opacity:1,transform:'scale(1)'}],t,d,POP);
+const T=25;
+// global
+an($('bar'),[{transform:'scaleX(0)'},{transform:'scaleX(1)'}],0,T,'linear');
+an($('b1'),[{transform:'translate(0,0)'},{transform:'translate(300px,600px)'}],0,T,'ease-in-out');
+an($('b2'),[{transform:'translate(0,0)'},{transform:'translate(-300px,-500px)'}],0,T,'ease-in-out');
+// S1 0-3.4
+scene('sc1',0,3.4);
+['l1','l2','l3','l4'].forEach((id,i)=>mask($(id),.15+i*.22,.7));
+an($('car1'),[{transform:'translateX(-800px)'},{transform:'translateX(620px)'}],.2,3.1,'cubic-bezier(.3,.1,.3,1)');
+// S2 3.4-7.2
+scene('sc2',3.4,7.2);
+up($('s2t'),3.5);up($('srch'),3.9);
+an($('typed'),[{width:'0px'},{width:'640px'}],4.3,1.3,'steps(21,end)');
+['r1','r2','r3'].forEach((id,i)=>up($(id),5.7+i*.25,.5));
+pop($('r4'),6.4,.6);
+an($('r4'),[{transform:'translateX(0)'},{transform:'translateX(-14px)'},{transform:'translateX(14px)'},{transform:'translateX(-8px)'},{transform:'translateX(0)'}],6.9,.35,'linear');
+// S3 7.2-12
+scene('sc3',7.2,12);
+up($('s3t'),7.3);
+an($('brw'),[{opacity:0,transform:'translateY(120px) scale(.85)'},{opacity:1,transform:'none'}],8.0,.9,POP);
+an($('phn'),[{opacity:0,transform:'translateY(200px)'},{opacity:1,transform:'none'}],9.0,.8,POP);
+an($('phn'),[{transform:'translateY(0)'},{transform:'translateY(-18px)'},{transform:'translateY(0)'}],9.9,2,'ease-in-out');
+// S4 12-16.2
+scene('sc4',12,16.2);
+up($('s4t'),12.1);
+['f1','f2','f3','f4'].forEach((id,i)=>an($(id),[{opacity:0,transform:'translateX(-120px)'},{opacity:1,transform:'none'}],12.7+i*.5,.6));
+// S5 16.2-22
+scene('sc5',16.2,22);
+up($('s5t'),16.3);pop($('chat'),16.8,.7);
+[['m1',17.7],['m2',18.7],['m3',19.9],['m4',20.7]].forEach(([id,t])=>an($(id),[{opacity:0,transform:'scale(.7) translateY(30px)'},{opacity:1,transform:'none'}],t,.45,POP));
+up($('bdg'),20.9,.5);
+// S6 22-T
+scene('sc6',22,T+.4);
+mask($('c1'),22.2,.7);mask($('c2'),22.45,.7);up($('c3'),23,.6);pop($('c4'),23.4,.6);up($('c5'),24,.5);
+an($('pl'),[{transform:'scale(1)'},{transform:'scale(1.08)'},{transform:'scale(1)'}],24,.7,'ease-in-out');
+// wheels spin
+document.querySelectorAll('.wh').forEach(w=>{w.style.transformBox='fill-box';w.style.transformOrigin='center';an(w,[{transform:'rotate(0)'},{transform:'rotate(1800deg)'}],0,T,'linear')});
+window.seek=t=>anims.forEach(a=>a.currentTime=t*1000);
+</script></body></html>
