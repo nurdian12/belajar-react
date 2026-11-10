@@ -51,6 +51,7 @@ ST = [2.0, 3.9, 5.8, 7.7]          # awal tiap penolakan (detik)
 B_STOP = [300, 300, 300, 215]      # titik berhenti siluet di angle B
 B_HERO_X = 150
 RING_RX = 120
+LAST_HAND = None
 IMP_A = [s + 1.25 for s in ST]     # momen "kena" tiap penolakan di angle A
 IMP_B = [s + 1.8 for s in ST[:3]]  # momen siluet berbalik pergi di angle B
 BURST = 9.5                        # momen bertemu yang cocok di angle B
@@ -129,7 +130,9 @@ def fig_layer(x, fy, col, f=1, walk=None, lean=0.0, head=0.0, arm_f=70, arm_b=-8
               sit=0.0, sc=1.15, lamp=None, face=None):
     """Gambar stickman di layer RGBA transparan. lamp=None / warna lentera.
     face: None | hope | sad | hit | calm | happy.
-    Mengembalikan (layer, posisi lentera, posisi kepala)."""
+    Mengembalikan (layer, posisi lentera, posisi kepala). Posisi tangan depan
+    disimpan di LAST_HAND (untuk menggambar benda yang dibawa)."""
+    global LAST_HAND
     lay = Image.new("RGBA", (PW * S, PH * S), (0, 0, 0, 0))
     d = ImageDraw.Draw(lay)
     L, B, R = 40 * sc, 36 * sc, 14 * sc
@@ -160,6 +163,7 @@ def fig_layer(x, fy, col, f=1, walk=None, lean=0.0, head=0.0, arm_f=70, arm_b=-8
         seg(sh, hnd)
         if front:
             hand_f = hnd
+    LAST_HAND = hand_f
     d.ellipse([(hd[0] - R) * S, (hd[1] - R) * S, (hd[0] + R) * S, (hd[1] + R) * S], fill=col)
     if face:
         ink = (28, 30, 42, 255)
