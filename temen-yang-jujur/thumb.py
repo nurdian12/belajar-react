@@ -22,24 +22,35 @@ def main(out):
     d = ImageDraw.Draw(bg)
 
     # karakter besar, kepala di tengah-bawah
-    r.draw_char(d, 350, 1010, 1.85, r.CH[T.get('cast', ('raka', 'bima'))[0]], 0.31, talk=True, seated=True)     # kaget / mulut terbuka
-    r.draw_char(d, 930, 1010, 1.85, r.CH[T.get('cast', ('raka', 'bima'))[1]], 1.9, talk=False, seated=True)
+    cast = T.get("cast", ("raka", "bima"))
+    four = len(cast) == 4
+    if four:                                                    # 4 karakter berjajar
+        for k, (nm, xx) in enumerate(zip(cast, (175, 465, 815, 1105))):
+            r.draw_char(d, xx, 1020, 1.45, r.CH[nm], 0.31 + k * 0.9, talk=(k in (0, 3)), seated=True)
+    else:
+        r.draw_char(d, 350, 1010, 1.85, r.CH[cast[0]], 0.31, talk=True, seated=True)     # kaget / mulut terbuka
+        r.draw_char(d, 930, 1010, 1.85, r.CH[cast[1]], 1.9, talk=False, seated=True)
 
     # gelembung dialog
     def bubble(x0, y0, x1, y1, tail, text, size):
         d.rounded_rectangle([x0 * S, y0 * S, x1 * S, y1 * S], 36 * S, fill=(255, 255, 255), outline=r.INK, width=6 * S)
         d.polygon([(a * S, b * S) for a, b in tail], fill=(255, 255, 255), outline=r.INK)
         d.text(((x0 + x1) / 2 * S, (y0 + y1) / 2 * S), text, font=r.font(FB, size * S), fill=r.INK, anchor="mm", align="center", spacing=4 * S)
-    bubble(190, 200, 480, 280, [(300, 278), (350, 278), (345, 312)], T["bubbleL"], 34)
-    bubble(790, 200, 1080, 280, [(880, 278), (930, 278), (925, 312)], T["bubbleR"], 34)
+    if four:
+        bubble(30, 220, 310, 305, [(130, 303), (190, 303), (175, 345)], T["bubbleL"], 32)
+        bubble(970, 220, 1250, 305, [(1070, 303), (1130, 303), (1115, 345)], T["bubbleR"], 32)
+    else:
+        bubble(190, 200, 480, 280, [(300, 278), (350, 278), (345, 312)], T["bubbleL"], 34)
+        bubble(790, 200, 1080, 280, [(880, 278), (930, 278), (925, 312)], T["bubbleR"], 34)
 
     # judul
     stroke_text(d, (TW / 2, 62), T["line1"], 78, (255, 255, 255), 12)
     stroke_text(d, (TW / 2, 150), T["line2"], 96, (255, 214, 10), 14)
 
     # badge merah
-    d.rounded_rectangle([330 * S, 590 * S, 950 * S, 700 * S], 26 * S, fill=(226, 44, 44), outline=(255, 255, 255), width=6 * S)
-    d.text((640 * S, 645 * S), T["badge"], font=r.font(FB, (70 if len(T["badge"]) < 14 else 60 if len(T["badge"]) <= 18 else 42) * S), fill=(255, 255, 255), anchor="mm", stroke_width=3 * S, stroke_fill=(120, 10, 10))
+    by0, by1, bty = (632, 706, 669) if four else (590, 700, 645)
+    d.rounded_rectangle([330 * S, by0 * S, 950 * S, by1 * S], 26 * S, fill=(226, 44, 44), outline=(255, 255, 255), width=6 * S)
+    d.text((640 * S, bty * S), T["badge"], font=r.font(FB, ((70 if len(T["badge"]) < 14 else 60 if len(T["badge"]) <= 18 else 42) * (0.8 if four else 1)) * S), fill=(255, 255, 255), anchor="mm", stroke_width=3 * S, stroke_fill=(120, 10, 10))
 
     # label episode
     d.rounded_rectangle([24 * S, 640 * S, 200 * S, 696 * S], 14 * S, fill=(20, 20, 26))

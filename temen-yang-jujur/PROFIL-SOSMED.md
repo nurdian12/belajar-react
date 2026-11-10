@@ -102,6 +102,7 @@ Kalau kamu suka, bagikan ke temen yang selalu ada buat kamu (dan yang selalu ngi
 - Eps 4: "Temen kamu yang cuma muncul pas ada maunya? Tag di sini, jangan kasih tau 😭"
 - Eps 5: "Siapa yang pernah bantuin kamu pas lagi di titik terendah? Tag mereka, bilang makasih 🫶"
 - Eps 6: "Kamu tim HORE (Fajar) atau tim REALISTIS (Naila)? Jawab jujur di komentar 👇"
+- Eps 7: "Kopi Galaksi atau Kopi Seadanya? Vote di komentar, yang kalah traktir 😆"
 
 ---
 

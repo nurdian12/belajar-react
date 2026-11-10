@@ -237,7 +237,7 @@ def get_bg(name, offset=0):
     if name == "road":
         return bg_road(offset)
     if name not in _bg:
-        _bg[name] = {"park": bg_park, "warung": bg_warung, "tamu": bg_tamu, "garasi": bg_garasi, "syuting": bg_garasi, "stairs": bg_stairs, "phone": bg_park, "credits": bg_dark}[name]()
+        _bg[name] = {"park": bg_park, "warung": bg_warung, "rapat": bg_warung, "tamu": bg_tamu, "garasi": bg_garasi, "syuting": bg_garasi, "stairs": bg_stairs, "phone": bg_park, "credits": bg_dark}[name]()
     return _bg[name].copy()
 
 # ------------------------------------------------------------------ karakter
@@ -420,11 +420,16 @@ def render_frame(n):
     def cart_here():
         draw_cart(d, 700, 640, 0.9)
 
-    if seq in ("park", "warung", "garasi", "syuting", "tamu"):
+    if seq in ("park", "warung", "garasi", "syuting", "tamu", "rapat"):
         garage = seq in ("garasi", "syuting")
         pair = getattr(EP, "CAST", {}).get(seq, ("fajar", "naila") if seq == "tamu" else ("raka", "bima"))
         L, Rr = CH[pair[0]], CH[pair[1]]
-        if seq == "tamu" and view == "wide":
+        if len(pair) == 4 and view == "wide":                 # rapat 4 karakter
+            if seq == "rapat":
+                draw_cart(d, 480, 640, 0.55)
+            for nm, xx in zip(pair, (150, 345, 615, 810)):
+                draw_char(d, xx, 655, 0.78, CH[nm], t, talk=(who == nm and talking))
+        elif seq == "tamu" and view == "wide":
             for cfg_, xx, fc, nm in ((L, 360, 1, pair[0]), (Rr, 610, -1, pair[1])):
                 draw_char(d, xx, 690, 0.95, cfg_, t, talk=(who == nm and talking), seated=True)
                 draw_sit_legs(d, xx, 548, 0.95, cfg_, facing=fc)

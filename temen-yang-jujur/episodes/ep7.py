@@ -1,0 +1,100 @@
+"""Episode 7 - Rapat Gerobak (4 karakter: Raka, Bima, Fajar, Naila)"""
+CAPTION = "Temen yang selalu support:\nRapat Gerobak!"
+CREDIT_TITLE = "Temen yang selalu support:\nRapat Gerobak!"
+VOICE_SUBDIR = "voice_ep7"
+GESTURE = 0.25
+CAST = {"rapat": ("raka", "fajar", "bima", "naila"), "park": ("raka", "fajar", "bima", "naila"),
+        "tamu": ("fajar", "naila")}
+THUMB = dict(line1="RAPAT GEROBAK", line2="4 KEPALA", badge="(nama gerobak?!)", eps="EPS. 7",
+             bubbleL="Kopi\nGALAKSI!", bubbleR="Kopi\nSEADANYA!", bg="park",
+             cast=("fajar", "raka", "bima", "naila"))
+
+SEQS = [
+    ("rapat", [
+        ("raka", "Oke, rapat gerobak dimulai. Agenda: nama baru.", "wide"),
+        ("fajar", "Kopi Galaksi! Kita go international!", "close"),
+        ("naila", "Kopi Galaksi. Kita bahkan belum go RT sebelah.", "close"),
+        ("bima", "Gue usul Kopi Filosofi aja. Udah ada tulisannya.", "close"),
+        ("raka", "Tapi filosofinya udah gue lupa.", "close"),
+        ("fajar", "Gampang! Karang aja. Nanti viral!", "wide"),
+        ("naila", "Karang filosofi. Itu namanya nipu.", "close"),
+        ("raka", "Bukan nipu. Itu storytelling!", "close"),
+        ("bima", "Voting aja.", "wide"),
+        ("naila", "Gue abstain. Gue mau lihat kalian nyesel.", "close"),
+    ]),
+    ("park", [
+        ("bima", "Voting. Yang pilih Kopi Galaksi?", "wide"),
+        ("fajar", "Gue! Dan Raka. Dan Bima. Dan Naila. Dan alam semesta!", "close"),
+        ("naila", "Satu suara. Jangan ngitung semesta.", "close"),
+        ("raka", "Kopi Filosofi dapet satu.", "close"),
+        ("bima", "Dua. Gue juga.", "close"),
+        ("naila", "Kopi Seadanya. Gue.", "wide"),
+        ("fajar", "Itu bukan nama, itu keluhan!", "close"),
+        ("raka", "Tapi jujur... itu menarik.", "close"),
+    ]),
+    ("tamu", [
+        ("fajar", "Naila, tolong kasih ide spanduk. Yang neon!", "wide"),
+        ("naila", "Neon mahal. Spidol murah.", "close"),
+        ("fajar", "Spidol itu nggak ada aura!", "close"),
+        ("naila", "Aura nggak bayar listrik.", "close"),
+        ("fajar", "Lu kenapa tega sama mimpi gue?", "close"),
+        ("naila", "Karena mimpi lu nggak punya sekring.", "wide"),
+    ]),
+    ("stairs", [
+        (None, "Beda pendapat itu wajar,", "narr"),
+        (None, "yang penting satu tujuan.", "narr"),
+        (None, "Ada yang ngegas,", "narr"),
+        (None, "ada yang ngerem,", "narr"),
+        (None, "dan ada yang jujur apa adanya.", "narr"),
+    ]),
+    ("road", [(None, "", "ride")]),
+    ("phone", [
+        ("bima", "☎ Rak! Spanduknya udah jadi.", "helmet"),
+        ("raka", "Tulisannya apa?", "helmet"),
+        ("bima", "☎ Kopi Seadanya.", "helmet"),
+        ("raka", "Lho? Siapa yang pilih?", "helmet"),
+        ("naila", "☎ Tukang spanduknya. Dia nggak ikut voting.", "helmet"),
+        ("fajar", "☎ Tapi lihat antreannya, Rak! Viral!", "helmet"),
+        ("raka", "Beneran?!", "helmet"),
+        ("naila", "☎ Orang penasaran. Katanya, kopinya apa adanya.", "helmet"),
+        ("raka", "Berarti... filosofinya jadi beneran.", "helmet"),
+    ]),
+    ("credits", [(None, "", "credits")]),
+]
+
+# index baris global -> (preset, teks ucapan)
+EMO = {
+    0:  ("yakin",    "Oke, rapat gerobak dimulai. Agenda: nama baru."),
+    1:  ("bangga",   "Kopi Galaksi! Kita go international!"),
+    2:  ("datar",    "Kopi Galaksi. Kita bahkan belum go RT sebelah."),
+    3:  ("santai",   "Gue usul, Kopi Filosofi aja. Udah ada tulisannya."),
+    4:  ("ragu",     "Tapi filosofinya udah gue lupa."),
+    5:  ("semangat", "Gampang! Karang aja. Nanti viral!"),
+    6:  ("tegas",    "Karang filosofi. Itu namanya nipu."),
+    7:  ("protes",   "Bukan nipu. Itu storytelling!"),
+    8:  ("tegas",    "Voting aja."),
+    9:  ("sarkas",   "Gue abstain. Gue mau lihat kalian nyesel."),
+    10: ("tegas",    "Voting. Yang pilih Kopi Galaksi?"),
+    11: ("semangat", "Gue! Dan Raka. Dan Bima. Dan Naila. Dan alam semesta!"),
+    12: ("datar",    "Satu suara. Jangan ngitung semesta."),
+    13: ("santai",   "Kopi Filosofi dapet satu."),
+    14: ("santai",   "Dua. Gue juga."),
+    15: ("datar",    "Kopi Seadanya. Gue."),
+    16: ("protes",   "Itu bukan nama, itu keluhan!"),
+    17: ("ragu",     "Tapi jujur... itu menarik."),
+    18: ("bangga",   "Naila, tolong kasih ide spanduk. Yang neon!"),
+    19: ("datar",    "Neon mahal. Spidol murah."),
+    20: ("protes",   "Spidol itu nggak ada aura!"),
+    21: ("tegas",    "Aura nggak bayar listrik."),
+    22: ("pasrah",   "Lu kenapa tega sama mimpi gue?"),
+    23: ("sarkas",   "Karena mimpi lu nggak punya sekring."),
+    30: ("tegas",    "Rak! Spanduknya udah jadi."),
+    31: ("ragu",     "Tulisannya apa?"),
+    32: ("santai",   "Kopi Seadanya."),
+    33: ("kaget",    "Lho? Siapa yang pilih?"),
+    34: ("datar",    "Tukang spanduknya. Dia nggak ikut voting."),
+    35: ("semangat", "Tapi lihat antreannya, Rak! Viral!"),
+    36: ("kaget",    "Beneran?!"),
+    37: ("hangat",   "Orang penasaran. Katanya, kopinya apa adanya."),
+    38: ("hangat",   "Berarti... filosofinya jadi beneran."),
+}
