@@ -1,0 +1,97 @@
+"""Episode 5 - Temen yang Selalu Percaya (giliran gue)"""
+CAPTION = "Temen yang selalu\npercaya (giliran gue)!"
+CREDIT_TITLE = "Temen yang selalu percaya\n(giliran gue)!"
+VOICE_SUBDIR = "voice_ep5"
+GESTURE = 0.25
+THUMB = dict(line1="TEMEN YANG SELALU", line2="PERCAYA", badge="(giliran gue!)", eps="EPS. 5",
+             bubbleL="Gerobak gue\nLARIS!", bubbleR="Gue... kena\nPHK.", bg="park")
+
+SEQS = [
+    ("park", [
+        ("raka", "Bim, gerobak gue laris hari ini!", "wide"),
+        ("bima", "Alhamdulillah. Berapa cup?", "close"),
+        ("raka", "Tiga puluh. Dua puluh delapan dibeli emak gue.", "close"),
+        ("bima", "Berarti dua yang bener-bener pelanggan.", "close"),
+        ("raka", "Satu minta diskon, jadi setengah.", "close"),
+        ("bima", "Selamat, Rak.", "wide"),
+        ("raka", "Kok lesu? Lu kenapa?", "close"),
+        ("bima", "Gue kena PHK kemarin.", "close"),
+    ]),
+    ("warung", [
+        ("raka", "Hah?! Kok nggak bilang dari kemarin?", "wide"),
+        ("bima", "Malu. Gue kan yang biasanya ngingetin lu.", "close"),
+        ("raka", "Terus seharian lu ngapain?", "close"),
+        ("bima", "Ngitung cicilan. Punya gue, sekarang.", "close"),
+        ("raka", "Bim, lu pernah nganterin gue enam kali.", "close"),
+        ("bima", "Tujuh. Sama pas lu minta kunci cadangan.", "close"),
+        ("raka", "Nah. Sekarang giliran gue.", "wide"),
+        ("bima", "Giliran apa?", "close"),
+        ("raka", "Giliran percaya sama lu. Lu pasti bisa.", "close"),
+        ("bima", "Percaya doang nggak bisa bayar kontrakan.", "wide"),
+    ]),
+    ("garasi", [
+        ("raka", "Makanya, nih. Gue sewa gerobak kedua.", "wide"),
+        ("bima", "Buat siapa?", "close"),
+        ("raka", "Buat lu. Jadi partner, bukan karyawan.", "close"),
+        ("bima", "Gue nggak ngerti kopi.", "close"),
+        ("raka", "Tenang. Lu jago nagih cicilan.", "close"),
+        ("bima", "Itu bukan skill kopi.", "close"),
+        ("raka", "Itu skill bisnis.", "wide"),
+    ]),
+    ("stairs", [
+        (None, "Temen yang percaya nggak cuma ngasih semangat,", "narr"),
+        (None, "tapi juga ngasih kesempatan.", "narr"),
+        (None, "Dulu kita dibantu,", "narr"),
+        (None, "sekarang giliran kita yang bantu.", "narr"),
+        (None, "Karena percaya itu, kadang harus dibuktiin.", "narr"),
+    ]),
+    ("road", [(None, "", "ride")]),
+    ("phone", [
+        ("bima", "☎ Rak, gue udah di warung. Kopinya mana?", "helmet"),
+        ("raka", "Di gerobak. Tinggal diseduh.", "helmet"),
+        ("bima", "☎ Tapi gue nggak bisa nyeduh.", "helmet"),
+        ("raka", "Ikutin tutorial. Atau tanya emak gue.", "helmet"),
+        ("bima", "☎ Emak lu juga ikut nyeduh?", "helmet"),
+        ("raka", "Dia manajer produksi, Bim.", "helmet"),
+        ("bima", "☎ Terus jabatan gue apa?", "helmet"),
+        ("raka", "Direktur. Gajinya nunggu laku dulu.", "helmet"),
+    ]),
+    ("credits", [(None, "", "credits")]),
+]
+
+# index baris global -> (preset, teks ucapan)
+EMO = {
+    0:  ("bangga",   "Bim! Gerobak gue laris hari ini!"),
+    1:  ("hangat",   "Alhamdulillah. Berapa cup?"),
+    2:  ("semangat", "Tiga puluh! Dua puluh delapan dibeli emak gue."),
+    3:  ("sarkas",   "Berarti dua yang bener-bener pelanggan."),
+    4:  ("protes",   "Satu minta diskon, jadi setengah!"),
+    5:  ("hangat",   "Selamat, Rak."),
+    6:  ("ragu",     "Kok lesu? Lu kenapa?"),
+    7:  ("pasrah",   "Gue kena PHK. Kemarin."),
+    8:  ("kaget",    "Hah?! Kok nggak bilang dari kemarin?"),
+    9:  ("pasrah",   "Malu. Gue kan yang biasanya, ngingetin lu."),
+    10: ("hangat",   "Terus seharian, lu ngapain?"),
+    11: ("pasrah",   "Ngitung cicilan. Punya gue, sekarang."),
+    12: ("yakin",    "Bim, lu pernah nganterin gue, enam kali."),
+    13: ("tegas",    "Tujuh. Sama pas lu minta kunci cadangan."),
+    14: ("yakin",    "Nah. Sekarang, giliran gue."),
+    15: ("ragu",     "Giliran apa?"),
+    16: ("hangat",   "Giliran percaya sama lu. Lu pasti bisa."),
+    17: ("sarkas",   "Percaya doang, nggak bisa bayar kontrakan."),
+    18: ("bangga",   "Makanya, nih! Gue sewa gerobak kedua."),
+    19: ("ragu",     "Buat siapa?"),
+    20: ("yakin",    "Buat lu. Jadi partner, bukan karyawan."),
+    21: ("ragu",     "Gue nggak ngerti kopi."),
+    22: ("bangga",   "Tenang. Lu jago nagih cicilan."),
+    23: ("sarkas",   "Itu bukan skill kopi."),
+    24: ("semangat", "Itu skill bisnis!"),
+    31: ("tegas",    "Rak, gue udah di warung. Kopinya mana?"),
+    32: ("santai",   "Di gerobak. Tinggal diseduh."),
+    33: ("kaget",    "Tapi gue nggak bisa nyeduh!"),
+    34: ("santai",   "Ikutin tutorial. Atau tanya emak gue."),
+    35: ("kaget",    "Emak lu juga ikut nyeduh?"),
+    36: ("bangga",   "Dia manajer produksi, Bim."),
+    37: ("ragu",     "Terus jabatan gue apa?"),
+    38: ("bangga",   "Direktur. Gajinya, nunggu laku dulu."),
+}
