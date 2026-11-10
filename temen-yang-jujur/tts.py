@@ -14,6 +14,8 @@ import render
 VOICES = {
     "raka": dict(voice="id-ID-ArdiNeural", pitch="+28Hz", rate="+10%"),
     "bima": dict(voice="id-ID-ArdiNeural", pitch="-22Hz", rate="-6%"),
+    "fajar": dict(voice="id-ID-ArdiNeural", pitch="+4Hz", rate="+8%"),     # cerah, ceplas-ceplos
+    "naila": dict(voice="id-ID-GadisNeural", pitch="+0Hz", rate="+0%"),    # satu-satunya suara wanita
 }
 
 # Emosi per baris: index baris global -> (preset, teks pengganti untuk penekanan/jeda)
@@ -32,6 +34,7 @@ PRESET = {
     "ragu":     (+10, -14, -6),   # pelan, gamang
     "protes":   (+16, +6, +20),
     "lega":     (0, -6, +4),
+    "datar":    (-4, -8, +2),     # deadpan
 }
 EMO = render.EP.EMO
 

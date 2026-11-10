@@ -1,0 +1,111 @@
+"""Episode 6 - Temen yang Selalu Support: Tim Hore vs Tim Realistis (karakter baru: Fajar & Naila)"""
+CAPTION = "Temen yang selalu support:\nTim Hore vs Tim Realistis!"
+CREDIT_TITLE = "Temen yang selalu support:\nTim Hore vs Tim Realistis!"
+VOICE_SUBDIR = "voice_ep6"
+GESTURE = 0.25
+# pasangan karakter per adegan (kiri, kanan); adegan lain default Raka & Bima
+CAST = {"tamu": ("fajar", "naila"), "park": ("raka", "bima"), "warung": ("raka", "fajar"), "garasi": ("bima", "naila")}
+THUMB = dict(line1="TIM HORE VS", line2="TIM REALISTIS", badge="(Fajar & Naila)", eps="EPS. 6",
+             bubbleL="Es batu\nke KUTUB!", bubbleR="Itu bukan\nPELUANG.", bg="tamu", cast=("fajar", "naila"))
+
+SEQS = [
+    ("tamu", [
+        ("fajar", "Naila! Gue punya ide bisnis. Jual es batu!", "wide"),
+        ("naila", "Es batu? Di mana?", "close"),
+        ("fajar", "Di kutub. Orang sana pasti butuh.", "close"),
+        ("naila", "Mereka tinggal di es, Jar.", "close"),
+        ("fajar", "Makanya! Belum ada kompetitor.", "close"),
+        ("naila", "Jar. Itu bukan peluang. Itu alasan.", "wide"),
+        ("fajar", "Lu kenapa selalu negatif, sih?", "close"),
+        ("naila", "Gue realistis. Bedanya tipis.", "close"),
+    ]),
+    ("park", [
+        ("raka", "Bim, temen gue mau ikut jaga gerobak.", "wide"),
+        ("bima", "Yang mana? Fajar atau Naila?", "close"),
+        ("raka", "Dua-duanya. Satu hore, satu nyinyir.", "close"),
+        ("bima", "Kombinasi sempurna.", "close"),
+        ("raka", "Fajar bilang, gerobak kita bisa ekspor ke Jepang.", "close"),
+        ("bima", "Terus Naila bilang apa?", "wide"),
+        ("raka", "Katanya, kita bahkan belum punya gelas cadangan.", "close"),
+        ("bima", "Dua-duanya bener.", "close"),
+    ]),
+    ("warung", [
+        ("fajar", "Rak! Gerobak lu bakal jadi franchise!", "wide"),
+        ("raka", "Serius? Udah ada yang minat?", "close"),
+        ("fajar", "Belum. Tapi feeling gue kuat.", "close"),
+        ("raka", "Feeling lu pernah bener?", "close"),
+        ("fajar", "Pernah. Sekali. Waktu nebak es teh.", "close"),
+        ("raka", "Itu pesenan gue!", "close"),
+        ("fajar", "Ya makanya! Feeling itu nyata!", "wide"),
+    ]),
+    ("garasi", [
+        ("naila", "Bim, gue bikin catatan keuangan gerobak.", "wide"),
+        ("bima", "Mantap. Hasilnya gimana?", "close"),
+        ("naila", "Untung dua belas ribu. Rugi dua ratus ribu.", "close"),
+        ("bima", "Kok bisa?", "close"),
+        ("naila", "Karena emaknya Raka beli dua puluh delapan cup.", "close"),
+        ("bima", "Itu kan untung.", "close"),
+        ("naila", "Gratis. Dia nggak bayar.", "wide"),
+    ]),
+    ("stairs", [
+        (None, "Kita butuh temen yang bilang \"gas\",", "narr"),
+        (None, "dan temen yang bilang \"tunggu dulu\".", "narr"),
+        (None, "Yang satu ngasih semangat,", "narr"),
+        (None, "yang satu ngasih rem.", "narr"),
+        (None, "Dua-duanya sayang, cuma beda cara.", "narr"),
+    ]),
+    ("road", [(None, "", "ride")]),
+    ("phone", [
+        ("raka", "Halo, Jar? Gue lagi di jalan.", "helmet"),
+        ("fajar", "☎ Rak! Gue punya ide! Gerobak keliling Jepang!", "helmet"),
+        ("raka", "Jepang? Gue aja belum punya paspor.", "helmet"),
+        ("naila", "☎ Rak, ini Naila. Jangan dengerin Fajar.", "helmet"),
+        ("raka", "Lho? Kalian satu HP?", "helmet"),
+        ("naila", "☎ Dia pinjem HP gue. Udah tiga hari belum balik.", "helmet"),
+        ("fajar", "☎ Gue balikin pas ide Jepangnya jadi!", "helmet"),
+        ("naila", "☎ Jar!", "helmet"),
+    ]),
+    ("credits", [(None, "", "credits")]),
+]
+
+# index baris global -> (preset, teks ucapan)
+EMO = {
+    0:  ("bangga",   "Naila! Gue punya ide bisnis. Jual es batu!"),
+    1:  ("datar",    "Es batu? Di mana?"),
+    2:  ("yakin",    "Di kutub. Orang sana pasti butuh."),
+    3:  ("sarkas",   "Mereka tinggal di es, Jar."),
+    4:  ("semangat", "Makanya! Belum ada kompetitor!"),
+    5:  ("tegas",    "Jar. Itu bukan peluang. Itu alasan."),
+    6:  ("protes",   "Lu kenapa selalu negatif, sih?"),
+    7:  ("datar",    "Gue realistis. Bedanya tipis."),
+    8:  ("santai",   "Bim, temen gue mau ikut jaga gerobak."),
+    9:  ("ragu",     "Yang mana? Fajar atau Naila?"),
+    10: ("santai",   "Dua-duanya. Satu hore, satu nyinyir."),
+    11: ("sarkas",   "Kombinasi sempurna."),
+    12: ("bangga",   "Fajar bilang, gerobak kita bisa ekspor ke Jepang."),
+    13: ("ragu",     "Terus Naila bilang apa?"),
+    14: ("pasrah",   "Katanya, kita bahkan belum punya gelas cadangan."),
+    15: ("tegas",    "Dua-duanya bener."),
+    16: ("bangga",   "Rak! Gerobak lu bakal jadi franchise!"),
+    17: ("ragu",     "Serius? Udah ada yang minat?"),
+    18: ("yakin",    "Belum. Tapi feeling gue kuat."),
+    19: ("sarkas",   "Feeling lu pernah bener?"),
+    20: ("santai",   "Pernah. Sekali. Waktu nebak es teh."),
+    21: ("protes",   "Itu pesenan gue!"),
+    22: ("semangat", "Ya makanya! Feeling itu nyata!"),
+    23: ("datar",    "Bim, gue bikin catatan keuangan gerobak."),
+    24: ("hangat",   "Mantap. Hasilnya gimana?"),
+    25: ("datar",    "Untung dua belas ribu. Rugi dua ratus ribu."),
+    26: ("kaget",    "Kok bisa?"),
+    27: ("tegas",    "Karena emaknya Raka beli dua puluh delapan cup."),
+    28: ("ragu",     "Itu kan untung."),
+    29: ("sarkas",   "Gratis. Dia nggak bayar."),
+    36: ("santai",   "Halo, Jar? Gue lagi di jalan."),
+    37: ("semangat", "Rak! Gue punya ide! Gerobak keliling Jepang!"),
+    38: ("kaget",    "Jepang? Gue aja belum punya paspor."),
+    39: ("datar",    "Rak, ini Naila. Jangan dengerin Fajar."),
+    40: ("kaget",    "Lho? Kalian satu HP?"),
+    41: ("tegas",    "Dia pinjem HP gue. Udah tiga hari belum balik."),
+    42: ("protes",   "Gue balikin pas ide Jepangnya jadi!"),
+    43: ("protes",   "Jar!"),
+}

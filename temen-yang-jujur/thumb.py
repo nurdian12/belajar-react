@@ -22,8 +22,8 @@ def main(out):
     d = ImageDraw.Draw(bg)
 
     # karakter besar, kepala di tengah-bawah
-    r.draw_char(d, 350, 1010, 1.85, r.RAKA, 0.31, talk=True)     # kaget / mulut terbuka
-    r.draw_char(d, 930, 1010, 1.85, r.BIMA, 1.9, talk=False)
+    r.draw_char(d, 350, 1010, 1.85, r.CH[T.get('cast', ('raka', 'bima'))[0]], 0.31, talk=True, seated=True)     # kaget / mulut terbuka
+    r.draw_char(d, 930, 1010, 1.85, r.CH[T.get('cast', ('raka', 'bima'))[1]], 1.9, talk=False, seated=True)
 
     # gelembung dialog
     def bubble(x0, y0, x1, y1, tail, text, size):
@@ -64,8 +64,8 @@ def vertical(out):
     d = ImageDraw.Draw(bg)
 
     # karakter (kepala di sekitar y~1000)
-    r.draw_char(d, 275, 1990, 2.9, r.RAKA, 0.31, talk=True)
-    r.draw_char(d, 805, 1990, 2.9, r.BIMA, 1.9, talk=False)
+    r.draw_char(d, 275, 1990, 2.9, r.CH[T.get('cast', ('raka', 'bima'))[0]], 0.31, talk=True, seated=True)
+    r.draw_char(d, 805, 1990, 2.9, r.CH[T.get('cast', ('raka', 'bima'))[1]], 1.9, talk=False, seated=True)
 
     def bubble(x0, y0, x1, y1, tail, text, size):
         d.rounded_rectangle([x0 * S, y0 * S, x1 * S, y1 * S], 44 * S, fill=(255, 255, 255), outline=r.INK, width=7 * S)

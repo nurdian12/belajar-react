@@ -31,6 +31,17 @@ Siap salin-tempel untuk TikTok, Instagram, YouTube, dan X. Jumlah karakter sudah
 
 ---
 
+### Karakter utama
+
+| Karakter | Peran | Ciri |
+|---|---|---|
+| **Raka** | Si pemimpi | Baju biru, kacamata, ide besar, dompet tipis |
+| **Bima** | Si realistis yang peduli | Baju hitam, tempat curhat dan pengingat cicilan |
+| **Fajar** *(mulai Eps 6)* | Tim Hore | Hoodie hitam, rambut spike, tatapan nyindir, selalu bilang "gas" |
+| **Naila** *(mulai Eps 6)* | Tim Realistis | Hoodie pink, rambut cepol, mata bulat datar, ucapannya jujur dan nyelekit |
+
+---
+
 ## 3. Bio per platform
 
 ### TikTok (maks 80 karakter, ini 79)
@@ -90,6 +101,7 @@ Kalau kamu suka, bagikan ke temen yang selalu ada buat kamu (dan yang selalu ngi
 - Eps 3: "Temen kamu yang paling bawel ngingetin apa? Tulis di sini 👇"
 - Eps 4: "Temen kamu yang cuma muncul pas ada maunya? Tag di sini, jangan kasih tau 😭"
 - Eps 5: "Siapa yang pernah bantuin kamu pas lagi di titik terendah? Tag mereka, bilang makasih 🫶"
+- Eps 6: "Kamu tim HORE (Fajar) atau tim REALISTIS (Naila)? Jawab jujur di komentar 👇"
 
 ---
 

@@ -22,7 +22,11 @@ FDJ = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
 # ------------------------------------------------------------------ naskah
 RAKA = dict(name="Raka", shirt=(78, 124, 196), pants=(86, 120, 170), hair=(24, 24, 28), glasses=True, pitch=235)
 BIMA = dict(name="Bima", shirt=(34, 34, 40), pants=(86, 120, 170), hair=(24, 24, 28), glasses=False, pitch=165)
-CH = {"raka": RAKA, "bima": BIMA}
+FAJAR = dict(name="Fajar", shirt=(30, 30, 36), pants=(40, 40, 52), hair=(20, 20, 24), glasses=False, pitch=190,
+             hoodie=True, hair_style="spiky", mood="smirk")
+NAILA = dict(name="Naila", shirt=(238, 138, 170), pants=(30, 30, 36), hair=(98, 66, 50), glasses=False, pitch=300,
+             hoodie=True, hair_style="bun", eyes="round", mood="flat")
+CH = {"raka": RAKA, "bima": BIMA, "fajar": FAJAR, "naila": NAILA}
 
 LINE_MIN, PER_CHAR, GAP = 1.3, 0.06, 0.12
 SPECIAL = {"ride": 3.4, "credits": 5.0}
@@ -170,6 +174,31 @@ def draw_ringlight(d, x, y, sc=1.0, on=True):
     d.rounded_rectangle([X(cx - 26), Y(cy - 46), X(cx + 26), Y(cy + 46)], 8 * sc * S, fill=(30, 32, 38))
     d.ellipse([X(cx - 8), Y(cy - 34), X(cx + 8), Y(cy - 18)], fill=(80, 120, 200))
 
+def bg_tamu():
+    img = Image.new("RGB", (W * S, H * S), (240, 236, 228))
+    d = ImageDraw.Draw(img)
+    d.polygon([(0, 0), (500 * S, 0), (500 * S, 600 * S), (0, 600 * S)], fill=(238, 234, 226))
+    d.polygon([(500 * S, 0), (W * S, 0), (W * S, 600 * S), (500 * S, 600 * S)], fill=(246, 243, 236))   # sudut dinding
+    d.line([(500 * S, 0), (500 * S, 600 * S)], fill=(210, 205, 196), width=3 * S)
+    d.rectangle([0, 40 * S, W * S, 52 * S], fill=(226, 221, 212))
+    d.rectangle([0, 592 * S, W * S, 604 * S], fill=(214, 208, 198))
+    d.rectangle([0, 604 * S, W * S, H * S], fill=(226, 206, 176))                                        # lantai
+    d.ellipse([140 * S, 640 * S, 820 * S, 760 * S], fill=(236, 230, 220))                                 # karpet
+    for (x0, y0, x1, y1, col) in [(80, 150, 230, 270, (200, 190, 175)), (700, 130, 880, 250, (200, 190, 175))]:   # bingkai
+        d.rectangle([x0 * S, y0 * S, x1 * S, y1 * S], fill=(176, 148, 116))
+        d.rectangle([(x0 + 10) * S, (y0 + 10) * S, (x1 - 10) * S, (y1 - 10) * S], fill=(214, 226, 230))
+    d.polygon([(710 * S, 240 * S), (790 * S, 180 * S), (870 * S, 240 * S)], fill=(150, 190, 150))
+    # sofa
+    d.rounded_rectangle([140 * S, 330 * S, 820 * S, 560 * S], 40 * S, fill=(214, 210, 203), outline=(160, 156, 148), width=4 * S)
+    d.rounded_rectangle([110 * S, 440 * S, 190 * S, 640 * S], 34 * S, fill=(206, 202, 195), outline=(160, 156, 148), width=4 * S)
+    d.rounded_rectangle([770 * S, 440 * S, 850 * S, 640 * S], 34 * S, fill=(206, 202, 195), outline=(160, 156, 148), width=4 * S)
+    d.rounded_rectangle([160 * S, 540 * S, 800 * S, 620 * S], 22 * S, fill=(220, 216, 209), outline=(160, 156, 148), width=4 * S)
+    d.line([(480 * S, 540 * S), (480 * S, 620 * S)], fill=(176, 172, 165), width=3 * S)
+    d.rounded_rectangle([160 * S, 618 * S, 800 * S, 656 * S], 14 * S, fill=(200, 196, 189), outline=(160, 156, 148), width=4 * S)
+    d.rounded_rectangle([120 * S, 410 * S, 200 * S, 500 * S], 18 * S, fill=(232, 200, 120))               # bantal kuning
+    d.rounded_rectangle([760 * S, 410 * S, 840 * S, 500 * S], 18 * S, fill=(170, 200, 214))               # bantal biru
+    return img
+
 def bg_stairs():
     img = Image.new("RGB", (W * S, H * S), (210, 218, 214))
     d = ImageDraw.Draw(img)
@@ -208,7 +237,7 @@ def get_bg(name, offset=0):
     if name == "road":
         return bg_road(offset)
     if name not in _bg:
-        _bg[name] = {"park": bg_park, "warung": bg_warung, "garasi": bg_garasi, "syuting": bg_garasi, "stairs": bg_stairs, "phone": bg_park, "credits": bg_dark}[name]()
+        _bg[name] = {"park": bg_park, "warung": bg_warung, "tamu": bg_tamu, "garasi": bg_garasi, "syuting": bg_garasi, "stairs": bg_stairs, "phone": bg_park, "credits": bg_dark}[name]()
     return _bg[name].copy()
 
 # ------------------------------------------------------------------ karakter
@@ -228,6 +257,12 @@ def draw_char(d, x, y, s, cfg, t, talk=False, phone=False, helmet=False, arm_ges
             d.ellipse([X(side * 20 - 22), Yb(-26), X(side * 20 + 22), Yb(0)], fill=(250, 250, 250), outline=INK, width=ow)
         d.rounded_rectangle([X(-46), Yb(-168), X(46), Yb(-96)], R(14), fill=cfg["pants"], outline=INK, width=ow)
     d.rounded_rectangle([X(-48), Yb(-282), X(48), Yb(-150)], R(24), fill=cfg["shirt"], outline=INK, width=ow)
+    if cfg.get("hoodie"):
+        dark = tuple(max(0, c - 28) for c in cfg["shirt"])
+        d.rounded_rectangle([X(-30), Yb(-212), X(30), Yb(-168)], R(10), fill=dark, outline=INK, width=ow)       # saku kanguru
+        d.ellipse([X(-44), Yb(-308), X(44), Yb(-262)], fill=cfg["shirt"], outline=INK, width=ow)                  # kerah tudung
+        for sx in (-9, 9):
+            d.line([(X(sx), Yb(-272)), (X(sx), Yb(-236))], fill=(235, 235, 235), width=max(2, int(R(3))))
 
     # lengan
     w = 2 * math.pi * 1.4 * t
@@ -257,16 +292,40 @@ def draw_char(d, x, y, s, cfg, t, talk=False, phone=False, helmet=False, arm_ges
     d.ellipse([X(cx - 60), Yb(cy - 54), X(cx + 60), Yb(cy + 54)], fill=SKIN, outline=INK, width=ow)
     for side in (-1, 1):
         d.ellipse([X(side * 60 - 8), Yb(cy - 6), X(side * 60 + 8), Yb(cy + 14)], fill=SKIN, outline=INK, width=ow)
+    hs = cfg.get("hair_style", "cap")
     if not helmet:
         d.pieslice([X(cx - 63), Yb(cy - 60), X(cx + 63), Yb(cy + 52)], 188, 352, fill=cfg["hair"])
-        d.polygon([(X(-52), Yb(cy - 34)), (X(-20), Yb(cy - 22)), (X(10), Yb(cy - 36)), (X(34), Yb(cy - 20)), (X(56), Yb(cy - 38)),
-                   (X(52), Yb(cy - 48)), (X(-52), Yb(cy - 48))], fill=cfg["hair"])
+        if hs == "spiky":
+            for i, xs in enumerate((-50, -32, -14, 4, 22, 40, 54)):
+                tip = (xs + 12, cy - 92 - (i % 3) * 7)
+                d.polygon([(X(xs - 11), Yb(cy - 42)), (X(tip[0]), Yb(tip[1])), (X(xs + 13), Yb(cy - 42))], fill=cfg["hair"])
+            d.polygon([(X(-56), Yb(cy - 30)), (X(-24), Yb(cy - 16)), (X(6), Yb(cy - 34)), (X(36), Yb(cy - 18)), (X(58), Yb(cy - 34)),
+                       (X(54), Yb(cy - 48)), (X(-54), Yb(cy - 48))], fill=cfg["hair"])
+        elif hs == "bun":
+            d.ellipse([X(14), Yb(cy - 96), X(62), Yb(cy - 52)], fill=cfg["hair"], outline=INK, width=ow)          # cepol
+            for sd in (-1, 1):                                                                                       # rambut samping
+                d.polygon([(X(sd * 62), Yb(cy - 18)), (X(sd * 66), Yb(cy + 46)), (X(sd * 48), Yb(cy + 38)), (X(sd * 46), Yb(cy - 10))], fill=cfg["hair"])
+            d.polygon([(X(-58), Yb(cy - 28)), (X(-10), Yb(cy - 22)), (X(32), Yb(cy - 38)), (X(58), Yb(cy - 26)),
+                       (X(54), Yb(cy - 50)), (X(-54), Yb(cy - 50))], fill=cfg["hair"])
+        else:
+            d.polygon([(X(-52), Yb(cy - 34)), (X(-20), Yb(cy - 22)), (X(10), Yb(cy - 36)), (X(34), Yb(cy - 20)), (X(56), Yb(cy - 38)),
+                       (X(52), Yb(cy - 48)), (X(-52), Yb(cy - 48))], fill=cfg["hair"])
     # mata
     blink = (t % 3.4) < 0.12
     for side in (-1, 1):
         ex, ey = side * 21, cy + 6
+        if cfg.get("eyes") == "round":                       # mata besar putih + pupil kecil
+            if blink:
+                d.line([(X(ex - 14), Yb(ey)), (X(ex + 14), Yb(ey))], fill=INK, width=max(2, int(R(3))))
+            else:
+                d.ellipse([X(ex - 15), Yb(ey - 16), X(ex + 15), Yb(ey + 16)], fill=(255, 255, 255), outline=INK, width=ow)
+                d.ellipse([X(ex - 5 + side * 2), Yb(ey - 6), X(ex + 5 + side * 2), Yb(ey + 6)], fill=INK)
+            continue
         ry = 1.5 if blink else 11
         d.ellipse([X(ex - 8), Yb(ey - ry), X(ex + 8), Yb(ey + ry)], fill=INK)
+        if cfg.get("mood") == "smirk" and not blink:         # kelopak setengah turun, tatapan nyindir
+            d.rectangle([X(ex - 11), Yb(ey - 14), X(ex + 11), Yb(ey - 3)], fill=SKIN)
+            d.line([(X(ex - 11), Yb(ey - 3)), (X(ex + 11), Yb(ey - 3))], fill=INK, width=max(2, int(R(3))))
         if not blink:
             d.ellipse([X(ex - 3), Yb(ey - 7), X(ex + 3), Yb(ey - 1)], fill=(255, 255, 255))
         by = ey - 20 - (4 if talk else 0)
@@ -281,6 +340,11 @@ def draw_char(d, x, y, s, cfg, t, talk=False, phone=False, helmet=False, arm_ges
     if talk and math.sin(2 * math.pi * 7.5 * t) > -0.25:
         k = 5 + 8 * abs(math.sin(2 * math.pi * 3.7 * t))
         d.ellipse([X(-12), Yb(my - k / 2), X(12), Yb(my + k)], fill=(96, 28, 36), outline=INK, width=ow)
+    elif cfg.get("mood") == "smirk":
+        d.arc([X(-6), Yb(my - 6), X(20), Yb(my + 8)], 15, 150, fill=INK, width=max(2, int(R(3))))
+        d.line([(X(19), Yb(my + 1)), (X(22), Yb(my - 3))], fill=INK, width=max(2, int(R(3))))
+    elif cfg.get("mood") == "flat":
+        d.line([(X(-9), Yb(my + 3)), (X(9), Yb(my + 3))], fill=INK, width=max(2, int(R(3))))
     else:
         d.arc([X(-11), Yb(my - 8), X(11), Yb(my + 6)], 20, 160, fill=INK, width=max(2, int(R(3))))
     if helmet:
@@ -288,6 +352,18 @@ def draw_char(d, x, y, s, cfg, t, talk=False, phone=False, helmet=False, arm_ges
         d.rectangle([X(cx - 72), Yb(cy - 20), X(cx - 56), Yb(cy + 14)], fill=(176, 180, 188), outline=INK, width=ow)
         d.rectangle([X(cx + 56), Yb(cy - 20), X(cx + 72), Yb(cy + 14)], fill=(176, 180, 188), outline=INK, width=ow)
         d.arc([X(cx - 50), Yb(cy - 40), X(cx + 50), Yb(cy + 12)], 200, 340, fill=(130, 134, 142), width=max(2, int(R(6))))
+
+def draw_sit_legs(d, x, y_hip, s, cfg, facing=1):
+    """Kaki duduk di sofa: paha pendek ke depan, betis menjuntai."""
+    X = lambda u: (x + u * s) * S
+    Y = lambda v: (y_hip + v * s) * S
+    for off, dx in ((-10, 46), (14, 70)):
+        hip, knee, ank = (X(off), Y(0)), (X(off + facing * dx), Y(6)), (X(off + facing * (dx - 6)), Y(104))
+        for w_, col in ((24, INK), (17, cfg["pants"])):
+            thick(d, hip, knee, w_ * s * S, col)
+            thick(d, knee, ank, w_ * s * S, col)
+        d.ellipse([ank[0] - 20 * s * S, ank[1] - 6 * s * S, ank[0] + 20 * s * S + facing * 14 * s * S, ank[1] + 14 * s * S],
+                  fill=(250, 250, 250), outline=INK, width=2 * S)
 
 # ------------------------------------------------------------------ teks
 def wrap(text, fnt, maxw, d):
@@ -344,19 +420,25 @@ def render_frame(n):
     def cart_here():
         draw_cart(d, 700, 640, 0.9)
 
-    if seq in ("park", "warung", "garasi", "syuting"):
+    if seq in ("park", "warung", "garasi", "syuting", "tamu"):
         garage = seq in ("garasi", "syuting")
-        if view == "wide":
+        pair = getattr(EP, "CAST", {}).get(seq, ("fajar", "naila") if seq == "tamu" else ("raka", "bima"))
+        L, Rr = CH[pair[0]], CH[pair[1]]
+        if seq == "tamu" and view == "wide":
+            for cfg_, xx, fc, nm in ((L, 360, 1, pair[0]), (Rr, 610, -1, pair[1])):
+                draw_char(d, xx, 690, 0.95, cfg_, t, talk=(who == nm and talking), seated=True)
+                draw_sit_legs(d, xx, 548, 0.95, cfg_, facing=fc)
+        elif view == "wide":
             if seq == "warung":
                 draw_cart(d, 600, 650, 0.78)
             if garage:
                 draw_cart(d, 860, 640, 0.5)                      # gerobak kopi ngangkrak di pojok
                 draw_ringlight(d, 480, 660, 0.62, on=(seq == "syuting"))
-            draw_char(d, 250 if not seq == "warung" else 200, 650, 0.9, RAKA, t, talk=(who == "raka" and talking))
-            draw_char(d, 700 if not seq == "warung" else 780, 650, 0.9, BIMA, t, talk=(who == "bima" and talking))
+            draw_char(d, 250 if not seq == "warung" else 200, 650, 0.9, L, t, talk=(who == pair[0] and talking))
+            draw_char(d, 700 if not seq == "warung" else 780, 650, 0.9, Rr, t, talk=(who == pair[1] and talking))
         else:
             if seq == "warung":
-                draw_cart(d, 780, 740, 1.5) if who == "raka" else draw_cart(d, 180, 740, 1.5)
+                draw_cart(d, 780, 740, 1.5) if who == pair[0] else draw_cart(d, 180, 740, 1.5)
             if garage:  # lingkar ring light di belakang kepala pembicara
                 d.ellipse([(480 - 235) * S, (500 - 235) * S, (480 + 235) * S, (500 + 235) * S], fill=(255, 250, 225), outline=INK, width=6 * S)
                 d.ellipse([(480 - 170) * S, (500 - 170) * S, (480 + 170) * S, (500 + 170) * S], fill=(196, 200, 206), outline=INK, width=4 * S)
