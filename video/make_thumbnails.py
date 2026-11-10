@@ -24,6 +24,7 @@ import make_video_penolakan as pen
 PEN_TEARS = list(pen.TEARS)
 import make_video_pintu as pintu
 import make_video_beban as beban
+import make_video_rumah as rumah
 
 W, H = 1080, 1920
 BG = (8, 10, 18)
@@ -118,6 +119,12 @@ def main():
                "MOVE ON BUKAN MELUPAKAN,", "TAPI MELETAKKAN.",
                beban.panel_A(9.3), beban.panel_B(10.4), "DIA YANG MENGUBUR",
                "DIA YANG MELETAKKAN", "TONTON SAMPAI AKHIR")
+    # 4. rumah
+    pen.TEARS[:] = list(rumah.TEARS)
+    make_cover(os.path.join(OUT_DIR, "thumb-rumah.png"), "PERCINTAAN  #04",
+               "JANGAN MINTA DICINTAI,", "JADILAH RUMAHNYA.",
+               rumah.panel_A(8.2), rumah.panel_B(10.3), "DIA YANG MENGETUK",
+               "DIA YANG JADI RUMAH", "TONTON SAMPAI AKHIR")
 
 
 if __name__ == "__main__":
