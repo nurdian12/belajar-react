@@ -7,7 +7,10 @@ import render as r
 TW, TH, S = 1280, 720, r.S
 FB = r.FB
 
-def stroke_text(d, xy, text, size, fill, stroke=10, anchor="mm", spacing=0):
+def stroke_text(d, xy, text, size, fill, stroke=10, anchor="mm", spacing=0, maxw=None):
+    if maxw:                                                  # kecilkan font bila melebihi lebar
+        while size > 20 and r.font(FB, size * S).getlength(text) > (maxw - 2 * stroke) * S:
+            size -= 2
     d.text((xy[0] * S, xy[1] * S), text, font=r.font(FB, size * S), fill=fill, anchor=anchor,
            stroke_width=stroke * S, stroke_fill=(15, 15, 20))
 
@@ -75,19 +78,31 @@ def vertical(out):
     d = ImageDraw.Draw(bg)
 
     # karakter (kepala di sekitar y~1000)
-    r.draw_char(d, 275, 1990, 2.9, r.CH[T.get('cast', ('raka', 'bima'))[0]], 0.31, talk=True, seated=bool(T.get('seated', False)))
-    r.draw_char(d, 805, 1990, 2.9, r.CH[T.get('cast', ('raka', 'bima'))[1]], 1.9, talk=False, seated=bool(T.get('seated', False)))
+    cast = T.get("cast", ("raka", "bima"))
+    four = len(cast) == 4
+    seat = bool(T.get("seated", False)) and T.get("bg") == "tamu"
+    if four:                                                   # 4 karakter berjajar
+        for k, (nm, xx) in enumerate(zip(cast, (140, 405, 675, 940))):
+            r.draw_char(d, xx, 1610, 1.55, r.CH[nm], 0.31 + k * 0.9, talk=(k in (0, 3)), seated=seat)
+    else:
+        dy = 55 if "fajar" in cast else 0                      # rambut spike lebih tinggi: turunkan sedikit
+        r.draw_char(d, 275, 1990 + dy, 2.9, r.CH[cast[0]], 0.31, talk=True, seated=seat)
+        r.draw_char(d, 805, 1990 + dy, 2.9, r.CH[cast[1]], 1.9, talk=False, seated=seat)
 
     def bubble(x0, y0, x1, y1, tail, text, size):
         d.rounded_rectangle([x0 * S, y0 * S, x1 * S, y1 * S], 44 * S, fill=(255, 255, 255), outline=r.INK, width=7 * S)
         d.polygon([(a * S, b * S) for a, b in tail], fill=(255, 255, 255), outline=r.INK)
         d.text(((x0 + x1) / 2 * S, (y0 + y1) / 2 * S), text, font=r.font(FB, size * S), fill=r.INK, anchor="mm", align="center", spacing=6 * S)
-    bubble(40, 690, 520, 830, [(250, 828), (320, 828), (300, 872)], T["bubbleL"], 46)
-    bubble(560, 690, 1040, 830, [(790, 828), (860, 828), (830, 872)], T["bubbleR"], 46)
+    if four:
+        bubble(20, 660, 380, 800, [(110, 798), (180, 798), (160, 852)], T["bubbleL"], 40)
+        bubble(700, 660, 1060, 800, [(900, 798), (970, 798), (950, 852)], T["bubbleR"], 40)
+    else:
+        bubble(40, 690, 520, 830, [(250, 828), (320, 828), (300, 872)], T["bubbleL"], 46)
+        bubble(560, 690, 1040, 830, [(790, 828), (860, 828), (830, 872)], T["bubbleR"], 46)
 
     # judul (di bawah zona UI atas)
-    stroke_text(d, (VW / 2, 330), T["line1"], 82, (255, 255, 255), 14)
-    stroke_text(d, (VW / 2, 470), T["line2"], 170, (255, 214, 10), 18)
+    stroke_text(d, (VW / 2, 330), T["line1"], 82, (255, 255, 255), 14, maxw=1020)
+    stroke_text(d, (VW / 2, 470), T["line2"], 170, (255, 214, 10), 18, maxw=1020)
 
     # badge merah (di atas zona UI bawah)
     bt = T["badge"]
