@@ -7,7 +7,7 @@ CAST = {"rapat": ("raka", "fajar", "bima", "naila"), "park": ("raka", "fajar", "
         "tamu": ("fajar", "naila")}
 THUMB = dict(line1="RAPAT GEROBAK", line2="4 KEPALA", badge="(nama gerobak?!)", eps="EPS. 7",
              bubbleL="Kopi\nGALAKSI!", bubbleR="Kopi\nSEADANYA!", bg="park",
-             cast=("fajar", "raka", "bima", "naila"))
+             cast=("fajar", "raka", "bima", "naila"), seated=True)
 
 SEQS = [
     ("rapat", [

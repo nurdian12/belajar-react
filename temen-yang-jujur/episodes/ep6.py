@@ -6,7 +6,7 @@ GESTURE = 0.25
 # pasangan karakter per adegan (kiri, kanan); adegan lain default Raka & Bima
 CAST = {"tamu": ("fajar", "naila"), "park": ("raka", "bima"), "warung": ("raka", "fajar"), "garasi": ("bima", "naila")}
 THUMB = dict(line1="TIM HORE VS", line2="TIM REALISTIS", badge="(Fajar & Naila)", eps="EPS. 6",
-             bubbleL="Es batu\nke KUTUB!", bubbleR="Itu bukan\nPELUANG.", bg="tamu", cast=("fajar", "naila"))
+             bubbleL="Es batu\nke KUTUB!", bubbleR="Itu bukan\nPELUANG.", bg="tamu", cast=("fajar", "naila"), seated=True)
 
 SEQS = [
     ("tamu", [

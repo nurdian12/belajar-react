@@ -26,10 +26,10 @@ def main(out):
     four = len(cast) == 4
     if four:                                                    # 4 karakter berjajar
         for k, (nm, xx) in enumerate(zip(cast, (175, 465, 815, 1105))):
-            r.draw_char(d, xx, 1020, 1.45, r.CH[nm], 0.31 + k * 0.9, talk=(k in (0, 3)), seated=True)
+            r.draw_char(d, xx, 1020, 1.45, r.CH[nm], 0.31 + k * 0.9, talk=(k in (0, 3)), seated=bool(T.get('seated', False)))
     else:
-        r.draw_char(d, 350, 1010, 1.85, r.CH[cast[0]], 0.31, talk=True, seated=True)     # kaget / mulut terbuka
-        r.draw_char(d, 930, 1010, 1.85, r.CH[cast[1]], 1.9, talk=False, seated=True)
+        r.draw_char(d, 350, 1010, 1.85, r.CH[cast[0]], 0.31, talk=True, seated=bool(T.get('seated', False)))     # kaget / mulut terbuka
+        r.draw_char(d, 930, 1010, 1.85, r.CH[cast[1]], 1.9, talk=False, seated=bool(T.get('seated', False)))
 
     # gelembung dialog
     def bubble(x0, y0, x1, y1, tail, text, size):
@@ -75,8 +75,8 @@ def vertical(out):
     d = ImageDraw.Draw(bg)
 
     # karakter (kepala di sekitar y~1000)
-    r.draw_char(d, 275, 1990, 2.9, r.CH[T.get('cast', ('raka', 'bima'))[0]], 0.31, talk=True, seated=True)
-    r.draw_char(d, 805, 1990, 2.9, r.CH[T.get('cast', ('raka', 'bima'))[1]], 1.9, talk=False, seated=True)
+    r.draw_char(d, 275, 1990, 2.9, r.CH[T.get('cast', ('raka', 'bima'))[0]], 0.31, talk=True, seated=bool(T.get('seated', False)))
+    r.draw_char(d, 805, 1990, 2.9, r.CH[T.get('cast', ('raka', 'bima'))[1]], 1.9, talk=False, seated=bool(T.get('seated', False)))
 
     def bubble(x0, y0, x1, y1, tail, text, size):
         d.rounded_rectangle([x0 * S, y0 * S, x1 * S, y1 * S], 44 * S, fill=(255, 255, 255), outline=r.INK, width=7 * S)
