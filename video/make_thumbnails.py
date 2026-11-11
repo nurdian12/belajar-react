@@ -26,6 +26,7 @@ import make_video_pintu as pintu
 import make_video_beban as beban
 import make_video_rumah as rumah
 import make_video_tenang as tenang
+import make_video_gelas as gelas
 
 W, H = 1080, 1920
 BG = (8, 10, 18)
@@ -159,6 +160,8 @@ COVERS = [
      "DIA YANG JADI RUMAH", rumah, 8.2, 10.3, 150, 190),
     ("tenang", 5, "DEBAR BUKAN SELALU CINTA,", "PILIH YANG TENANG.", "DIA YANG MENGEJAR DEBAR",
      "DIA YANG MEMILIH TENANG", tenang, 8.6, 10.0, 205, 280),
+    ("gelas", 6, "KESEPIAN BUKAN TANDA KURANG,", "PENUHI DIRIMU DULU.", "DIA YANG MENGISI KOSONG",
+     "DIA YANG MENEMANI DIRI", gelas, 9.3, 10.7, 150, 190),
 ]
 
 
