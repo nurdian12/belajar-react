@@ -5,7 +5,7 @@ Tiap cover: judul besar + dua panel (angle A redup vs angle B terang) yang diamb
 dari momen paling kuat di videonya. Elemen penting ada di area aman crop grid 3:4
 (y 240-1680) dan crop 1:1 (y 420-1500 hampir seluruhnya).
 
-Pakai: python3 video/make_thumbnails.py [folder_output]
+Menghasilkan dua set: feed/grid (thumb-*.png) dan Reels (reels/reels-*.png).\nPakai: python3 video/make_thumbnails.py [folder_output]
 Butuh: Pillow, numpy (modul video di folder yang sama).
 """
 import os
@@ -99,39 +99,79 @@ def make_cover(path, series, line1, line2, a_scene, b_scene, a_label, b_label, h
     print("tersimpan:", path)
 
 
+def panel_reels(scene, label, label_col, bg_chip, top):
+    """Potong adegan panel jadi 880x400 (rasio 2.2) dengan chip label."""
+    img = scene[0].crop((0, top, 1280, top + 582)).resize((880, 400), Image.LANCZOS)
+    d = ImageDraw.Draw(img, "RGBA")
+    f = font(26)
+    tw = d.textlength(label, font=f)
+    d.rounded_rectangle([18, 18, 18 + tw + 36, 18 + 48], radius=12, fill=bg_chip + (235,))
+    d.text((36, 42), label, font=f, fill=label_col, anchor="lm")
+    mask = Image.new("L", img.size, 0)
+    ImageDraw.Draw(mask).rounded_rectangle([0, 0, img.size[0] - 1, img.size[1] - 1], radius=28, fill=255)
+    img.putalpha(mask)
+    return img
+
+
+def make_reels_cover(path, num, line1, line2, a_scene, b_scene, a_label, b_label, top):
+    """Cover Reels 1080x1920 yang menghindari area tertutup UI Reels.
+
+    Semua elemen penting ada di y 280-1500 (atas 250 px dan bawah 380 px dipakai UI Reels),
+    dan x 100-980 (kolom kanan dipakai tombol like/komentar). Juga aman untuk crop grid 3:4.
+    """
+    cv = Image.new("RGB", (W, H), BG)
+    glow = Image.new("RGB", (W, H), (0, 0, 0))
+    ImageDraw.Draw(glow).ellipse([100, 1000, 980, 1560], fill=(70, 46, 14))
+    glow = glow.filter(ImageFilter.GaussianBlur(150))
+    cv = Image.fromarray(np.clip(np.asarray(cv, dtype="int16") + np.asarray(glow, dtype="int16"),
+                                 0, 255).astype("uint8"))
+    d = ImageDraw.Draw(cv)
+    # lencana seri
+    badge = f"SERI PERCINTAAN  {num:02d}"
+    bf = font(28)
+    bw = d.textlength(badge, font=bf) + 56
+    d.rounded_rectangle([W / 2 - bw / 2, 286, W / 2 + bw / 2, 342], radius=28, fill=(30, 34, 52))
+    d.text((W / 2, 314), badge, font=bf, fill=GREY, anchor="mm")
+    # hook
+    f1 = fit(line1, 880, 88)
+    f2 = fit(line2, 880, 120)
+    center_text(d, line1, 440, f1, WHITE)
+    center_text(d, line2, 440 + int(f1.size * 1.3), f2, AMBER)
+    # dua angle
+    pa = panel_reels(a_scene, a_label, BLUE, (28, 32, 60), top)
+    pb = panel_reels(b_scene, b_label, AMBER, (62, 44, 18), top)
+    cv.paste(pa, (100, 660), pa)
+    cv.paste(pb, (100, 1090), pb)
+    d.text((W / 2, 1075), "VS", font=font(28), fill=GREY, anchor="mm")
+    cv.save(path)
+    print("tersimpan:", path)
+
+
+COVERS = [
+    # slug, no, baris1, baris2, label A, label B, modul, t_A, t_B, crop feed, crop reels, air mata
+    ("penolakan", 1, "DITOLAK BUKAN VONIS,", "ITU FILTER.", "DIA YANG MERATAPI",
+     "DIA YANG MENYARING", pen, 8.9, 10.0, 150, 190),
+    ("pintu", 2, "YANG PERGI", "MEMBUKA PINTU.", "DIA YANG MENAHAN PINTU",
+     "DIA YANG MELIHAT JALAN", pintu, 8.6, 10.1, 150, 190),
+    ("move-on", 3, "MOVE ON BUKAN MELUPAKAN,", "TAPI MELETAKKAN.", "DIA YANG MENGUBUR",
+     "DIA YANG MELETAKKAN", beban, 9.3, 10.4, 150, 190),
+    ("rumah", 4, "JANGAN MINTA DICINTAI,", "JADILAH RUMAHNYA.", "DIA YANG MENGETUK",
+     "DIA YANG JADI RUMAH", rumah, 8.2, 10.3, 150, 190),
+    ("tenang", 5, "DEBAR BUKAN SELALU CINTA,", "PILIH YANG TENANG.", "DIA YANG MENGEJAR DEBAR",
+     "DIA YANG MEMILIH TENANG", tenang, 8.6, 10.0, 205, 280),
+]
+
+
 def main():
-    os.makedirs(OUT_DIR, exist_ok=True)
-    # 1. penolakan
-    pen.TEARS[:] = PEN_TEARS
-    make_cover(os.path.join(OUT_DIR, "thumb-penolakan.png"), "PERCINTAAN  #01",
-               "DITOLAK BUKAN VONIS,", "ITU FILTER.",
-               pen.panel_A(8.9), pen.panel_B(10.0), "DIA YANG MERATAPI", "DIA YANG MENYARING",
-               "TONTON SAMPAI AKHIR")
-    # 2. pintu
-    base_t = list(pintu.TEARS)
-    pen.TEARS[:] = base_t
-    make_cover(os.path.join(OUT_DIR, "thumb-pintu.png"), "PERCINTAAN  #02",
-               "YANG PERGI", "MEMBUKA PINTU.",
-               pintu.panel_A(8.6), pintu.panel_B(10.1), "DIA YANG MENAHAN PINTU",
-               "DIA YANG MELIHAT JALAN", "TONTON SAMPAI AKHIR")
-    # 3. beban
-    pen.TEARS[:] = list(beban.TEARS)
-    make_cover(os.path.join(OUT_DIR, "thumb-move-on.png"), "PERCINTAAN  #03",
-               "MOVE ON BUKAN MELUPAKAN,", "TAPI MELETAKKAN.",
-               beban.panel_A(9.3), beban.panel_B(10.4), "DIA YANG MENGUBUR",
-               "DIA YANG MELETAKKAN", "TONTON SAMPAI AKHIR")
-    # 4. rumah
-    pen.TEARS[:] = list(rumah.TEARS)
-    make_cover(os.path.join(OUT_DIR, "thumb-rumah.png"), "PERCINTAAN  #04",
-               "JANGAN MINTA DICINTAI,", "JADILAH RUMAHNYA.",
-               rumah.panel_A(8.2), rumah.panel_B(10.3), "DIA YANG MENGETUK",
-               "DIA YANG JADI RUMAH", "TONTON SAMPAI AKHIR")
-    # 5. tenang
-    pen.TEARS[:] = list(tenang.TEARS)
-    make_cover(os.path.join(OUT_DIR, "thumb-tenang.png"), "PERCINTAAN  #05",
-               "DEBAR BUKAN SELALU CINTA,", "PILIH YANG TENANG.",
-               tenang.panel_A(8.6), tenang.panel_B(10.0), "DIA YANG MENGEJAR DEBAR",
-               "DIA YANG MEMILIH TENANG", "TONTON SAMPAI AKHIR", top=205)
+    reels_dir = os.path.join(OUT_DIR, "reels")
+    os.makedirs(reels_dir, exist_ok=True)
+    for slug, num, l1, l2, la, lb, mod, ta, tb, top_feed, top_reels in COVERS:
+        pen.TEARS[:] = PEN_TEARS if mod is pen else list(mod.TEARS)
+        sa, sb = mod.panel_A(ta), mod.panel_B(tb)
+        make_cover(os.path.join(OUT_DIR, f"thumb-{slug}.png"), f"PERCINTAAN  #{num:02d}",
+                   l1, l2, sa, sb, la, lb, "TONTON SAMPAI AKHIR", top=top_feed)
+        make_reels_cover(os.path.join(reels_dir, f"reels-{slug}.png"), num, l1, l2, sa, sb, la, lb,
+                         top_reels)
 
 
 if __name__ == "__main__":
