@@ -25,6 +25,7 @@ PEN_TEARS = list(pen.TEARS)
 import make_video_pintu as pintu
 import make_video_beban as beban
 import make_video_rumah as rumah
+import make_video_tenang as tenang
 
 W, H = 1080, 1920
 BG = (8, 10, 18)
@@ -57,9 +58,9 @@ def center_text(d, text, y, f, fill, sp=2):
         x += w + sp
 
 
-def panel_img(scene, label, label_col, bg_chip):
+def panel_img(scene, label, label_col, bg_chip, top=150):
     """Potong adegan panel (1280x900) jadi 960x500 dengan chip label."""
-    img = scene[0].crop((0, 150, 1280, 817)).resize((960, 500), Image.LANCZOS)
+    img = scene[0].crop((0, top, 1280, top + 667)).resize((960, 500), Image.LANCZOS)
     d = ImageDraw.Draw(img, "RGBA")
     f = font(30)
     tw = d.textlength(label, font=f)
@@ -71,7 +72,7 @@ def panel_img(scene, label, label_col, bg_chip):
     return img
 
 
-def make_cover(path, series, line1, line2, a_scene, b_scene, a_label, b_label, hint):
+def make_cover(path, series, line1, line2, a_scene, b_scene, a_label, b_label, hint, top=150):
     cv = Image.new("RGB", (W, H), BG)
     # cahaya hangat di belakang panel B
     glow = Image.new("RGB", (W, H), (0, 0, 0))
@@ -87,8 +88,8 @@ def make_cover(path, series, line1, line2, a_scene, b_scene, a_label, b_label, h
     center_text(d, line1, 330, f1, WHITE)
     center_text(d, line2, 330 + int(f1.size * 1.25), f2, AMBER)
 
-    pa = panel_img(a_scene, a_label, BLUE, (28, 32, 60))
-    pb = panel_img(b_scene, b_label, AMBER, (62, 44, 18))
+    pa = panel_img(a_scene, a_label, BLUE, (28, 32, 60), top)
+    pb = panel_img(b_scene, b_label, AMBER, (62, 44, 18), top)
     cv.paste(pa, (60, 600), pa)
     cv.paste(pb, (60, 1130), pb)
     # garis penghubung A -> B
@@ -125,6 +126,12 @@ def main():
                "JANGAN MINTA DICINTAI,", "JADILAH RUMAHNYA.",
                rumah.panel_A(8.2), rumah.panel_B(10.3), "DIA YANG MENGETUK",
                "DIA YANG JADI RUMAH", "TONTON SAMPAI AKHIR")
+    # 5. tenang
+    pen.TEARS[:] = list(tenang.TEARS)
+    make_cover(os.path.join(OUT_DIR, "thumb-tenang.png"), "PERCINTAAN  #05",
+               "DEBAR BUKAN SELALU CINTA,", "PILIH YANG TENANG.",
+               tenang.panel_A(8.6), tenang.panel_B(10.0), "DIA YANG MENGEJAR DEBAR",
+               "DIA YANG MEMILIH TENANG", "TONTON SAMPAI AKHIR", top=205)
 
 
 if __name__ == "__main__":

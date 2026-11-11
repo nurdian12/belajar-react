@@ -29,6 +29,7 @@ Seri percintaan:
 02. Yang pergi membuka pintu
 03. Move on bukan melupakan, tapi meletakkan
 04. Jangan minta dicintai, jadilah rumahnya
+05. Debar bukan selalu cinta, pilih yang tenang
 
 Subscribe supaya tidak ketinggalan lentera berikutnya.
 ```
@@ -49,6 +50,7 @@ Semua video berdurasi 20 detik dan vertikal, jadi otomatis tayang sebagai Shorts
 | 02 | `pintu-membuka-jalan.mp4` | Yang Pergi Membuka Pintu #Shorts | `thumb-pintu.png` |
 | 03 | `move-on-meletakkan.mp4` | Move On Bukan Melupakan, Tapi Meletakkan #Shorts | `thumb-move-on.png` |
 | 04 | `jadilah-rumah.mp4` | Jangan Minta Dicintai, Jadilah Rumahnya #Shorts | `thumb-rumah.png` |
+| 05 | `pilih-yang-tenang.mp4` | Debar Bukan Selalu Cinta, Pilih yang Tenang #Shorts | `thumb-tenang.png` |
 
 Contoh deskripsi video (ganti kalimat pembalik sesuai video):
 
