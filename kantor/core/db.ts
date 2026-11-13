@@ -4,6 +4,9 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 export const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
+// Muat kantor/.env (kunci API) bila ada. Variabel yang sudah diset di shell tidak ditimpa.
+try { process.loadEnvFile(join(ROOT, ".env")); } catch { /* tidak ada .env */ }
+
 export const DATA = process.env.KANTOR_DATA || join(ROOT, "data");
 mkdirSync(DATA, { recursive: true });
 
@@ -33,6 +36,17 @@ CREATE TABLE IF NOT EXISTS topik (
 CREATE TABLE IF NOT EXISTS jadwal_log (
   kunci TEXT PRIMARY KEY,          -- "agent|YYYY-MM-DD|HH:MM"
   dijalankan TEXT NOT NULL DEFAULT (datetime('now'))
+);
+CREATE TABLE IF NOT EXISTS video (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  naskah_id INTEGER NOT NULL,
+  status TEXT NOT NULL,            -- menyiapkan | suara | render | selesai | gagal
+  sumber_suara TEXT,               -- elevenlabs | senyap
+  durasi REAL,
+  file TEXT,                       -- nama file di data/video/
+  error TEXT,
+  dibuat TEXT NOT NULL DEFAULT (datetime('now')),
+  selesai TEXT
 );
 CREATE TABLE IF NOT EXISTS naskah (
   id INTEGER PRIMARY KEY AUTOINCREMENT,

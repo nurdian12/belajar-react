@@ -48,6 +48,9 @@
   <h2>Naskah</h2>
   <div id="naskah"></div>
 
+  <h2>Video</h2>
+  <div id="video-list"></div>
+
   <h2>Riwayat job</h2>
   <div id="jobs" class="mut"></div>
 </main>
@@ -58,7 +61,16 @@ const api = (p, o) => fetch(p, o).then((r) => r.json());
 const post = (p, b) => api(p, { method:"POST", headers:{ "content-type":"application/json" }, body:JSON.stringify(b ?? {}) });
 
 async function muat() {
-  const [agents, naskah, jobs, tp] = await Promise.all([api("/api/agents"), api("/api/naskah"), api("/api/jobs"), api("/api/topik")]);
+  const [agents, naskah, jobs, tp, videos] = await Promise.all([api("/api/agents"), api("/api/naskah"), api("/api/jobs"), api("/api/topik"), api("/api/video")]);
+  const sibuk = new Set(videos.filter((v) => ["menyiapkan", "suara", "render"].includes(v.status)).map((v) => v.naskah_id));
+  const judulNaskah = Object.fromEntries(naskah.map((n) => [n.id, n.judul || n.topik]));
+  // Jangan bangun ulang <video> yang sedang diputar: hanya render ulang bila datanya berubah.
+  const vhtml = videos.map((v) => `<div class="card">
+      <div class="row"><b>${esc(judulNaskah[v.naskah_id] ?? "Naskah #" + v.naskah_id)}</b><span class="tag ${v.status === "selesai" ? "disetujui" : v.status}">${v.status}</span>
+      <span class="mut">#${v.id}${v.sumber_suara ? " · suara: " + v.sumber_suara : ""}${v.durasi ? " · " + v.durasi.toFixed(0) + " dtk" : ""}</span></div>
+      ${v.error ? `<div class="mut">${esc(v.error.slice(0, 300))}</div>` : ""}
+      ${v.file ? `<video controls preload="metadata" src="/video/${esc(v.file)}" style="height:420px;margin-top:8px;border-radius:8px"></video>` : ""}</div>`).join("") || `<div class="mut">Belum ada video. Setujui naskah, lalu klik Buat video.</div>`;
+  if ($("#video-list").dataset.h !== vhtml) { $("#video-list").innerHTML = vhtml; $("#video-list").dataset.h = vhtml; }
   $("#riset").disabled = tp.sedangRiset;
   $("#risetInfo").textContent = tp.sedangRiset ? "Rina sedang riset…" : "Otomatis tiap hari sesuai pengaturan.json.";
   $("#topik-list").innerHTML = tp.topik.filter((t) => t.status === "baru").map((t) => {
@@ -76,7 +88,8 @@ async function muat() {
         <button class="ok" data-a="setujui" data-id="${n.id}">Setujui</button>
         <button class="bad" data-a="tolak" data-id="${n.id}">Tolak</button>
         <input id="cat${n.id}" placeholder="Catatan revisi…"><button class="ghost" data-a="revisi" data-id="${n.id}">Revisi</button>
-      </div>` : "";
+      </div>` : n.status === "disetujui"
+        ? `<div class="row" style="margin-top:10px"><button data-a="video" data-id="${n.id}" ${sibuk.has(n.id) ? "disabled" : ""}>Buat video</button></div>` : "";
     return `<div class="card">
       <div class="row"><b>${esc(n.judul || n.topik)}</b><span class="tag ${n.status}">${n.status}</span><span class="mut">v${n.versi} · #${n.id}</span></div>
       ${n.isi ? `<pre>${esc(n.isi)}</pre>` : `<div class="mut">Topik: ${esc(n.topik)}</div>`}
@@ -104,7 +117,10 @@ $("#naskah").addEventListener("click", async (e) => {
     const catatan = $("#cat" + id).value.trim();
     if (!catatan) return alert("Isi catatan revisi dulu.");
     await post(`/api/naskah/${id}/revisi`, { catatan });
-  } else await post(`/api/naskah/${id}/${a}`);
+  } else {
+    const r = await post(`/api/naskah/${id}/${a}`);
+    if (r.error) alert(r.error);
+  }
   muat();
 });
 muat(); setInterval(muat, 3000);

@@ -3,3 +3,4 @@ out
 .env
 kantor/data
 .DS_Store
+public/kantor

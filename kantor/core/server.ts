@@ -5,6 +5,22 @@ import { db, ROOT } from "./db.ts";
 import { listAgents } from "./agents.ts";
 import { buatNaskah, revisiNaskah, setStatus, riset, sedangRiset, tulisDariTopik, buangTopik } from "./pipeline.ts";
 import { mulaiScheduler } from "./scheduler.ts";
+import { buatVideo, VIDEO_DIR } from "./video.ts";
+import { createReadStream, existsSync, statSync } from "node:fs";
+
+/** Kirim mp4 dengan dukungan Range supaya bisa di-seek di browser. */
+function kirimVideo(req: any, res: any, file: string) {
+  if (!existsSync(file)) { res.writeHead(404); return res.end(); }
+  const size = statSync(file).size;
+  const m = /bytes=(\d*)-(\d*)/.exec(req.headers.range ?? "");
+  if (!m) {
+    res.writeHead(200, { "content-type": "video/mp4", "content-length": size, "accept-ranges": "bytes" });
+    return createReadStream(file).pipe(res);
+  }
+  const start = m[1] ? Number(m[1]) : 0, end = m[2] ? Number(m[2]) : size - 1;
+  res.writeHead(206, { "content-type": "video/mp4", "content-range": `bytes ${start}-${end}/${size}`, "content-length": end - start + 1, "accept-ranges": "bytes" });
+  createReadStream(file, { start, end }).pipe(res);
+}
 
 const PORT = Number(process.env.PORT ?? 4321);
 
@@ -32,6 +48,15 @@ createServer(async (req, res) => {
       return json(res, db.prepare("SELECT id,agent,status,error,biaya_usd,dibuat,selesai FROM jobs ORDER BY id DESC LIMIT 50").all());
     if (req.method === "GET" && p === "/api/naskah")
       return json(res, db.prepare("SELECT * FROM naskah ORDER BY id DESC LIMIT 50").all());
+    if (req.method === "GET" && p === "/api/video")
+      return json(res, db.prepare("SELECT * FROM video ORDER BY id DESC LIMIT 30").all());
+    const vn = p.match(/^\/api\/naskah\/(\d+)\/video$/);
+    if (req.method === "POST" && vn) {
+      try { return json(res, { id: buatVideo(Number(vn[1])) }, 202); }
+      catch (e) { return json(res, { error: e instanceof Error ? e.message : String(e) }, 400); }
+    }
+    const vf = p.match(/^\/video\/(\d+\.mp4)$/);
+    if (req.method === "GET" && vf) return kirimVideo(req, res, join(VIDEO_DIR, vf[1]));
     if (req.method === "GET" && p === "/api/topik")
       return json(res, { sedangRiset: sedangRiset(), topik: db.prepare("SELECT * FROM topik ORDER BY id DESC LIMIT 60").all() });
     if (req.method === "POST" && p === "/api/riset") {
