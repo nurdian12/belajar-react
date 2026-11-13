@@ -27,6 +27,7 @@ import make_video_beban as beban
 import make_video_rumah as rumah
 import make_video_tenang as tenang
 import make_video_gelas as gelas
+import make_video_cerita_lentera as cerita
 
 W, H = 1080, 1920
 BG = (8, 10, 18)
@@ -94,7 +95,7 @@ def make_cover(path, series, line1, line2, a_scene, b_scene, a_label, b_label, h
     cv.paste(pa, (60, 600), pa)
     cv.paste(pb, (60, 1130), pb)
     # garis penghubung A -> B
-    d.text((W / 2, 1115), "VS", font=font(30), fill=GREY, anchor="mm")
+    d.text((W / 2, 1115), "VS" if series.startswith("PERCINTAAN") else "LALU", font=font(30), fill=GREY, anchor="mm")
     center_text(d, hint, 1770, font(30), GREY, sp=3)
     cv.save(path)
     print("tersimpan:", path)
@@ -128,7 +129,7 @@ def make_reels_cover(path, num, line1, line2, a_scene, b_scene, a_label, b_label
                                  0, 255).astype("uint8"))
     d = ImageDraw.Draw(cv)
     # lencana seri
-    badge = f"SERI PERCINTAAN  {num:02d}"
+    badge = f"SERI PERCINTAAN  {num:02d}" if isinstance(num, int) else num
     bf = font(28)
     bw = d.textlength(badge, font=bf) + 56
     d.rounded_rectangle([W / 2 - bw / 2, 286, W / 2 + bw / 2, 342], radius=28, fill=(30, 34, 52))
@@ -143,7 +144,7 @@ def make_reels_cover(path, num, line1, line2, a_scene, b_scene, a_label, b_label
     pb = panel_reels(b_scene, b_label, AMBER, (62, 44, 18), top)
     cv.paste(pa, (100, 660), pa)
     cv.paste(pb, (100, 1090), pb)
-    d.text((W / 2, 1075), "VS", font=font(28), fill=GREY, anchor="mm")
+    d.text((W / 2, 1075), "VS" if isinstance(num, int) else "LALU", font=font(28), fill=GREY, anchor="mm")
     cv.save(path)
     print("tersimpan:", path)
 
@@ -162,6 +163,8 @@ COVERS = [
      "DIA YANG MEMILIH TENANG", tenang, 8.6, 10.0, 205, 280),
     ("gelas", 6, "KESEPIAN BUKAN TANDA KURANG,", "PENUHI DIRIMU DULU.", "DIA YANG MENGISI KOSONG",
      "DIA YANG MENEMANI DIRI", gelas, 9.3, 10.7, 150, 190),
+    ("cerita-lentera", "CERITA 01", "BAGI CAHAYAMU,", "JANGAN HABISKAN.", "MEMBERI SAMPAI HABIS",
+     "MENYALAKAN SENDIRI", cerita, 16.6, 37.4, 150, 190),
 ]
 
 
@@ -171,7 +174,7 @@ def main():
     for slug, num, l1, l2, la, lb, mod, ta, tb, top_feed, top_reels in COVERS:
         pen.TEARS[:] = PEN_TEARS if mod is pen else list(mod.TEARS)
         sa, sb = mod.panel_A(ta), mod.panel_B(tb)
-        make_cover(os.path.join(OUT_DIR, f"thumb-{slug}.png"), f"PERCINTAAN  #{num:02d}",
+        make_cover(os.path.join(OUT_DIR, f"thumb-{slug}.png"), (f"PERCINTAAN  #{num:02d}" if isinstance(num, int) else num),
                    l1, l2, sa, sb, la, lb, "TONTON SAMPAI AKHIR", top=top_feed)
         make_reels_cover(os.path.join(reels_dir, f"reels-{slug}.png"), num, l1, l2, sa, sb, la, lb,
                          top_reels)

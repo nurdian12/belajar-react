@@ -53,6 +53,7 @@ Semua video berdurasi 20 detik dan vertikal, jadi otomatis tayang sebagai Shorts
 | 04 | `jadilah-rumah.mp4` | Jangan Minta Dicintai, Jadilah Rumahnya #Shorts | `thumb-rumah.png` |
 | 05 | `pilih-yang-tenang.mp4` | Debar Bukan Selalu Cinta, Pilih yang Tenang #Shorts | `thumb-tenang.png` |
 | 06 | `kesepian-gelas.mp4` | Kesepian Bukan Tanda Kamu Kurang #Shorts | `thumb-gelas.png` |
+| C01 | `cerita-lentera.mp4` | Cerita Lentera: Bagi Cahayamu, Jangan Habiskan #Shorts | `thumb-cerita-lentera.png` |
 
 Contoh deskripsi video (ganti kalimat pembalik sesuai video):
 
@@ -72,3 +73,23 @@ Lanjut nonton seri percintaan LENTERA di kanal ini.
 - **Foto profil** tampil bulat. Tokoh dan cahaya sengaja di tengah supaya tidak terpotong.
 - **Banner**: di ponsel hanya bagian tengah (1546x423) yang terlihat. Tokoh kiri dan kanan baru tampil di tablet, desktop, dan TV.
 - **Konsistensi**: warna biru redup untuk sisi yang meratapi dan amber hangat untuk sisi yang bertindak dipakai di semua video, cover, dan banner. Pertahankan.
+
+## Format storytelling
+
+Selain seri A/B (20 detik), kanal punya format cerita bertokoh (sekitar 46 detik), diberi kode **C01, C02, ...**.
+
+| Kode | Judul | Tokoh | Pesan |
+|---|---|---|---|
+| C01 | Cerita Lentera | Raka, Laras, Sekar | Bagi cahayamu, jangan habiskan. Yang tepat datang membawa lenteranya sendiri. |
+
+Deskripsi video cerita (usulan):
+
+```
+Raka selalu membawa lentera. Katanya, cahaya itu untuk orang yang ia sayang.
+Lalu ia memberikan seluruhnya.
+
+Cerita pendek tentang memberi tanpa menghabiskan diri.
+Bagi cahayamu, jangan habiskan.
+
+#Shorts #cerita #percintaan #moveon #animasi
+```
