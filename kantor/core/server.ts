@@ -3,7 +3,8 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { db, ROOT } from "./db.ts";
 import { listAgents } from "./agents.ts";
-import { buatNaskah, revisiNaskah, setStatus } from "./pipeline.ts";
+import { buatNaskah, revisiNaskah, setStatus, riset, sedangRiset, tulisDariTopik, buangTopik } from "./pipeline.ts";
+import { mulaiScheduler } from "./scheduler.ts";
 
 const PORT = Number(process.env.PORT ?? 4321);
 
@@ -31,6 +32,19 @@ createServer(async (req, res) => {
       return json(res, db.prepare("SELECT id,agent,status,error,biaya_usd,dibuat,selesai FROM jobs ORDER BY id DESC LIMIT 50").all());
     if (req.method === "GET" && p === "/api/naskah")
       return json(res, db.prepare("SELECT * FROM naskah ORDER BY id DESC LIMIT 50").all());
+    if (req.method === "GET" && p === "/api/topik")
+      return json(res, { sedangRiset: sedangRiset(), topik: db.prepare("SELECT * FROM topik ORDER BY id DESC LIMIT 60").all() });
+    if (req.method === "POST" && p === "/api/riset") {
+      if (sedangRiset()) return json(res, { error: "Riset sedang berjalan" }, 409);
+      riset().catch((e) => console.error("[periset] gagal:", e instanceof Error ? e.message : e));
+      return json(res, { ok: true }, 202);
+    }
+    const t = p.match(/^\/api\/topik\/(\d+)\/(tulis|buang)$/);
+    if (req.method === "POST" && t) {
+      if (t[2] === "tulis") return json(res, { naskahId: tulisDariTopik(Number(t[1])) }, 202);
+      buangTopik(Number(t[1]));
+      return json(res, { ok: true });
+    }
     if (req.method === "POST" && p === "/api/naskah") {
       const { topik } = await body(req);
       if (!topik?.trim()) return json(res, { error: "topik wajib diisi" }, 400);
@@ -50,6 +64,7 @@ createServer(async (req, res) => {
   } catch (e) {
     json(res, { error: e instanceof Error ? e.message : String(e) }, 500);
   }
-}).listen(PORT, "127.0.0.1", () =>
-  console.log(`Kantor berjalan di http://127.0.0.1:${PORT}${process.env.KANTOR_MOCK === "1" ? " (MOCK)" : ""}`),
-);
+}).listen(PORT, "127.0.0.1", () => {
+  console.log(`Kantor berjalan di http://127.0.0.1:${PORT}${process.env.KANTOR_MOCK === "1" ? " (MOCK)" : ""}`);
+  mulaiScheduler();
+});

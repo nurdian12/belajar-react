@@ -32,6 +32,13 @@
   <h2>Agent</h2>
   <div id="agents" class="row"></div>
 
+  <h2>Topik dari Rina</h2>
+  <div class="row" style="margin-bottom:10px">
+    <button id="riset">Minta Rina riset sekarang</button>
+    <span class="mut" id="risetInfo">Otomatis tiap hari sesuai pengaturan.json.</span>
+  </div>
+  <div id="topik-list"></div>
+
   <h2>Naskah baru</h2>
   <form class="row" id="form">
     <input id="topik" placeholder="Topik video, mis. kenapa uang gaji cepat habis" required>
@@ -51,7 +58,15 @@ const api = (p, o) => fetch(p, o).then((r) => r.json());
 const post = (p, b) => api(p, { method:"POST", headers:{ "content-type":"application/json" }, body:JSON.stringify(b ?? {}) });
 
 async function muat() {
-  const [agents, naskah, jobs] = await Promise.all([api("/api/agents"), api("/api/naskah"), api("/api/jobs")]);
+  const [agents, naskah, jobs, tp] = await Promise.all([api("/api/agents"), api("/api/naskah"), api("/api/jobs"), api("/api/topik")]);
+  $("#riset").disabled = tp.sedangRiset;
+  $("#risetInfo").textContent = tp.sedangRiset ? "Rina sedang riset…" : "Otomatis tiap hari sesuai pengaturan.json.";
+  $("#topik-list").innerHTML = tp.topik.filter((t) => t.status === "baru").map((t) => {
+    const src = JSON.parse(t.sumber || "[]");
+    return `<div class="card"><b>${esc(t.judul)}</b><div class="mut">${esc(t.ringkasan)}</div>
+      ${src.length ? `<div class="mut">${src.map((u) => `<a href="${esc(u)}" target="_blank" rel="noopener noreferrer">${esc(new URL(u, "http://x").hostname)}</a>`).join(" · ")}</div>` : ""}
+      <div class="row" style="margin-top:8px"><button data-t="tulis" data-id="${t.id}">Tulis naskah</button><button class="ghost" data-t="buang" data-id="${t.id}">Buang</button></div></div>`;
+  }).join("") || `<div class="mut">Belum ada topik baru.</div>`;
   $("#agents").innerHTML = agents.map((a) =>
     `<span class="card" style="margin:0"><b>${esc(a.nama)}</b> <span class="mut">${esc(a.jabatan)}</span> <span class="tag">${a.aktif ? "siap" : "belum aktif"}</span></span>`).join("");
   $("#naskah").innerHTML = naskah.map((n) => {
@@ -76,6 +91,11 @@ $("#form").addEventListener("submit", async (e) => {
   e.preventDefault();
   await post("/api/naskah", { topik: $("#topik").value });
   $("#topik").value = ""; muat();
+});
+$("#riset").addEventListener("click", async () => { await post("/api/riset"); muat(); });
+$("#topik-list").addEventListener("click", async (e) => {
+  const b = e.target.closest("button[data-t]"); if (!b) return;
+  await post(`/api/topik/${b.dataset.id}/${b.dataset.t}`); muat();
 });
 $("#naskah").addEventListener("click", async (e) => {
   const b = e.target.closest("button[data-a]"); if (!b) return;

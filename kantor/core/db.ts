@@ -4,9 +4,10 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 export const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-mkdirSync(join(ROOT, "data"), { recursive: true });
+export const DATA = process.env.KANTOR_DATA || join(ROOT, "data");
+mkdirSync(DATA, { recursive: true });
 
-export const db = new DatabaseSync(join(ROOT, "data", "kantor.sqlite"));
+export const db = new DatabaseSync(join(DATA, "kantor.sqlite"));
 
 db.exec(`
 CREATE TABLE IF NOT EXISTS jobs (
@@ -19,6 +20,19 @@ CREATE TABLE IF NOT EXISTS jobs (
   biaya_usd REAL,
   dibuat TEXT NOT NULL DEFAULT (datetime('now')),
   selesai TEXT
+);
+CREATE TABLE IF NOT EXISTS topik (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  judul TEXT NOT NULL,
+  ringkasan TEXT,
+  sumber TEXT,                     -- JSON array URL
+  status TEXT NOT NULL DEFAULT 'baru',  -- baru | dipakai | dibuang
+  job_id INTEGER,
+  dibuat TEXT NOT NULL DEFAULT (datetime('now'))
+);
+CREATE TABLE IF NOT EXISTS jadwal_log (
+  kunci TEXT PRIMARY KEY,          -- "agent|YYYY-MM-DD|HH:MM"
+  dijalankan TEXT NOT NULL DEFAULT (datetime('now'))
 );
 CREATE TABLE IF NOT EXISTS naskah (
   id INTEGER PRIMARY KEY AUTOINCREMENT,

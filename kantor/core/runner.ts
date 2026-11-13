@@ -1,7 +1,7 @@
 import { spawn } from "node:child_process";
 import { writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { db, ROOT } from "./db.ts";
+import { db, DATA } from "./db.ts";
 import { loadAgent } from "./agents.ts";
 
 export type RunResult = { jobId: number; text: string; biayaUsd: number | null };
@@ -30,7 +30,7 @@ export async function runAgent(agentId: string, prompt: string): Promise<RunResu
 function panggilClaude(agent: ReturnType<typeof loadAgent>, prompt: string) {
   const { config } = agent;
   // System prompt lewat file & prompt lewat stdin: aman dari batas panjang/quoting baris perintah Windows.
-  const sysFile = join(ROOT, "data", `sys-${agent.id}.md`);
+  const sysFile = join(DATA, `sys-${agent.id}.md`);
   writeFileSync(sysFile, agent.systemPrompt);
   const args = [
     "-p",
@@ -78,6 +78,15 @@ async function mock(agentId: string, prompt: string) {
         judul: "[MOCK] " + prompt.slice(0, 40),
         naskah: "Ini naskah contoh. Hook singkat. Isi inti dalam beberapa kalimat pendek. Penutup ajakan menyimpan video.",
         rencana_visual: ["Teks besar hook", "Ilustrasi isi inti", "Logo + ajakan simpan"],
+      }),
+    };
+  }
+  if (agentId === "periset") {
+    return {
+      biayaUsd: 0,
+      text: JSON.stringify({
+        topik: ["Kenapa tanggal tua terasa lebih panjang", "Kebiasaan pagi yang diam-diam menguras energi", "Antre di warung: hitungan waktu yang tidak kita sadari"]
+          .map((judul) => ({ judul: `[MOCK] ${judul}`, ringkasan: "Ringkasan contoh.", sumber: ["https://example.com"] })),
       }),
     };
   }

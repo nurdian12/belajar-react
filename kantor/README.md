@@ -25,7 +25,9 @@ Edit `agents/penulis/skills/gaya-channel.md` dulu supaya naskah sesuai niche kam
 ## Roadmap
 
 - [x] 1. Penulis → naskah → Setujui / Revisi / Tolak
-- [ ] 2. Periset + scheduler (cron, "setelah agent X selesai")
+- [x] 2. Periset (Rina) + scheduler harian. Jadwal & mode di `pengaturan.json`:
+  `jadwal` (agent + jam lokal), `naskahOtomatis` (true = topik hasil riset langsung ditulis Maya).
+  Topik muncul di dashboard: **Tulis naskah** atau **Buang**. Niche saat ini: keseharian (`agents/penulis/skills/gaya-channel.md`).
 - [ ] 3. Video: template Remotion (`../src`) + ElevenLabs
 - [ ] 4. Posting terjadwal lewat Repliz
 - [ ] 5. CS WhatsApp
