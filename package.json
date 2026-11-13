@@ -7,7 +7,10 @@
     "dev": "remotion studio",
     "build": "remotion render PelukanVideo out/pelukan.mp4",
     "still": "remotion still PelukanVideo out/still.png --frame=60",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "kantor": "node kantor/core/server.ts",
+    "kantor:mock": "KANTOR_MOCK=1 node kantor/core/server.ts",
+    "kantor:tulis": "node kantor/core/cli.ts"
   },
   "dependencies": {
     "@remotion/cli": "4.0.541",

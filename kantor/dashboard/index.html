@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kantor</title>
+<style>
+  :root { --bg:#f6f1ea; --card:#fff; --ink:#1f1b16; --mut:#7a7168; --line:#e6ddd1; --acc:#d9622b; --ok:#2e7d4f; --bad:#b3372c; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#161412; --card:#211e1b; --ink:#f1ebe3; --mut:#9c9288; --line:#332e29; } }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.5 system-ui,sans-serif; }
+  main { max-width:880px; margin:0 auto; padding:24px 16px 64px; }
+  h1 { font-size:22px; margin:0 0 4px; } h2 { font-size:13px; margin:28px 0 10px; color:var(--mut); text-transform:uppercase; letter-spacing:.06em; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:14px 16px; margin-bottom:10px; }
+  .row { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  input { flex:1; min-width:0; padding:9px 11px; border:1px solid var(--line); border-radius:8px; background:var(--bg); color:var(--ink); font:inherit; }
+  button { padding:8px 14px; border:0; border-radius:8px; background:var(--acc); color:#fff; font:inherit; cursor:pointer; }
+  button.ghost { background:transparent; color:var(--ink); border:1px solid var(--line); }
+  button.ok { background:var(--ok); } button.bad { background:var(--bad); }
+  .tag { font-size:12px; padding:2px 8px; border-radius:99px; border:1px solid var(--line); color:var(--mut); }
+  .tag.menunggu { color:var(--acc); border-color:var(--acc); } .tag.disetujui { color:var(--ok); border-color:var(--ok); }
+  .tag.ditolak,.tag.gagal { color:var(--bad); border-color:var(--bad); }
+  .mut { color:var(--mut); font-size:13px; } pre { white-space:pre-wrap; margin:8px 0; font:inherit; }
+  ul { margin:6px 0 0; padding-left:20px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Kantor</h1>
+  <div class="mut">Dashboard persetujuan. Semua jalan di PC kamu.</div>
+
+  <h2>Agent</h2>
+  <div id="agents" class="row"></div>
+
+  <h2>Naskah baru</h2>
+  <form class="row" id="form">
+    <input id="topik" placeholder="Topik video, mis. kenapa uang gaji cepat habis" required>
+    <button>Minta Maya menulis</button>
+  </form>
+
+  <h2>Naskah</h2>
+  <div id="naskah"></div>
+
+  <h2>Riwayat job</h2>
+  <div id="jobs" class="mut"></div>
+</main>
+<script>
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;" }[c]));
+const api = (p, o) => fetch(p, o).then((r) => r.json());
+const post = (p, b) => api(p, { method:"POST", headers:{ "content-type":"application/json" }, body:JSON.stringify(b ?? {}) });
+
+async function muat() {
+  const [agents, naskah, jobs] = await Promise.all([api("/api/agents"), api("/api/naskah"), api("/api/jobs")]);
+  $("#agents").innerHTML = agents.map((a) =>
+    `<span class="card" style="margin:0"><b>${esc(a.nama)}</b> <span class="mut">${esc(a.jabatan)}</span> <span class="tag">${a.aktif ? "siap" : "belum aktif"}</span></span>`).join("");
+  $("#naskah").innerHTML = naskah.map((n) => {
+    const visual = JSON.parse(n.rencana_visual || "[]");
+    const aksi = n.status === "menunggu" ? `
+      <div class="row" style="margin-top:10px">
+        <button class="ok" data-a="setujui" data-id="${n.id}">Setujui</button>
+        <button class="bad" data-a="tolak" data-id="${n.id}">Tolak</button>
+        <input id="cat${n.id}" placeholder="Catatan revisi…"><button class="ghost" data-a="revisi" data-id="${n.id}">Revisi</button>
+      </div>` : "";
+    return `<div class="card">
+      <div class="row"><b>${esc(n.judul || n.topik)}</b><span class="tag ${n.status}">${n.status}</span><span class="mut">v${n.versi} · #${n.id}</span></div>
+      ${n.isi ? `<pre>${esc(n.isi)}</pre>` : `<div class="mut">Topik: ${esc(n.topik)}</div>`}
+      ${visual.length ? `<div class="mut">Rencana visual:<ul>${visual.map((v) => `<li>${esc(v)}</li>`).join("")}</ul></div>` : ""}
+      ${aksi}</div>`;
+  }).join("") || `<div class="mut">Belum ada naskah.</div>`;
+  $("#jobs").innerHTML = jobs.map((j) =>
+    `#${j.id} ${esc(j.agent)} — ${j.status}${j.biaya_usd ? ` · $${j.biaya_usd.toFixed(3)}` : ""}${j.error ? ` · ${esc(j.error.slice(0,120))}` : ""}`).join("<br>") || "Belum ada job.";
+}
+
+$("#form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  await post("/api/naskah", { topik: $("#topik").value });
+  $("#topik").value = ""; muat();
+});
+$("#naskah").addEventListener("click", async (e) => {
+  const b = e.target.closest("button[data-a]"); if (!b) return;
+  const { a, id } = b.dataset;
+  if (a === "revisi") {
+    const catatan = $("#cat" + id).value.trim();
+    if (!catatan) return alert("Isi catatan revisi dulu.");
+    await post(`/api/naskah/${id}/revisi`, { catatan });
+  } else await post(`/api/naskah/${id}/${a}`);
+  muat();
+});
+muat(); setInterval(muat, 3000);
+</script>
+</body>
+</html>

@@ -1,0 +1,85 @@
+import { spawn } from "node:child_process";
+import { db } from "./db.ts";
+import { loadAgent } from "./agents.ts";
+
+export type RunResult = { jobId: number; text: string; biayaUsd: number | null };
+
+/** Jalankan satu agent lewat Claude Code headless (`claude -p`) dan catat sebagai job. */
+export async function runAgent(agentId: string, prompt: string): Promise<RunResult> {
+  const agent = loadAgent(agentId);
+  const { lastInsertRowid } = db
+    .prepare("INSERT INTO jobs (agent, status, input) VALUES (?, 'berjalan', ?)")
+    .run(agentId, prompt);
+  const jobId = Number(lastInsertRowid);
+
+  try {
+    const { text, biayaUsd } =
+      process.env.KANTOR_MOCK === "1" ? await mock(agentId, prompt) : await panggilClaude(agent, prompt);
+    db.prepare("UPDATE jobs SET status='selesai', output=?, biaya_usd=?, selesai=datetime('now') WHERE id=?")
+      .run(text, biayaUsd, jobId);
+    return { jobId, text, biayaUsd };
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : String(e);
+    db.prepare("UPDATE jobs SET status='gagal', error=?, selesai=datetime('now') WHERE id=?").run(msg, jobId);
+    throw e;
+  }
+}
+
+function panggilClaude(agent: ReturnType<typeof loadAgent>, prompt: string) {
+  const { config } = agent;
+  const args = [
+    "-p", prompt,
+    "--output-format", "json",
+    "--append-system-prompt", agent.systemPrompt,
+    "--max-turns", String(config.maxTurns ?? 3),
+    "--no-session-persistence",
+  ];
+  // Tanpa tools = agent hanya berpikir/menulis. Tools hanya yang diizinkan di config.json.
+  if (config.tools?.length) args.push("--allowedTools", ...config.tools);
+  else args.push("--tools", "");
+  if (config.model) args.push("--model", config.model);
+
+  return new Promise<{ text: string; biayaUsd: number | null }>((resolve, reject) => {
+    const p = spawn("claude", args, { stdio: ["ignore", "pipe", "pipe"] });
+    let out = "", err = "";
+    p.stdout.on("data", (d) => (out += d));
+    p.stderr.on("data", (d) => (err += d));
+    const timer = setTimeout(() => { p.kill(); reject(new Error("Timeout 5 menit")); }, 5 * 60_000);
+    p.on("error", (e) => { clearTimeout(timer); reject(e); });
+    p.on("close", (code) => {
+      clearTimeout(timer);
+      if (code !== 0) return reject(new Error(`claude keluar dengan kode ${code}: ${err || out}`.slice(0, 2000)));
+      try {
+        const j = JSON.parse(out);
+        if (j.is_error) return reject(new Error(String(j.result ?? "error dari claude")));
+        resolve({ text: String(j.result ?? ""), biayaUsd: j.total_cost_usd ?? null });
+      } catch {
+        reject(new Error(`Output claude bukan JSON: ${out.slice(0, 500)}`));
+      }
+    });
+  });
+}
+
+async function mock(agentId: string, prompt: string) {
+  await new Promise((r) => setTimeout(r, 600));
+  if (agentId === "penulis") {
+    return {
+      biayaUsd: 0,
+      text: JSON.stringify({
+        judul: "[MOCK] " + prompt.slice(0, 40),
+        naskah: "Ini naskah contoh. Hook singkat. Isi inti dalam beberapa kalimat pendek. Penutup ajakan menyimpan video.",
+        rencana_visual: ["Teks besar hook", "Ilustrasi isi inti", "Logo + ajakan simpan"],
+      }),
+    };
+  }
+  return { biayaUsd: 0, text: "{}" };
+}
+
+/** Ambil objek JSON dari balasan agent (toleran terhadap code fence / teks sekitar). */
+export function ekstrakJson<T = unknown>(text: string): T {
+  const t = text.trim().replace(/^```(?:json)?\s*|\s*```$/g, "");
+  try { return JSON.parse(t) as T; } catch { /* lanjut */ }
+  const a = t.indexOf("{"), b = t.lastIndexOf("}");
+  if (a >= 0 && b > a) return JSON.parse(t.slice(a, b + 1)) as T;
+  throw new Error("Balasan agent tidak berisi JSON");
+}
