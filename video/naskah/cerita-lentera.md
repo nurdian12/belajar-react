@@ -126,3 +126,34 @@ Pernah memberi sampai habis? Ceritakan satu kalimat tentang apa yang kamu pelaja
 - **C02 sisi Laras:** kenapa ia pergi, dan apa yang ia temukan saat lentera itu ternyata bukan miliknya. Pesan: cahaya pinjaman tidak bisa jadi arah.
 - **Versi bahasa Inggris:** *"Raka always carried a lantern. They say light is for the ones you love. So he gave it all away..."*
 - **Kutipan penutup alternatif:** "Cahaya itu untuk dibagi, bukan dihabiskan."
+
+---
+
+## 6. Merekam dan memasang voice-over
+
+**Merekam**
+1. Buka bagian 1 (naskah bersih) di layar ponsel atau laptop sebagai teleprompter.
+2. Rekam di ruangan senyap, jarak mulut ke mikrofon sekitar sejengkal. Aplikasi perekam bawaan ponsel sudah cukup.
+3. Baca **sekali jalan dari awal sampai akhir** dengan tempo pelan. Itu cara termudah supaya pas dengan video. Ulangi sampai terasa jujur, lalu pilih take terbaik.
+4. Simpan sebagai `.wav`, `.mp3`, atau `.m4a`. Durasi rekaman sebaiknya sekitar 40 detik atau kurang.
+
+**Memasang ke video**
+
+```bash
+python3 video/mix_voiceover.py video/cerita-lentera.mp4 rekaman.wav -o video/cerita-lentera-vo.mp4
+```
+
+Skrip ini menyamakan loudness suaramu dan mengecilkan SFX atau musik video otomatis saat kamu berbicara. Video tidak dienkode ulang, jadi kualitas gambar tetap.
+
+| Opsi | Fungsi | Default |
+|---|---|---|
+| `--offset 0.4` | Jeda (detik) sebelum suaramu mulai. Naikkan jika kalimat pertama terdengar terlalu cepat dari adegan. | 0.4 |
+| `--bed 0.8` | Volume suara latar video (0 sampai 1). | 0.8 |
+| `--duck 8` | Seberapa kuat latar mengecil saat kamu berbicara. | 8 |
+| `--no-norm` | Matikan penyamaan loudness suara. | aktif |
+
+**Cek hasil**
+- Kalimat "Raka selalu membawa lentera" harus mulai sekitar detik 0:00–0:01.
+- "Lalu Laras pergi" jatuh di sekitar 0:15, bersamaan dengan layar bergetar dan hati yang retak.
+- "Bagi cahayamu, jangan habiskan" harus selesai sebelum video berakhir di 0:46. Kalau terpotong, skrip memberi peringatan.
+- Kalau seluruh suara terlambat atau terlalu cepat, geser dengan `--offset`, mulai dari kelipatan 0.2.
