@@ -1,5 +1,7 @@
 import { spawn } from "node:child_process";
-import { db } from "./db.ts";
+import { writeFileSync } from "node:fs";
+import { join } from "node:path";
+import { db, ROOT } from "./db.ts";
 import { loadAgent } from "./agents.ts";
 
 export type RunResult = { jobId: number; text: string; biayaUsd: number | null };
@@ -27,10 +29,13 @@ export async function runAgent(agentId: string, prompt: string): Promise<RunResu
 
 function panggilClaude(agent: ReturnType<typeof loadAgent>, prompt: string) {
   const { config } = agent;
+  // System prompt lewat file & prompt lewat stdin: aman dari batas panjang/quoting baris perintah Windows.
+  const sysFile = join(ROOT, "data", `sys-${agent.id}.md`);
+  writeFileSync(sysFile, agent.systemPrompt);
   const args = [
-    "-p", prompt,
+    "-p",
     "--output-format", "json",
-    "--append-system-prompt", agent.systemPrompt,
+    "--append-system-prompt-file", sysFile,
     "--max-turns", String(config.maxTurns ?? 3),
     "--no-session-persistence",
   ];
@@ -40,7 +45,11 @@ function panggilClaude(agent: ReturnType<typeof loadAgent>, prompt: string) {
   if (config.model) args.push("--model", config.model);
 
   return new Promise<{ text: string; biayaUsd: number | null }>((resolve, reject) => {
-    const p = spawn("claude", args, { stdio: ["ignore", "pipe", "pipe"] });
+    const bin = process.env.KANTOR_CLAUDE_BIN || "claude";
+    // claude.cmd (hasil `npm i -g` di Windows) hanya bisa dijalankan lewat shell.
+    const p = spawn(bin, args, { stdio: ["pipe", "pipe", "pipe"], shell: /\.(cmd|bat)$/i.test(bin) });
+    p.stdin.on("error", () => {});
+    p.stdin.end(prompt);
     let out = "", err = "";
     p.stdout.on("data", (d) => (out += d));
     p.stderr.on("data", (d) => (err += d));
