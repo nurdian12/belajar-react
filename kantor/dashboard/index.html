@@ -80,7 +80,9 @@
   textarea:focus-visible { outline-offset:0; }
   .lbl3d { pointer-events:auto !important; cursor:pointer; transition:transform .1s; } .lbl3d:hover { outline:2px solid var(--acc); }
   .item > span:last-child { white-space:nowrap; }
-  #demo3d { background:var(--card); color:var(--ink); border:1px solid var(--line); box-shadow:var(--shadow); }
+  .fd { display:grid; grid-template-columns:44px 1fr; gap:6px; font-size:13px; padding:4px 0; border-top:1px solid var(--line); } .fd:first-child { border-top:0; }
+  .fd i { font-style:normal; color:var(--mut); font-variant-numeric:tabular-nums; } .fd.selesai b { color:var(--ok); } .fd.gagal b { color:var(--bad); } .fd.kamu b { color:var(--acc); }
+  .sd { display:flex; gap:8px; align-items:baseline; padding:5px 0; font-size:14px; } .sd .mut { margin-left:auto; white-space:nowrap; font-variant-numeric:tabular-nums; }
   .kosong { border:1px dashed var(--line); border-radius:12px; padding:18px; text-align:center; color:var(--mut); background:var(--soft); }
   @media (prefers-reduced-motion: reduce) { * { transition:none !important; animation:none !important; } }
   @media (max-width:560px) { .lbl3d[data-s="siap"] .s { display:none; } .lbl3d { font-size:10px; padding:1px 6px; } .bar .in { padding:8px 12px; gap:8px 12px; } #mode-info { display:none; } .brand { font-size:16px; } }
@@ -99,14 +101,16 @@
     <div class="stats" id="ringkasan" aria-label="Ringkasan"></div>
     <div class="beranda">
       <div class="card panelkiri" style="margin:0">
+        <h3 class="sec">Sedang dikerjakan</h3>
+        <div id="sedang" style="margin-bottom:16px"></div>
         <h3 class="sec" style="display:flex;justify-content:space-between;align-items:center">Perlu keputusan kamu <span class="badge" id="n-keputusan">0</span></h3>
         <div id="keputusan"></div>
+        <h3 class="sec" style="margin-top:18px">Aktivitas terbaru</h3>
+        <div id="feed" aria-live="polite"></div>
         <h3 class="sec" style="margin-top:18px">Berikutnya</h3>
         <div id="berikutnya" class="mut"></div>
       </div>
-      <div id="scene3d" hidden>
-        <div class="row" style="position:absolute;top:10px;right:10px;z-index:2"><button class="ghost" id="demo3d" aria-pressed="false">Demo animasi</button></div>
-      </div>
+      <div id="scene3d" hidden></div>
     </div>
   </section>
 
@@ -217,10 +221,13 @@
       if (id === "pandu") { document.getElementById("pandu-buka").click(); return; }
       if (buka[id]) location.hash = "#" + buka[id];
     });
-    document.getElementById("demo3d").addEventListener("click", (e) => {
-      const on = e.currentTarget.getAttribute("aria-pressed") !== "true";
-      e.currentTarget.setAttribute("aria-pressed", String(on)); e.currentTarget.textContent = on ? "Hentikan demo" : "Demo animasi"; k.setDemo(on);
-    });
+    // Aliran langsung dari server: status, tugas yang sedang berjalan, dan aktivitas. Terputus -> tersambung ulang otomatis.
+    if ("EventSource" in window) {
+      const es = new EventSource("/api/aliran");
+      es.addEventListener("status", (e) => { const d = JSON.parse(e.data); k.terima(d); window.kantorStatus?.(d); });
+      es.addEventListener("riwayat", (e) => window.kantorRiwayat?.(JSON.parse(e.data)));
+      es.addEventListener("aktivitas", (e) => { window.kantorAktivitas?.(JSON.parse(e.data)); window.muat?.(); });
+    }
   } catch (e) { console.warn("Kantor 3D tidak aktif:", e); document.getElementById("scene3d").hidden = true; }
 </script>
 <script>
@@ -285,6 +292,7 @@ async function muat() {
       ${src.length ? `<div class="mut">${src.map((u) => `<a href="${esc(u)}" target="_blank" rel="noopener noreferrer">${esc(new URL(u, "http://x").hostname)}</a>`).join(" · ")}</div>` : ""}
       <div class="row" style="margin-top:8px"><button data-t="tulis" data-id="${t.id}">Tulis naskah</button><button class="ghost" data-t="buang" data-id="${t.id}">Buang</button></div></div>`;
   }).join("") || `<div class="mut">Belum ada topik baru.</div>`;
+  window.kantorStatus(stat);
   renderBeranda(naskah, tp, videos, pst, peng, csList, rencana);
   renderCS(csList, peng);
   renderRencana(rencana, peng);
@@ -424,6 +432,25 @@ $("#m-simpan").addEventListener("click", async () => {
   if (r.error) { $("#m-info").textContent = r.error; return; }
   $("#m-isi").value = ""; $("#m-info").textContent = "Naskah tersimpan, menunggu persetujuanmu di bawah."; muat();
 });
+// ---------- aktivitas langsung ----------
+const NAMA_K = { rina: "Rina", maya: "Maya", dewi: "Dewi", laras: "Laras", putri: "Putri", pandu: "Pandu", kamu: "Kamu" };
+let feedData = [], tugasData = {};
+const lalu = (w) => { const d = new Date(w.replace(" ", "T") + "Z"), s = (Date.now() - d) / 1000;
+  return s < 60 ? "baru" : s < 3600 ? Math.floor(s / 60) + "m" : s < 86400 ? Math.floor(s / 3600) + "j" : d.toLocaleDateString(); };
+function renderFeed() {
+  $("#feed").innerHTML = feedData.slice().reverse().map((a) => `<div class="fd ${a.jenis}"><i>${lalu(a.waktu)}</i><span><b>${esc(NAMA_K[a.agent] ?? a.agent)}</b> ${esc(a.teks)}</span></div>`).join("")
+    || '<div class="kosong">Belum ada aktivitas. Mulai dengan meminta Rina riset.</div>';
+}
+function renderSedang() {
+  const baris = Object.entries(tugasData).filter(([k]) => k !== "kamu").map(([k, t]) => `<div class="sd"><span class="dot kerja"></span><b>${esc(NAMA_K[k] ?? k)}</b><span>${esc(t.teks)}</span><span class="mut">${t.detik} dtk</span></div>`);
+  $("#sedang").innerHTML = baris.join("") || '<div class="mut">Tidak ada yang sedang bekerja.</div>';
+}
+window.kantorRiwayat = (a) => { feedData = a.slice(-14); renderFeed(); };
+window.kantorAktivitas = (a) => { feedData = [...feedData, a].slice(-14); renderFeed(); };
+window.kantorStatus = (d) => { tugasData = d._tugas || {}; renderSedang(); };
+setInterval(() => { renderFeed(); }, 30000);   // "baru" menjadi "1m", dst.
+fetch("/api/aktivitas?n=14").then((r) => r.json()).then((a) => { if (!feedData.length) { feedData = a; renderFeed(); } }).catch(() => {});
+
 // ---------- Laras (marketing) ----------
 function mintaTempel(judul, info, promptUrl, promptBody) {
   return new Promise(async (ok) => {

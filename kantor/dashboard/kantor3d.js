@@ -129,9 +129,17 @@ export function mulaiKantor3D(el, ambilStatus, onKlik) {
   }
 
   const target = Object.fromEntries(Object.keys(ruang).map((k) => [k, "siap"]));
-  let demo = false, demoMulai = 0;
-  async function sedot() { try { Object.assign(target, await ambilStatus()); } catch { /* biarkan status terakhir */ } }
-  sedot(); const poll = setInterval(() => { if (!demo && !document.hidden) sedot(); }, 2500);
+  const tugas = {};   // apa yang sedang dikerjakan tiap karyawan (dari server, nyata)
+  let terakhirDorong = 0;
+  /** Terima status dari server: {rina:"kerja", ..., _tugas:{rina:{teks, detik}}}. */
+  function terima(d) {
+    const { _tugas = {}, ...st } = d || {};
+    for (const k of Object.keys(ruang)) { if (st[k]) target[k] = st[k]; if (_tugas[k]) tugas[k] = _tugas[k]; else delete tugas[k]; }
+    terakhirDorong = performance.now();
+  }
+  // Cadangan: bila aliran langsung (SSE) tidak tersambung, baca status berkala.
+  async function sedot() { try { terima(await ambilStatus()); } catch { /* biarkan status terakhir */ } }
+  sedot(); const poll = setInterval(() => { if (!document.hidden && performance.now() - terakhirDorong > 6000) sedot(); }, 2500);
 
   function ukur() {
     const w = el.clientWidth, h = el.clientHeight; if (!w || !h) return;
@@ -146,10 +154,6 @@ export function mulaiKantor3D(el, ambilStatus, onKlik) {
     // Tab lain sedang dibuka (adegan tersembunyi): jangan menggambar, hemat CPU.
     if (!el.clientWidth || document.hidden) { requestAnimationFrame(frame); return; }
     const t = (now - t0) / 1000;
-    if (demo) {   // siklus demo: Rina → Maya → kamu menyetujui → Dewi
-      const f = Math.floor((now - demoMulai) / 2800) % 5;
-      Object.assign(target, { rina: f === 0 ? "kerja" : "siap", maya: f === 1 ? "kerja" : "siap", kamu: f === 2 ? "tunggu" : "siap", dewi: f === 3 ? "kerja" : "siap" });
-    }
     for (const id in ruang) {
       const r = ruang[id], s = target[id] ?? "siap"; r.status = s;
       const p = r.p, kerja = s === "kerja", tunggu = s === "tunggu";
@@ -162,8 +166,15 @@ export function mulaiKantor3D(el, ambilStatus, onKlik) {
       r.layar.forEach((m) => { m.material.emissiveIntensity = kerja ? 0.55 + Math.sin(t * 8) * 0.25 : 0.12; });
       // label
       v.set(r.cx, 3.3, r.cz - 0.9).project(cam);
-      r.label.style.transform = `translate(-50%,-100%) translate(${((v.x + 1) / 2) * el.clientWidth}px, ${((1 - v.y) / 2) * el.clientHeight}px)`;
-      r.label.dataset.s = s; r.label.querySelector(".s").textContent = (STATUS_TEKS[id] ?? {})[s] ?? s;
+      const lw = r.label.offsetWidth / 2 + 4, px = Math.min(Math.max(((v.x + 1) / 2) * el.clientWidth, lw), el.clientWidth - lw);   // label tetap di dalam bingkai
+      r.label.style.transform = `translate(-50%,-100%) translate(${px}px, ${Math.max(((1 - v.y) / 2) * el.clientHeight, r.label.offsetHeight + 4)}px)`;
+      r.label.dataset.s = s; {
+        const tg = tugas[id], teks = tg && (kerja || tunggu) ? tg.teks : (STATUS_TEKS[id] ?? {})[s] ?? s;
+        const lama = tg && kerja && tg.detik >= 5 ? ` · ${tg.detik} dtk` : "";
+        const el2 = r.label.querySelector(".s"), isi = teks.length > 46 ? teks.slice(0, 45) + "…" : teks;
+        if (el2.textContent !== isi + lama) el2.textContent = isi + lama;
+        r.label.title = tg ? `${info[id][0]}: ${tg.teks}` : "Klik untuk membuka";
+      }
     }
     nampan.position.y = nampan.userData.y0 + (target.kamu === "tunggu" ? Math.abs(Math.sin(t * 5)) * 0.12 : 0);
     nampan.material.emissive = new THREE.Color(target.kamu === "tunggu" ? 0xf59e0b : 0x000000); nampan.material.emissiveIntensity = 0.6;
@@ -175,7 +186,7 @@ export function mulaiKantor3D(el, ambilStatus, onKlik) {
   requestAnimationFrame(frame);
 
   return {
-    setDemo(on) { demo = on; demoMulai = performance.now(); if (!on) sedot(); },
+    terima,
     hentikan() { clearInterval(poll); renderer.dispose(); },
   };
 }

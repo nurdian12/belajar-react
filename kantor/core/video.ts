@@ -3,6 +3,7 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { db, DATA, ROOT } from "./db.ts";
 import { buatNarasi } from "./suara.ts";
+import { mulaiTugas, akhiriTugas, catat } from "./aktivitas.ts";
 
 const REPO = join(ROOT, "..");
 export const VIDEO_DIR = join(DATA, "video");
@@ -27,11 +28,16 @@ export function buatVideo(naskahId: number): number {
 }
 
 async function proses(id: number, n: any) {
+  const judul = String(n.judul ?? n.topik).slice(0, 60);
+  let tugas = mulaiTugas("animator", `menyiapkan suara: ${judul}`);
+  catat("animator", `mulai membuat video "${judul}"`);
   try {
     set(id, "status='suara'");
     const narasi = await buatNarasi(id, n.isi);
     set(id, "sumber_suara=?, durasi=?", narasi.sumber, narasi.durasi);
+    catat("animator", narasi.sumber === "elevenlabs" ? "suara narasi selesai (ElevenLabs)" : "tanpa suara (kunci ElevenLabs belum diisi), waktu kata diperkirakan");
 
+    akhiriTugas(tugas); tugas = mulaiTugas("animator", `merender video: ${judul}`);
     set(id, "status='render'");
     mkdirSync(VIDEO_DIR, { recursive: true });
     const props = { judul: n.judul ?? n.topik, audio: narasi.audio, durasi: narasi.durasi, kalimat: narasi.kalimat };
@@ -39,10 +45,14 @@ async function proses(id: number, n: any) {
     writeFileSync(propsFile, JSON.stringify(props));
     await render(propsFile, join(VIDEO_DIR, `${id}.mp4`));
     set(id, "status='selesai', file=?, selesai=datetime('now')", `${id}.mp4`);
+    catat("animator", `video "${judul}" selesai (${Math.round(narasi.durasi)} dtk)`, "selesai");
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);
     console.error(`[video] #${id} gagal:`, msg);
     set(id, "status='gagal', error=?, selesai=datetime('now')", msg.slice(0, 2000));
+    catat("animator", `video "${judul}" gagal: ${msg.slice(0, 100)}`, "gagal");
+  } finally {
+    akhiriTugas(tugas);
   }
 }
 

@@ -5,6 +5,7 @@ import { runAgent, ekstrakJson } from "./runner.ts";
 import { bacaPengaturan } from "./pipeline.ts";
 import { loadAgent } from "./agents.ts";
 import { kirim } from "./saluran.ts";
+import { catat } from "./aktivitas.ts";
 
 type Hasil = { balasan?: string; butuh_manusia?: boolean; alasan?: string };
 const sedang = new Set<number>();
@@ -20,6 +21,7 @@ export function pesanMasuk(saluran: string, kontak: string, teks: string): numbe
   db.prepare("INSERT OR IGNORE INTO percakapan (saluran, kontak, status) VALUES (?,?, 'baru')").run(saluran, nama);
   const { id } = db.prepare("SELECT id FROM percakapan WHERE saluran=? AND kontak=?").get(saluran, nama) as { id: number };
   db.prepare("INSERT INTO pesan (percakapan_id, arah, teks) VALUES (?, 'masuk', ?)").run(id, isi);
+  catat("putri", `pesan masuk dari ${nama}`);
   db.prepare("DELETE FROM pesan WHERE percakapan_id=? AND arah='draf'").run(id);   // draf lama sudah usang
   db.prepare("UPDATE percakapan SET status='baru', alasan=NULL, diperbarui=datetime('now') WHERE id=?").run(id);
   if (process.env.KANTOR_OTAK !== "manual") void buatDraf(id);
@@ -44,7 +46,8 @@ export async function buatDraf(id: number) {
   if (sedang.has(id)) return;
   sedang.add(id);
   try {
-    const r = await runAgent("cs-wa", susunPrompt(id));
+    const kontak = (db.prepare("SELECT kontak FROM percakapan WHERE id=?").get(id) as { kontak: string } | undefined)?.kontak ?? "pelanggan";
+    const r = await runAgent("cs-wa", susunPrompt(id), `membalas chat ${kontak}`);
     await simpanHasil(id, r.text);
   } catch (e) {
     db.prepare("UPDATE percakapan SET status='butuh-kamu', alasan=? WHERE id=?")
@@ -82,6 +85,7 @@ export async function kirimBalasan(id: number, teks: string) {
   db.prepare("INSERT INTO pesan (percakapan_id, arah, teks, catatan) VALUES (?, 'keluar', ?, ?)")
     .run(id, t, dryRun ? "dry-run: tidak dikirim ke WhatsApp" : null);
   db.prepare("UPDATE percakapan SET status='dibalas', alasan=NULL, diperbarui=datetime('now') WHERE id=?").run(id);
+  catat("putri", `balasan ke ${p.kontak} terkirim${dryRun ? " (dry-run, tidak ke WhatsApp)" : ""}`, "selesai");
 }
 
 export function selesaikan(id: number) {

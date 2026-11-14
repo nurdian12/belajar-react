@@ -3,6 +3,7 @@ import { db } from "./db.ts";
 import { VIDEO_DIR } from "./video.ts";
 import { jadwalkan, susunBody, type PermintaanPosting } from "./repliz.ts";
 import { bacaPengaturan } from "./pipeline.ts";
+import { catat, mulaiTugas, akhiriTugas } from "./aktivitas.ts";
 
 /** Jadwalkan posting untuk sebuah video. Memencet tombol "Jadwalkan" di dashboard = persetujuan kamu. */
 export async function buatPosting(videoId: number, akunId: string, caption: string, jadwal: string): Promise<number> {
@@ -27,13 +28,18 @@ export async function buatPosting(videoId: number, akunId: string, caption: stri
   // Default AMAN: dry-run (hanya mencatat apa yang akan dikirim). Aktifkan "kirimNyata" di pengaturan.json.
   if (!bacaPengaturan().repliz?.kirimNyata) {
     db.prepare("UPDATE posting SET status='dry-run', respons=? WHERE id=?").run(JSON.stringify(susunBody(req)), id);
+    catat("kamu", `menjadwalkan "${req.judul.slice(0, 50)}" ke ${akunId} (dry-run, belum dikirim ke Repliz)`, "kamu");
     return id;
   }
+  const tugas = mulaiTugas("animator", `mengunggah video ke Repliz: ${req.judul.slice(0, 50)}`);
   try {
     const r = await jadwalkan(req);
     db.prepare("UPDATE posting SET status='terjadwal', respons=? WHERE id=?").run(JSON.stringify(r).slice(0, 4000), id);
+    catat("animator", `video "${req.judul.slice(0, 50)}" terjadwal di Repliz`, "selesai");
   } catch (e) {
-    db.prepare("UPDATE posting SET status='gagal', error=? WHERE id=?").run(e instanceof Error ? e.message : String(e), id);
-  }
+    const msg = e instanceof Error ? e.message : String(e);
+    db.prepare("UPDATE posting SET status='gagal', error=? WHERE id=?").run(msg, id);
+    catat("animator", `posting ke Repliz gagal: ${msg.slice(0, 100)}`, "gagal");
+  } finally { akhiriTugas(tugas); }
   return id;
 }

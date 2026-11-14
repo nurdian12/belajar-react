@@ -28,6 +28,12 @@ copy kantor\.env.example kantor\.env
 Edit `kantor\.env` (Notepad): `KANTOR_OTAK=api`, `ANTHROPIC_API_KEY=...`, lalu `ELEVENLABS_API_KEY=...`. Jalankan `npm run kantor`, buka http://127.0.0.1:4321.
 Render video memakai Chromium (diunduh Remotion saat pertama) dan bisa lambat di mesin lama.
 
+## Aktivitas langsung (bukan demo)
+
+Kantor 3D dan panel Beranda menampilkan pekerjaan yang **benar-benar sedang berjalan** di server: label tiap karyawan menunjukkan tugasnya ("Maya: menulis naskah: ...", "Dewi: merender video: ... · 42 dtk"), panel **Sedang dikerjakan** mendaftar semuanya, dan **Aktivitas terbaru** mencatat tiap kejadian (riset, naskah, persetujuanmu, video, posting, chat).
+Datanya mengalir lewat Server-Sent Events (`/api/aliran`), jadi muncul seketika tanpa memuat ulang; bila koneksi itu putus, dashboard membaca `/api/status` berkala. Riwayat tersimpan di tabel `aktivitas` (300 terakhir).
+Pekerjaan yang terputus karena server mati ditandai gagal saat server menyala lagi, supaya tidak terlihat "bekerja" selamanya.
+
 ## Tampilan
 
 Beranda punya kartu ringkasan (topik baru, naskah menunggu, video siap, posting terjadwal, chat butuh kamu, ide Laras), panel "Perlu keputusan kamu", dan kantor 3D dengan semua karyawan (Rina, Maya, Dewi, Laras, Putri, Pandu, dan meja Kamu).

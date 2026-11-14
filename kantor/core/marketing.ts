@@ -43,7 +43,7 @@ export async function susunRencana(): Promise<number> {
   if (menyusun) throw new Error("Laras sedang menyusun rencana");
   menyusun = true;
   try {
-    const r = await runAgent("marketing", promptRencana());
+    const r = await runAgent("marketing", promptRencana(), "menyusun rencana ide konten 7 hari");
     return simpanRencana(r.text, r.jobId);
   } finally { menyusun = false; }
 }
@@ -85,6 +85,6 @@ export function rakitCaption(teks: string): string {
 export async function buatCaption(videoId: number, platform: string, tempel?: string): Promise<string> {
   if (typeof tempel === "string" && tempel.trim()) return rakitCaption(tempel);
   video(videoId);
-  const r = await runAgent("marketing", promptCaption(videoId, platform));
+  const r = await runAgent("marketing", promptCaption(videoId, platform), `menulis caption ${cekPlatform(platform)} untuk video #${videoId}`);
   return rakitCaption(r.text);
 }

@@ -3,12 +3,18 @@ import { writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { db, DATA } from "./db.ts";
 import { loadAgent } from "./agents.ts";
+import { mulaiTugas, akhiriTugas, catat } from "./aktivitas.ts";
 
 export type RunResult = { jobId: number; text: string; biayaUsd: number | null };
 
 /** Jalankan satu agent lewat Claude Code headless (`claude -p`) dan catat sebagai job. */
-export async function runAgent(agentId: string, prompt: string): Promise<RunResult> {
-  const agent = loadAgent(agentId);
+const BAWAAN: Record<string, string> = { periset: "meriset topik baru", penulis: "menulis naskah", marketing: "menyusun ide konten", "cs-wa": "membalas chat pelanggan", pandu: "menjawab pertanyaanmu" };
+
+/** Jalankan satu agen. `deskripsi` = apa yang sedang dikerjakan (tampil di kantor 3D dan feed aktivitas). */
+export async function runAgent(agentId: string, prompt: string, deskripsi?: string): Promise<RunResult> {
+  const apa = deskripsi ?? BAWAAN[agentId] ?? "bekerja";
+  const agent = loadAgent(agentId);   // sebelum mencatat tugas: agen tak dikenal tidak boleh meninggalkan tugas "aktif"
+  const tugas = mulaiTugas(agentId, apa); catat(agentId, `mulai ${apa}`);
   const { lastInsertRowid } = db
     .prepare("INSERT INTO jobs (agent, status, input) VALUES (?, 'berjalan', ?)")
     .run(agentId, prompt);
@@ -23,11 +29,15 @@ export async function runAgent(agentId: string, prompt: string): Promise<RunResu
       : await panggilClaude(agent, prompt);
     db.prepare("UPDATE jobs SET status='selesai', output=?, biaya_usd=?, selesai=datetime('now') WHERE id=?")
       .run(text, biayaUsd, jobId);
+    catat(agentId, `selesai ${apa}`, "selesai");
     return { jobId, text, biayaUsd };
   } catch (e) {
     const msg = e instanceof Error ? e.message : String(e);
     db.prepare("UPDATE jobs SET status='gagal', error=?, selesai=datetime('now') WHERE id=?").run(msg, jobId);
+    catat(agentId, `gagal ${apa}: ${msg.slice(0, 120)}`, "gagal");
     throw e;
+  } finally {
+    akhiriTugas(tugas);
   }
 }
 

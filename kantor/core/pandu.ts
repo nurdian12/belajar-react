@@ -74,7 +74,7 @@ export function urai(teks: string): { balasan: string; aksi: Aksi[] } {
 
 export async function tanya(pesan: string, riwayat: Giliran[]) {
   if (!pesan.trim()) throw new Error("Pesan kosong");
-  const r = await runAgent("pandu", susunPrompt(pesan, riwayat));
+  const r = await runAgent("pandu", susunPrompt(pesan, riwayat), "menjawab pertanyaanmu");
   return urai(r.text);
 }
 

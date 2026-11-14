@@ -47,6 +47,13 @@ CREATE TABLE IF NOT EXISTS video (
   dibuat TEXT NOT NULL DEFAULT (datetime('now')),
   selesai TEXT
 );
+CREATE TABLE IF NOT EXISTS aktivitas (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  waktu TEXT NOT NULL DEFAULT (datetime('now')),   -- UTC
+  agent TEXT NOT NULL,                             -- rina | maya | dewi | laras | putri | pandu | kamu
+  teks TEXT NOT NULL,
+  jenis TEXT NOT NULL DEFAULT 'info'               -- info | selesai | gagal | kamu
+);
 CREATE TABLE IF NOT EXISTS rencana (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   judul TEXT NOT NULL,

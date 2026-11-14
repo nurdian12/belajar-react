@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { db, ROOT } from "./db.ts";
 import { runAgent, ekstrakJson } from "./runner.ts";
+import { catat } from "./aktivitas.ts";
 
 type Draf = { judul: string; naskah: string; rencana_visual: string[] };
 
@@ -20,7 +21,7 @@ export async function riset(): Promise<number> {
     const prompt =
       `Hari ini ${new Date().toISOString().slice(0, 10)}. Cari 3 topik baru.\n` +
       (dipakai ? `Sudah pernah dipakai, jangan diulang:\n${dipakai}` : "");
-    const r = await runAgent("periset", prompt);
+    const r = await runAgent("periset", prompt, "meriset 3 topik keseharian baru");
     const { topik } = ekstrakJson<Riset>(r.text);
     const ins = db.prepare("INSERT INTO topik (judul, ringkasan, sumber, job_id) VALUES (?,?,?,?)");
     const ids = (topik ?? []).filter((t) => t.judul).map((t) =>
@@ -93,22 +94,27 @@ export function revisiNaskah(id: number, catatan: string) {
   const n = db.prepare("SELECT * FROM naskah WHERE id=?").get(id) as any;
   if (!n) throw new Error("Naskah tidak ditemukan");
   db.prepare("UPDATE naskah SET status='menyusun', catatan=? WHERE id=?").run(catatan, id);
+  catat("kamu", `minta revisi naskah "${(n.judul ?? n.topik).slice(0, 50)}": ${catatan.slice(0, 80)}`, "kamu");
   const prompt =
     `Topik: ${n.topik}\n\nNaskah sebelumnya:\n${n.isi}\n\nCatatan revisi dari bos:\n${catatan}\n\nPerbaiki naskahnya.`;
   void tulis(id, prompt, n.versi + 1);
 }
 
 export function setStatus(id: number, status: "disetujui" | "ditolak") {
-  db.prepare("UPDATE naskah SET status=? WHERE id=? AND status='menunggu'").run(status, id);
+  const n = db.prepare("SELECT judul, topik FROM naskah WHERE id=?").get(id) as { judul?: string; topik: string } | undefined;
+  const { changes } = db.prepare("UPDATE naskah SET status=? WHERE id=? AND status='menunggu'").run(status, id);
+  if (changes && n) catat("kamu", `${status === "disetujui" ? "menyetujui" : "menolak"} naskah "${(n.judul ?? n.topik).slice(0, 60)}"`, "kamu");
 }
 
 async function tulis(id: number, prompt: string, versi: number) {
   try {
-    const r = await runAgent("penulis", prompt);
+    const topik = (db.prepare("SELECT topik FROM naskah WHERE id=?").get(id) as { topik: string } | undefined)?.topik ?? "";
+    const r = await runAgent("penulis", prompt, `${versi > 1 ? "merevisi" : "menulis"} naskah: ${topik.slice(0, 70)}`);
     const d = ekstrakJson<Draf>(r.text);
     db.prepare(
       "UPDATE naskah SET judul=?, isi=?, rencana_visual=?, status='menunggu', versi=?, job_id=? WHERE id=?",
     ).run(d.judul, d.naskah, JSON.stringify(d.rencana_visual ?? []), versi, r.jobId, id);
+    catat("penulis", `naskah v${versi} "${String(d.judul).slice(0, 60)}" siap, menunggu persetujuanmu`, "selesai");
   } catch (e) {
     console.error(`[penulis] naskah #${id} gagal:`, e instanceof Error ? e.message : e);
     db.prepare("UPDATE naskah SET status='gagal' WHERE id=?").run(id);

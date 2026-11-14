@@ -7,6 +7,7 @@ import { buatNaskah, revisiNaskah, setStatus, simpanManual, riset, sedangRiset, 
 import { mulaiScheduler } from "./scheduler.ts";
 import { pesanMasuk, buatDraf, kirimBalasan, selesaikan, simpanHasil, promptManual, sedangMembalas } from "./cs.ts";
 import { mulaiWebhook } from "./webhook.ts";
+import { tugasAktif, langgan, riwayat } from "./aktivitas.ts";
 import { susunRencana, simpanRencana, sedangMenyusun, promptRencanaManual, promptCaptionManual, buatCaption, PLATFORM } from "./marketing.ts";
 import { tanya, urai, promptManual as promptPandu, ubahBerkas } from "./pandu.ts";
 import { buatVideo, VIDEO_DIR } from "./video.ts";
@@ -37,6 +38,29 @@ function kirimVideo(req: any, res: any, file: string) {
 
 const PORT = Number(process.env.PORT ?? 4321);
 
+/** Status tiap karyawan, dihitung dari tugas yang BENAR-BENAR sedang berjalan di server ini. */
+function statusKantor() {
+  const t = tugasAktif();
+  const n = (sql: string) => (db.prepare(sql).get() as { n: number }).n;
+  const naskahTunggu = n("SELECT COUNT(*) n FROM naskah WHERE status='menunggu'"), chatTunggu = n("SELECT COUNT(*) n FROM percakapan WHERE status='butuh-kamu'");
+  const st = (k: string, tunggu = false) => (t[k] ? "kerja" : tunggu ? "tunggu" : "siap");
+  const tugas: Record<string, { teks: string; detik: number }> = {};
+  for (const [k, v] of Object.entries(t)) tugas[k] = { teks: v.teks, detik: Math.round((Date.now() - v.sejak) / 1000) };
+  if (naskahTunggu || chatTunggu) tugas.kamu = { teks: [naskahTunggu && `${naskahTunggu} naskah menunggu persetujuan`, chatTunggu && `${chatTunggu} chat butuh kamu`].filter(Boolean).join(", "), detik: 0 };
+  return {
+    rina: st("rina"), maya: st("maya"), dewi: st("dewi"), laras: st("laras"), pandu: st("pandu"),
+    putri: st("putri", chatTunggu > 0), kamu: naskahTunggu || chatTunggu ? "tunggu" : "siap", _tugas: tugas,
+  };
+}
+
+/** Pekerjaan yang terputus saat server mati tidak boleh terlihat "sedang berjalan" selamanya. */
+function bersihkanYatim() {
+  db.prepare("UPDATE jobs SET status='gagal', error='terputus: server dimulai ulang', selesai=datetime('now') WHERE status='berjalan'").run();
+  db.prepare("UPDATE naskah SET status='gagal' WHERE status='menyusun'").run();
+  db.prepare("UPDATE video SET status='gagal', error='terputus: server dimulai ulang', selesai=datetime('now') WHERE status IN ('menyiapkan','suara','render')").run();
+}
+bersihkanYatim();
+
 const json = (res: any, data: unknown, code = 200) => {
   res.writeHead(code, { "content-type": "application/json; charset=utf-8" });
   res.end(JSON.stringify(data));
@@ -60,17 +84,16 @@ createServer(async (req, res) => {
       return kirimBerkas(res, join(ROOT, "..", "node_modules", "three", "build", "three.module.js"), "text/javascript; charset=utf-8");
     if (req.method === "GET" && p === "/kantor3d.js")
       return kirimBerkas(res, join(ROOT, "dashboard", "kantor3d.js"), "text/javascript; charset=utf-8");
-    if (req.method === "GET" && p === "/api/status") {
-      const ada = (sql: string, ...a: any[]) => Boolean(db.prepare(sql).get(...a));
-      return json(res, {
-        rina: sedangRiset() || ada("SELECT 1 FROM jobs WHERE agent='periset' AND status='berjalan'") ? "kerja" : "siap",
-        maya: ada("SELECT 1 FROM jobs WHERE agent='penulis' AND status='berjalan'") || ada("SELECT 1 FROM naskah WHERE status='menyusun'") ? "kerja" : "siap",
-        dewi: ada("SELECT 1 FROM video WHERE status IN ('menyiapkan','suara','render')") ? "kerja" : "siap",
-        kamu: ada("SELECT 1 FROM naskah WHERE status='menunggu'") || ada("SELECT 1 FROM percakapan WHERE status='butuh-kamu'") ? "tunggu" : "siap",
-        pandu: ada("SELECT 1 FROM jobs WHERE agent='pandu' AND status='berjalan'") ? "kerja" : "siap",
-        laras: sedangMenyusun() || ada("SELECT 1 FROM jobs WHERE agent='marketing' AND status='berjalan'") ? "kerja" : "siap",
-        putri: ada("SELECT 1 FROM jobs WHERE agent='cs-wa' AND status='berjalan'") ? "kerja" : ada("SELECT 1 FROM percakapan WHERE status='butuh-kamu'") ? "tunggu" : "siap",
-      });
+    if (req.method === "GET" && p === "/api/status") return json(res, statusKantor());
+    if (req.method === "GET" && p === "/api/aktivitas") return json(res, riwayat(Math.min(100, Number(url.searchParams.get("n")) || 30)));
+    if (req.method === "GET" && p === "/api/aliran") {   // Server-Sent Events: status dan aktivitas langsung ke dashboard
+      res.writeHead(200, { "content-type": "text/event-stream; charset=utf-8", "cache-control": "no-cache", connection: "keep-alive", "x-accel-buffering": "no" });
+      const kirim = (ev: string, d: unknown) => { if (!res.writableEnded) res.write(`event: ${ev}\ndata: ${JSON.stringify(d)}\n\n`); };
+      kirim("riwayat", riwayat(20)); kirim("status", statusKantor());
+      const lepas = langgan((ev, d) => { if (ev === "aktivitas") kirim("aktivitas", d); kirim("status", statusKantor()); });
+      const detak = setInterval(() => kirim("status", statusKantor()), 3000);   // menjaga koneksi hidup dan memperbarui lama tugas
+      req.on("close", () => { clearInterval(detak); lepas(); });
+      return;
     }
     // ---- Laras, marketing ----
     if (req.method === "GET" && p === "/api/rencana")
