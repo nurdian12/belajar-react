@@ -1,11 +1,10 @@
+import "./env.ts";
 import { DatabaseSync } from "node:sqlite";
 import { mkdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 export const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-// Muat kantor/.env (kunci API) bila ada. Variabel yang sudah diset di shell tidak ditimpa.
-try { process.loadEnvFile(join(ROOT, ".env")); } catch { /* tidak ada .env */ }
 
 export const DATA = process.env.KANTOR_DATA || join(ROOT, "data");
 mkdirSync(DATA, { recursive: true });

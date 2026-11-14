@@ -1,3 +1,4 @@
+import "./env.ts";
 import { readFile, stat } from "node:fs/promises";
 import { basename } from "node:path";
 
