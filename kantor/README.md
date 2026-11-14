@@ -77,10 +77,8 @@ Tanpa `ELEVENLABS_API_KEY` video dibuat senyap (hanya teks bergerak).
 
 ## Dashboard
 
-Lima tab seperti di video contoh: **Beranda** (kantor 3D + panel "Perlu keputusan kamu"), **Agent** (tim, status, job desk), **Channel** (pengaturan, hanya baca), **Konten** (topik, naskah, video, jadwal posting), **Jadwal**.
-Di Beranda ada kantor 3D: kantor isometrik (Three.js, low-poly) dengan lima ruangan. Karakter bergerak sesuai status asli
-(`/api/status`): Rina riset, Maya menulis, Dewi merender, dan meja Kamu menyala amber saat ada naskah menunggu persetujuan.
-Putri tembus pandang karena belum dibangun. Tombol **Demo animasi** memutar siklus contoh. Bila WebGL tidak ada, dashboard tetap jalan tanpa adegan.
+Tujuh tab: **Beranda** (ringkasan, panel "Sedang dikerjakan" dan "Perlu keputusan kamu", kantor 3D), **Agent** (tim, status, job desk), **Channel** (pengaturan, hanya baca), **Konten** (topik, naskah, video, jadwal posting), **Marketing**, **CS**, **Jadwal**.
+Kantor 3D (Three.js, low-poly) menampilkan semua karyawan (Rina, Maya, Dewi, Laras, Putri, Pandu, dan meja Kamu) dengan status dan tugas nyata dari server (lihat "Aktivitas langsung"); klik label untuk membuka tab terkait. Bila WebGL tidak ada, dashboard tetap jalan tanpa adegan.
 
 ## Video tur
 
