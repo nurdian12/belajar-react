@@ -122,6 +122,12 @@ async function mock(agentId: string, prompt: string) {
       }),
     };
   }
+  if (agentId === "marketing") {
+    if (prompt.includes("<tugas>caption</tugas>"))
+      return { biayaUsd: 0, text: JSON.stringify({ caption: "[MOCK] Gaji baru masuk, kok cepat habis? Simpan videonya ya!", hashtag: ["keuangan", "#tipshemat", "gaji bulanan", "keuangan"] }) };
+    const pilar = ["edukasi", "relatable", "musiman", "interaksi", "edukasi", "relatable", "interaksi"];
+    return { biayaUsd: 0, text: JSON.stringify({ ide: pilar.map((p, i) => ({ judul: `[MOCK] Ide ${i + 1}`, sudut: "Sudut contoh.", pilar: p, alasan: "Alasan contoh." })) }) };
+  }
   if (agentId === "pandu") {
     const pesan = (prompt.match(/<pesan>\n([\s\S]*?)\n<\/pesan>/) ?? [])[1] ?? "";
     const gaya = /niche|kuliner|gaya/i.test(pesan);

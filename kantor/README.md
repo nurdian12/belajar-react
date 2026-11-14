@@ -28,6 +28,13 @@ copy kantor\.env.example kantor\.env
 Edit `kantor\.env` (Notepad): `KANTOR_OTAK=api`, `ANTHROPIC_API_KEY=...`, lalu `ELEVENLABS_API_KEY=...`. Jalankan `npm run kantor`, buka http://127.0.0.1:4321.
 Render video memakai Chromium (diunduh Remotion saat pertama) dan bisa lambat di mesin lama.
 
+## Marketing (Laras)
+
+Tab **Marketing**: Laras menyusun **rencana ide konten 7 hari** sesuai gaya channel (pilar edukasi, relatable, musiman, interaksi) dan menghindari judul yang sudah dipakai; tiap ide punya tombol *Tulis naskah* (ke Maya) atau *Buang*.
+Di form jadwal tiap video (tab Konten) ada **Caption oleh Laras**: caption + hashtag sesuai platform akun yang dipilih (TikTok, Instagram, YouTube Shorts, dst.), hashtag dirapikan otomatis, lalu kamu sunting sebelum menjadwalkan.
+Batasan: ide bukan data tren (itu tugas Rina), dan belum ada analitik/performa, jadi tidak ada saran jam posting berbasis data. Pedoman per platform di `agents/marketing/skills/platform-caption.md` adalah pedoman umum, ubah sesuai pengalamanmu.
+Mode manual (`KANTOR_OTAK=manual`): permintaan disalin otomatis, tempel balasan Claude di kotak yang muncul.
+
 ## Di VPS (disarankan jika laptop tidak kuat)
 
 Claude Code, render video, dan semua agen jalan di VPS Linux; laptop hanya membuka dashboard di browser lewat SSH tunnel. Dashboard sengaja **tidak** dibuka ke internet (tidak punya login).

@@ -74,7 +74,7 @@
 <header class="bar"><div class="in">
   <div class="brand"><i>K</i> Kantor</div>
   <nav aria-label="Navigasi">
-    <a href="#beranda">Beranda</a><a href="#agent">Agent</a><a href="#channel">Channel</a><a href="#konten">Konten</a><a href="#cs">CS</a><a href="#jadwal">Jadwal</a>
+    <a href="#beranda">Beranda</a><a href="#agent">Agent</a><a href="#channel">Channel</a><a href="#konten">Konten</a><a href="#marketing">Marketing</a><a href="#cs">CS</a><a href="#jadwal">Jadwal</a>
   </nav>
   <span class="mut" id="mode-info" style="margin-left:auto"></span>
 </div></header>
@@ -139,6 +139,14 @@
     <div id="video-list"></div>
   </section>
 
+  <section class="tab" data-tab="marketing" hidden>
+    <h2>Rencana konten 7 hari</h2>
+    <p class="mut" style="margin-top:-4px">Laras menyusun <b>ide</b> sesuai gaya channel dan menghindari yang sudah dipakai. Ini ide, bukan data tren (data tren tugas Rina).</p>
+    <div class="row" style="margin-bottom:10px"><button id="rencana-susun">Minta Laras susun rencana</button><span class="mut" id="rencana-info"></span></div>
+    <div id="rencana-list"></div>
+    <p class="mut">Caption dan hashtag per platform: di tab <a href="#konten">Konten</a>, pada form jadwal tiap video, tombol <b>Caption oleh Laras</b>.</p>
+  </section>
+
   <section class="tab" data-tab="cs" hidden>
     <h2>Customer service</h2>
     <p class="mut" id="cs-info" style="margin-top:-4px"></p>
@@ -164,6 +172,11 @@
     <div id="jadwal-posting"></div>
   </section>
 </main>
+<div id="dlg" class="card" hidden role="dialog" aria-label="Tempel balasan Claude" style="position:fixed;left:50%;top:18%;transform:translateX(-50%);width:min(520px,92vw);z-index:40;box-shadow:0 12px 40px #0005">
+  <b id="dlg-judul"></b><p class="mut" id="dlg-info" style="margin:4px 0 8px"></p>
+  <textarea id="dlg-isi" rows="6" placeholder="Tempel balasan Claude di sini"></textarea>
+  <div class="row" style="margin-top:8px"><button id="dlg-ok">Gunakan</button><button class="ghost" id="dlg-batal">Batal</button></div>
+</div>
 <button class="pandu-fab" id="pandu-buka">Tanya Pandu</button>
 <aside id="pandu" hidden aria-label="Pandu, asisten kantor">
   <div class="ph"><span class="av" style="margin:0">PA</span><span><b>Pandu</b><div class="mut">Asisten kantor: bilang saja kamu mau apa</div></span><button class="ghost" id="pandu-tutup" aria-label="Tutup">&times;</button></div>
@@ -207,6 +220,7 @@ function jadwalDefault(jam = "16:00") {
 $("#video-list").addEventListener("click", async (e) => {
   const b = e.target.closest("button[data-p]"); if (!b) return;
   const box = b.closest(".post");
+  if (b.dataset.p === "caption") return buatCaptionLaras(box, b);
   if (!box.querySelector(".jadwal").value) return alert("Isi waktu jadwal dulu.");
   const r = await post(`/api/video/${box.dataset.vid}/posting`, {
     akunId: box.querySelector(".akun").value,
@@ -218,7 +232,7 @@ $("#video-list").addEventListener("click", async (e) => {
 });
 
 async function muat() {
-  const [agents, naskah, jobs, tp, videos, pst, peng, stat, csList] = await Promise.all([api("/api/agents"), api("/api/naskah"), api("/api/jobs"), api("/api/topik"), api("/api/video"), api("/api/posting"), api("/api/pengaturan"), api("/api/status"), api("/api/cs")]);
+  const [agents, naskah, jobs, tp, videos, pst, peng, stat, csList, rencana] = await Promise.all([api("/api/agents"), api("/api/naskah"), api("/api/jobs"), api("/api/topik"), api("/api/video"), api("/api/posting"), api("/api/pengaturan"), api("/api/status"), api("/api/cs"), api("/api/rencana")]);
   if (!akunRepliz) akunRepliz = await api("/api/repliz/akun");  // sekali saja, jangan memanggil Repliz tiap 3 detik
   const postingPerVideo = {};
   pst.posting.forEach((x) => (postingPerVideo[x.video_id] ||= []).push(x));
@@ -236,7 +250,7 @@ async function muat() {
       ${v.file ? `<video controls preload="metadata" src="/video/${esc(v.file)}" style="height:420px;margin-top:8px;border-radius:8px"></video>` : ""}
       ${v.file ? `<div class="post" data-vid="${v.id}" style="margin-top:10px">
         <div class="row">${opsiAkun}<input class="jadwal" type="datetime-local" value="${jadwalDefault(pst.jamPosting[0])}" style="flex:0 0 auto"></div>
-        <div class="row" style="margin-top:8px"><input class="caption" placeholder="Caption (kosong = pakai judul)" value="${esc(judulNaskah[v.naskah_id] ?? "")}"><button data-p="jadwalkan">Jadwalkan</button></div>
+        <div class="row" style="margin-top:8px"><textarea class="caption" rows="2" placeholder="Caption (kosong = pakai judul)" style="flex:1;min-width:0">${esc(judulNaskah[v.naskah_id] ?? "")}</textarea><button class="ghost" data-p="caption">Caption oleh Laras</button><button data-p="jadwalkan">Jadwalkan</button></div><div class="mut capinfo"></div>
         ${(postingPerVideo[v.id] || []).map((x) => `<div class="mut">Posting #${x.id}: <span class="tag ${x.status === "gagal" ? "gagal" : "disetujui"}">${x.status}</span> ${new Date(x.jadwal).toLocaleString()}${x.error ? " · " + esc(x.error.slice(0, 200)) : ""}</div>`).join("")}
         ${modeKirim}</div>` : ""}</div>`).join("") || `<div class="mut">Belum ada video. Setujui naskah, lalu klik Buat video.</div>`;
   if ($("#video-list").dataset.h !== vhtml) { $("#video-list").innerHTML = vhtml; $("#video-list").dataset.h = vhtml; }
@@ -250,8 +264,9 @@ async function muat() {
       ${src.length ? `<div class="mut">${src.map((u) => `<a href="${esc(u)}" target="_blank" rel="noopener noreferrer">${esc(new URL(u, "http://x").hostname)}</a>`).join(" · ")}</div>` : ""}
       <div class="row" style="margin-top:8px"><button data-t="tulis" data-id="${t.id}">Tulis naskah</button><button class="ghost" data-t="buang" data-id="${t.id}">Buang</button></div></div>`;
   }).join("") || `<div class="mut">Belum ada topik baru.</div>`;
-  renderBeranda(naskah, tp, videos, pst, peng, csList);
+  renderBeranda(naskah, tp, videos, pst, peng, csList, rencana);
   renderCS(csList, peng);
+  renderRencana(rencana, peng);
   renderAgent(agents, stat, peng);
   renderChannel(peng);
   renderJadwal(peng, pst, videos, naskah);
@@ -299,7 +314,7 @@ $("#naskah").addEventListener("click", async (e) => {
 });
 
 // ---------- tab & tampilan baru ----------
-const TABS = ["beranda", "agent", "channel", "konten", "cs", "jadwal"];
+const TABS = ["beranda", "agent", "channel", "konten", "marketing", "cs", "jadwal"];
 function rute() {
   const h = (location.hash || "#beranda").slice(1), t = TABS.includes(h) ? h : "beranda";
   document.querySelectorAll(".tab").forEach((x) => (x.hidden = x.dataset.tab !== t));
@@ -309,7 +324,7 @@ addEventListener("hashchange", rute); rute();
 
 let otakMode = "claude";
 const OTAK = { claude: "Claude Code (langganan)", api: "Anthropic API", manual: "Manual (tempel dari Claude)", mock: "Mode uji (tanpa AI)" };
-function renderBeranda(naskah, tp, videos, pst, peng, csList) {
+function renderBeranda(naskah, tp, videos, pst, peng, csList, rencana) {
   const menunggu = naskah.filter((n) => n.status === "menunggu");
   const sudahPosting = new Set(pst.posting.map((x) => x.video_id));
   const siap = videos.filter((v) => v.status === "selesai" && !sudahPosting.has(v.id));
@@ -319,20 +334,21 @@ function renderBeranda(naskah, tp, videos, pst, peng, csList) {
     ...menunggu.map((n) => `<div class="item" data-ke="konten"><span><b>Naskah menunggu</b><div class="mut">${esc(n.judul || n.topik)}</div></span><span class="mut">Buka &rsaquo;</span></div>`),
     ...siap.map((v) => `<div class="item" data-ke="konten"><span><b>Video siap dijadwalkan</b><div class="mut">${esc(judul[v.naskah_id] ?? "Video #" + v.id)}</div></span><span class="mut">Buka &rsaquo;</span></div>`),
     ...csList.filter((c) => c.status === "butuh-kamu").map((c) => `<div class="item" data-ke="cs"><span><b>Chat butuh kamu</b><div class="mut">${esc(c.kontak)}: ${esc(c.terakhir || "")}</div></span><span class="mut">Buka &rsaquo;</span></div>`),
+    ...(rencana.ide.filter((i) => i.status === "baru").length ? [`<div class="item" data-ke="marketing"><span><b>${rencana.ide.filter((i) => i.status === "baru").length} ide dari Laras</b><div class="mut">Rencana konten menunggu dipilih</div></span><span class="mut">Buka &rsaquo;</span></div>`] : []),
     ...(baru ? [`<div class="item" data-ke="konten"><span><b>${baru} topik baru dari Rina</b><div class="mut">Pilih yang mau ditulis</div></span><span class="mut">Buka &rsaquo;</span></div>`] : []),
   ];
-  $("#n-keputusan").textContent = menunggu.length + siap.length + csList.filter((c) => c.status === "butuh-kamu").length;
+  $("#n-keputusan").textContent = baris.length;
   $("#keputusan").innerHTML = baris.join("") || `<div class="mut">Tidak ada yang menunggu kamu.</div>`;
   $("#berikutnya").innerHTML = peng.jadwal.map((j) => `${esc(j.jam)} · ${j.agent === "periset" ? "Rina riset topik" : esc(j.agent)}`).join("<br>") || "Belum ada jadwal.";
   otakMode = peng.otak;
   $("#mode-info").textContent = `Mode ${peng.naskahOtomatis ? "otomatis" : "manual"} · otak: ${OTAK[peng.otak]}`;
 }
-const TAMPIL = { periset: ["Rina", "Riset"], penulis: ["Maya", "Konten"], animator: ["Dewi", "Konten"], "cs-wa": ["Putri", "Operasional"], pandu: ["Pandu", "Asisten"] };
-const KUNCI_STATUS = { periset: "rina", penulis: "maya", animator: "dewi", "cs-wa": "putri", pandu: "pandu" };
+const TAMPIL = { periset: ["Rina", "Riset"], penulis: ["Maya", "Konten"], animator: ["Dewi", "Konten"], marketing: ["Laras", "Pemasaran"], "cs-wa": ["Putri", "Operasional"], pandu: ["Pandu", "Asisten"] };
+const KUNCI_STATUS = { periset: "rina", penulis: "maya", animator: "dewi", marketing: "laras", "cs-wa": "putri", pandu: "pandu" };
 const TEKS_STATUS = { siap: "siap", kerja: "bekerja", tunggu: "menunggu kamu", belum: "belum dibangun" };
 function renderAgent(agents, stat, peng) {
   const jadwalDari = (id) => id === "periset" ? (peng.jadwal.filter((j) => j.agent === "periset").map((j) => "Setiap hari " + j.jam).join(", ") || "Manual")
-    : id === "penulis" ? (peng.naskahOtomatis ? "Setelah Rina selesai" : "Saat kamu memilih topik") : id === "animator" ? "Setelah naskah disetujui" : id === "pandu" ? "Saat kamu bertanya" : "Saat ada pesan masuk";
+    : id === "penulis" ? (peng.naskahOtomatis ? "Setelah Rina selesai" : "Saat kamu memilih topik") : id === "animator" ? "Setelah naskah disetujui" : id === "pandu" ? "Saat kamu bertanya" : id === "marketing" ? "Saat kamu meminta" : "Saat ada pesan masuk";
   const otak = (a) => a.model || OTAK[peng.otak === "mock" ? "mock" : peng.otak];
   let grup = "", html = "";
   for (const a of Object.keys(TAMPIL).map((id) => agents.find((x) => x.id === id)).filter(Boolean)) {
@@ -380,6 +396,60 @@ $("#m-simpan").addEventListener("click", async () => {
   if (r.error) { $("#m-info").textContent = r.error; return; }
   $("#m-isi").value = ""; $("#m-info").textContent = "Naskah tersimpan, menunggu persetujuanmu di bawah."; muat();
 });
+// ---------- Laras (marketing) ----------
+function mintaTempel(judul, info, promptUrl, promptBody) {
+  return new Promise(async (ok) => {
+    const { teks } = await post(promptUrl, promptBody);
+    try { await navigator.clipboard.writeText(teks); } catch { /* pemilik bisa menyalin manual */ }
+    $("#dlg-judul").textContent = judul; $("#dlg-info").textContent = info; $("#dlg-isi").value = ""; $("#dlg").hidden = false; $("#dlg-isi").focus();
+    const tutup = (v) => { $("#dlg").hidden = true; $("#dlg-ok").onclick = $("#dlg-batal").onclick = null; ok(v); };
+    $("#dlg-ok").onclick = () => tutup($("#dlg-isi").value.trim() || null); $("#dlg-batal").onclick = () => tutup(null);
+  });
+}
+function platformDari(box) {
+  const id = box.querySelector(".akun").value, a = (akunRepliz?.akun ?? []).find((x) => x.id === id), t = `${a?.platform ?? ""} ${a?.nama ?? ""}`.toLowerCase();
+  return ["tiktok", "instagram", "youtube", "facebook", "threads"].find((p) => t.includes(p)) || (/\b(x|twitter)\b/.test(t) ? "x" : "umum");
+}
+async function buatCaptionLaras(box, tombol) {
+  const info = box.querySelector(".capinfo"), platform = platformDari(box), vid = Number(box.dataset.vid);
+  tombol.disabled = true; info.textContent = `Laras menulis caption untuk ${platform}…`;
+  try {
+    let tempel;
+    if (otakMode === "manual") {
+      tempel = await mintaTempel("Caption oleh Laras", "Tidak ada AI di komputer ini: permintaan sudah disalin. Tempel di Claude, lalu tempel balasannya di sini.", `/api/video/${vid}/caption/prompt`, { platform });
+      if (!tempel) { info.textContent = ""; return; }
+    }
+    const r = await post(`/api/video/${vid}/caption`, { platform, tempel });
+    if (r.error) info.textContent = "Gagal: " + r.error;
+    else { box.querySelector(".caption").value = r.caption; info.textContent = `Caption untuk ${platform} sudah diisi. Periksa dan sunting dulu sebelum menjadwalkan.`; }
+  } finally { tombol.disabled = false; }
+}
+const PILAR = { edukasi: "disetujui", relatable: "menunggu", musiman: "", interaksi: "" };
+function renderRencana(r, peng) {
+  const baru = r.ide.filter((i) => i.status === "baru"), manual = peng.otak === "manual";
+  $("#rencana-susun").disabled = r.sedang; $("#rencana-info").textContent = r.sedang ? "Laras sedang menyusun…" : manual ? "Tanpa AI di komputer ini: permintaan disalin untuk ditempel di Claude." : "";
+  $("#rencana-list").innerHTML = baru.map((i) => `<div class="card"><div class="row" style="justify-content:space-between"><b>${esc(i.judul)}</b><span class="tag ${PILAR[i.pilar] ?? ""}">${esc(i.pilar)}</span></div>
+    <div>${esc(i.sudut)}</div><div class="mut">${esc(i.alasan)}</div>
+    <div class="row" style="margin-top:8px"><button data-r="tulis" data-id="${i.id}">Tulis naskah</button><button class="ghost" data-r="buang" data-id="${i.id}">Buang</button></div></div>`).join("") || '<div class="mut">Belum ada ide. Klik tombol di atas.</div>';
+}
+$("#rencana-susun").addEventListener("click", async () => {
+  if (otakMode === "manual") {
+    const t = await mintaTempel("Rencana konten oleh Laras", "Tidak ada AI di komputer ini: permintaan sudah disalin. Tempel di Claude, lalu tempel balasannya di sini.", "/api/rencana/prompt", {});
+    if (!t) return;
+    const r = await post("/api/rencana/susun", { tempel: t }); if (r.error) alert(r.error);
+  } else { const r = await post("/api/rencana/susun"); if (r.error) alert(r.error); }
+  muat();
+});
+$("#rencana-list").addEventListener("click", async (e) => {
+  const b = e.target.closest("button[data-r]"); if (!b) return;
+  if (b.dataset.r === "tulis" && otakMode === "manual") {   // tanpa AI: isi topik di panel manual Konten
+    const ide = (await api("/api/rencana")).ide.find((i) => i.id === Number(b.dataset.id));
+    await post(`/api/rencana/${b.dataset.id}/buang`); location.hash = "#konten"; $("#m-topik").value = `${ide.judul}. ${ide.sudut ?? ""}`; $("#manual").open = true; muat(); return;
+  }
+  const r = await post(`/api/rencana/${b.dataset.id}/${b.dataset.r}`); if (r.error) alert(r.error);
+  if (b.dataset.r === "tulis") location.hash = "#konten"; muat();
+});
+
 // ---------- Pandu ----------
 const pandu = { riwayat: [], aksi: [], sibuk: false, pesanTerakhir: "" };
 const SARAN = ["Aku mulai dari mana?", "Ganti niche channel", "Kenapa videoku senyap?", "Apa yang belum bisa?"];

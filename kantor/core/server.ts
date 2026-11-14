@@ -7,6 +7,7 @@ import { buatNaskah, revisiNaskah, setStatus, simpanManual, riset, sedangRiset, 
 import { mulaiScheduler } from "./scheduler.ts";
 import { pesanMasuk, buatDraf, kirimBalasan, selesaikan, simpanHasil, promptManual, sedangMembalas } from "./cs.ts";
 import { mulaiWebhook } from "./webhook.ts";
+import { susunRencana, simpanRencana, sedangMenyusun, promptRencanaManual, promptCaptionManual, buatCaption, PLATFORM } from "./marketing.ts";
 import { tanya, urai, promptManual as promptPandu, ubahBerkas } from "./pandu.ts";
 import { buatVideo, VIDEO_DIR } from "./video.ts";
 import { buatPosting } from "./posting.ts";
@@ -66,8 +67,39 @@ createServer(async (req, res) => {
         maya: ada("SELECT 1 FROM jobs WHERE agent='penulis' AND status='berjalan'") || ada("SELECT 1 FROM naskah WHERE status='menyusun'") ? "kerja" : "siap",
         dewi: ada("SELECT 1 FROM video WHERE status IN ('menyiapkan','suara','render')") ? "kerja" : "siap",
         kamu: ada("SELECT 1 FROM naskah WHERE status='menunggu'") || ada("SELECT 1 FROM percakapan WHERE status='butuh-kamu'") ? "tunggu" : "siap",
+        laras: sedangMenyusun() || ada("SELECT 1 FROM jobs WHERE agent='marketing' AND status='berjalan'") ? "kerja" : "siap",
         putri: ada("SELECT 1 FROM jobs WHERE agent='cs-wa' AND status='berjalan'") ? "kerja" : ada("SELECT 1 FROM percakapan WHERE status='butuh-kamu'") ? "tunggu" : "siap",
       });
+    }
+    // ---- Laras, marketing ----
+    if (req.method === "GET" && p === "/api/rencana")
+      return json(res, { sedang: sedangMenyusun(), ide: db.prepare("SELECT * FROM rencana ORDER BY id DESC LIMIT 40").all() });
+    if (req.method === "POST" && p === "/api/rencana/susun") {
+      const { tempel } = await body(req);
+      try {
+        if (typeof tempel === "string" && tempel.trim()) return json(res, { n: simpanRencana(tempel) });   // balasan Claude yang ditempel (mode manual)
+        if (sedangMenyusun()) return json(res, { error: "Laras sedang menyusun rencana" }, 409);
+        susunRencana().catch((e) => console.error("[marketing] gagal:", e instanceof Error ? e.message : e));
+        return json(res, { ok: true }, 202);
+      } catch (e) { return json(res, { error: e instanceof Error ? e.message : String(e) }, 400); }
+    }
+    if (req.method === "POST" && p === "/api/rencana/prompt") return json(res, { teks: promptRencanaManual() });
+    const rn = p.match(/^\/api\/rencana\/(\d+)\/(tulis|buang)$/);
+    if (req.method === "POST" && rn) {
+      const r = db.prepare("SELECT * FROM rencana WHERE id=?").get(Number(rn[1])) as any;
+      if (!r) return json(res, { error: "tidak ditemukan" }, 404);
+      if (rn[2] === "buang") { db.prepare("UPDATE rencana SET status='dibuang' WHERE id=? AND status='baru'").run(r.id); return json(res, { ok: true }); }
+      db.prepare("UPDATE rencana SET status='dipakai' WHERE id=?").run(r.id);
+      return json(res, { naskahId: buatNaskah(`${r.judul}. ${r.sudut ?? ""}`.trim()) }, 202);
+    }
+    const vc = p.match(/^\/api\/video\/(\d+)\/caption(\/prompt)?$/);
+    if (req.method === "POST" && vc) {
+      const { platform, tempel } = await body(req);
+      const plat = (PLATFORM as readonly string[]).includes(platform) ? platform : "umum";
+      try {
+        if (vc[2]) return json(res, { teks: promptCaptionManual(Number(vc[1]), plat) });
+        return json(res, { caption: await buatCaption(Number(vc[1]), plat, tempel) });
+      } catch (e) { return json(res, { error: e instanceof Error ? e.message : String(e) }, 400); }
     }
     // ---- Pandu, asisten kantor ----
     if (req.method === "POST" && p === "/api/pandu") {

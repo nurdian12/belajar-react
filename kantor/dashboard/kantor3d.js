@@ -9,6 +9,7 @@ const STATUS_TEKS = {
   maya: { kerja: "menulis naskah…", siap: "siap" },
   dewi: { kerja: "membuat video…", siap: "siap" },
   kamu: { tunggu: "ada yang menunggu kamu", siap: "tidak ada antrean" },
+  laras: { kerja: "menyusun ide…", siap: "siap" },
   putri: { kerja: "membalas chat…", tunggu: "chat butuh kamu", siap: "siap" },
 };
 
@@ -93,10 +94,13 @@ export function mulaiKantor3D(el, ambilStatus) {
   layar(kamu, -0.5, -0.2, 0.8);
   const nampan = box(kamu.meja, 0.7, 0.12, 0.5, 0xe0b04b, 0.75, 0.8, 0.1); nampan.userData.y0 = nampan.position.y;
   const pesan = box(kamu.meja, 0.5, 0.05, 0.35, 0xffffff, 0.75, 0.92, 0.1);
-  // ruang santai
-  const lounge = new THREE.Group(); dunia.add(lounge);
-  box(lounge, 2.6, 0.5, 1.0, 0x6d8fb3, 6, 0.3, 4.5); box(lounge, 2.6, 0.7, 0.25, 0x5b7a9c, 6, 0.8, 5.1); box(lounge, 1.2, 0.35, 0.8, 0xb68a5a, 6, 0.3, 3.2);
-  cyl(lounge, 0.35, 0.28, 0.5, 0xc2693f, 8.3, 0.3, 1.5); sph(lounge, 0.55, 0x3fa34d, 8.3, 1.3, 1.5);
+  // ruang marketing (Laras): papan strategi dengan catatan warna-warni dan sofa tamu
+  const laras = siapRuang("laras", 6, 3, 0xe05a8a, 0x5a2d82);
+  layar(laras, -0.5, -0.2, 0.8);
+  box(laras.g, 2.6, 1.5, 0.08, 0xffffff, 6, 0.9, 0.2);
+  [0xffd166, 0xef476f, 0x06d6a0, 0x118ab2, 0xffd166, 0xef476f, 0x06d6a0, 0x118ab2].forEach((c, i) => box(laras.g, 0.4, 0.4, 0.05, c, 5.1 + (i % 4) * 0.6, 1.2 + Math.floor(i / 4) * 0.55, 0.27));
+  box(laras.g, 2.2, 0.45, 0.8, 0x6d8fb3, 6, 0.35, 5.3); box(laras.g, 2.2, 0.6, 0.2, 0x5b7a9c, 6, 0.8, 5.75);
+  cyl(laras.g, 0.3, 0.24, 0.5, 0xc2693f, 8.3, 0.35, 5.3); sph(laras.g, 0.5, 0x3fa34d, 8.3, 1.35, 5.3);
 
   // ---- halaman luar ----
   const pohon = (x, z, s = 1) => { cyl(dunia, 0.16 * s, 0.2 * s, 1.0 * s, 0x8a5a3a, x, 0, z); cone(dunia, 0.9 * s, 1.8 * s, 0x2f9d4c, x, 0.9 * s, z); cone(dunia, 0.7 * s, 1.4 * s, 0x3bb45a, x, 1.8 * s, z); };
@@ -107,7 +111,7 @@ export function mulaiKantor3D(el, ambilStatus) {
 
 
   // ---- label DOM di atas kepala ----
-  const info = { rina: ["Rina", "Periset"], maya: ["Maya", "Penulis naskah"], dewi: ["Dewi", "Video"], putri: ["Putri", "CS WhatsApp"], kamu: ["Kamu", "Bos"] };
+  const info = { rina: ["Rina", "Periset"], maya: ["Maya", "Penulis naskah"], dewi: ["Dewi", "Video"], putri: ["Putri", "CS WhatsApp"], laras: ["Laras", "Marketing"], kamu: ["Kamu", "Bos"] };
   for (const id of Object.keys(ruang)) {
     const r = ruang[id], d = document.createElement("div"); d.className = "lbl3d";
     d.innerHTML = `<b>${info[id][0]}</b> <span class="j">${info[id][1]}</span><span class="s"></span>`; el.appendChild(d); r.label = d; r.status = "siap";

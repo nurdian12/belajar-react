@@ -6,7 +6,7 @@ import { bacaPengaturan } from "./pipeline.ts";
 import { adaKunciRepliz } from "./repliz.ts";
 import { loadAgent } from "./agents.ts";
 
-const TAB = ["beranda", "agent", "channel", "konten", "cs", "jadwal"] as const;
+const TAB = ["beranda", "agent", "channel", "konten", "marketing", "cs", "jadwal"] as const;
 const BERKAS = { gaya: join(ROOT, "agents", "penulis", "skills", "gaya-channel.md"), "info-bisnis": join(ROOT, "info-bisnis.md") } as const;
 export type Aksi =
   | { tipe: "buka"; tab: (typeof TAB)[number]; label: string }
@@ -26,6 +26,7 @@ function keadaan() {
     topikBaru: hitung("SELECT COUNT(*) n FROM topik WHERE status='baru'"),
     videoSelesai: hitung("SELECT COUNT(*) n FROM video WHERE status='selesai'"),
     videoBelumDijadwalkan: hitung("SELECT COUNT(*) n FROM video v WHERE status='selesai' AND NOT EXISTS (SELECT 1 FROM posting WHERE video_id=v.id)"),
+    ideRencanaBaru: hitung("SELECT COUNT(*) n FROM rencana WHERE status='baru'"),
     chatButuhPemilik: hitung("SELECT COUNT(*) n FROM percakapan WHERE status='butuh-kamu'"),
     otak: e.KANTOR_OTAK === "api" ? "api" : e.KANTOR_OTAK === "manual" ? "manual" : "claude",
     kunciTerisi: { elevenlabs: Boolean(e.ELEVENLABS_API_KEY), repliz: adaKunciRepliz(), anthropic: Boolean(e.ANTHROPIC_API_KEY), whatsapp: Boolean(e.WA_TOKEN && e.WA_PHONE_NUMBER_ID) },
