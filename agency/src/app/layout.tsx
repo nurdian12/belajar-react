@@ -19,7 +19,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     shell = <>
       <Sidebar pending={pending} org={org} demo={ctx.demo} />
       <main className="min-h-screen px-4 pb-10 pt-14 lg:ml-64 lg:px-8 lg:pt-8">
-        {prov.simulated && <div className="mb-4 rounded-lg border border-fuchsia-200 bg-fuchsia-50 px-4 py-2 text-xs text-fuchsia-800">⚠️ Provider AI belum dikonfigurasi — memakai <b>MOCK adapter</b> (hanya untuk development). Output bersifat simulasi. Setel <code>ANTHROPIC_API_KEY</code> atau <code>OPENAI_API_KEY</code> di server.</div>}
+        {prov.simulated && <div className="mb-4 rounded-lg border border-fuchsia-200 bg-fuchsia-50 px-4 py-2 text-xs text-fuchsia-800">ℹ️ Mode tanpa API key: <b>Local Template Engine</b> — output berupa template terstruktur sesuai instruksi (bukan model AI). Untuk analisis kreatif penuh, setel <code>ANTHROPIC_API_KEY</code> atau <code>OPENAI_API_KEY</code> di server.</div>}
         {children}
       </main></>;
   } catch (e) { if ((e as Error).message !== 'UNAUTHENTICATED') throw e; shell = <main className="p-6">{children}</main>; }

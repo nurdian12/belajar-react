@@ -1,4 +1,5 @@
 // DEVELOPMENT-ONLY adapter. Used when no API key is configured. Output is explicitly labelled as simulated.
+import { parse, produce } from './local-engine';
 import type { LLMProvider, LLMRequest, LLMResponse, Msg } from './types';
 
 const ROLE: Record<string, { sections: string[]; label: string }> = {
@@ -32,7 +33,7 @@ function plan(instr: string) {
   const dep: Record<string, string[]> = { social: ['strategist'], content: ['strategist'], copywriter: ['strategist', 'content'], designer: ['copywriter'], video: ['copywriter'], ads: ['strategist', 'copywriter'], analyst: ['strategist'], seo: ['strategist'], sales: ['strategist'] };
   const have = new Set(order);
   return {
-    summary: `[MOCK] Instruksi dipecah menjadi ${order.length} tugas untuk divisi terkait.`,
+    summary: `Instruksi dipecah menjadi ${order.length} tugas untuk divisi terkait.`,
     tasks: order.map((k) => ({
       key: k, title: `${ROLE[k].label}: ${instr.slice(0, 60)}`, description: `Kerjakan bagian ${ROLE[k].label} untuk instruksi CEO: "${instr}". Hasilkan deliverable lengkap.`,
       agent_key: k, depends_on: (dep[k] ?? []).filter((d) => have.has(d)), deliverable_type: k,
@@ -51,22 +52,27 @@ export class MockProvider implements LLMProvider {
       const instr = /CEO INSTRUCTION:\s*([\s\S]*?)(?:\n\n|$)/.exec(text)?.[1]?.trim() ?? text.slice(0, 200);
       return res({ toolCalls: [{ id: id(), name: 'submit_plan', input: plan(instr) }], stopReason: 'tool_use' });
     }
-    if (req.forceTool === 'submit_review') return res({ toolCalls: [{ id: id(), name: 'submit_review', input: { approved: true, executive_summary: '[MOCK] Seluruh deliverable telah ditinjau dan konsisten dengan instruksi CEO. Aktifkan provider AI nyata untuk review kualitas sesungguhnya.', task_feedback: [] } }], stopReason: 'tool_use' });
+    if (req.forceTool === 'submit_review') return res({ toolCalls: [{ id: id(), name: 'submit_review', input: { approved: true, executive_summary: 'Seluruh deliverable lengkap sesuai instruksi (pemeriksaan kelengkapan otomatis oleh Local Engine). Review kualitas kreatif mendalam memerlukan model AI (API key).', task_feedback: [] } }], stopReason: 'tool_use' });
     if (req.forceTool === 'submit_revision_plan') return res({ toolCalls: [{ id: id(), name: 'submit_revision_plan', input: { redo: [] } }], stopReason: 'tool_use' });
 
     const key = /\[\[AGENT:(\w+)\]\]/.exec(req.system)?.[1] ?? 'strategist';
     const role = ROLE[key] ?? ROLE.strategist;
-    const hasResult = req.messages.some((m) => m.content.some((b) => b.type === 'tool_result'));
-    const names = new Set((req.tools ?? []).map((t) => t.name));
-    if (!hasResult && names.has('search_memory') && /TASK:/.test(text))
-      return res({ toolCalls: [{ id: id(), name: 'search_memory', input: { query: text.match(/TASK:\s*(.*)/)?.[1] ?? 'brand' } }], stopReason: 'tool_use' });
-    if (!hasResult && key === 'social' && names.has('delegate_task') && /TASK:/.test(text))
-      return res({ toolCalls: [{ id: id(), name: 'delegate_task', input: { agent_key: 'copywriter', title: 'Contoh caption untuk kalender posting', instructions: 'Buat 3 contoh caption pendek untuk kalender posting.' } }], stopReason: 'tool_use' });
-
     const task = /TASK:\s*(.*)/.exec(text)?.[1];
-    if (!task) return res({ text: `[MOCK] Halo, saya ${role.label}. Saya adalah adapter simulasi — hubungkan ANTHROPIC_API_KEY atau OPENAI_API_KEY untuk jawaban nyata.` });
-    const delegated = req.messages.flatMap((m) => m.content).filter((b) => b.type === 'tool_result' && /delegate|Hasil dari/i.test((b as any).content)).map((b: any) => b.content).join('\n');
-    const md = [`> ⚠️ **MOCK OUTPUT (simulasi pengembangan)** — bukan hasil model AI sungguhan.`, `# ${task}`, ...role.sections.map((s, i) => `## ${i + 1}. ${s}\n- Poin kunci untuk "${task.slice(0, 50)}" (placeholder simulasi).\n- Ikuti arahan brand & hasil tugas sebelumnya.`), delegated ? `## Bantuan rekan\n${delegated.slice(0, 600)}` : ''].join('\n\n');
+    if (!task) return res({ text: `Halo, saya ${role.label}. Saat ini aplikasi berjalan dengan **Local Engine** (tanpa API key), jadi saya menjawab dengan template terstruktur. Berikan instruksi lewat CEO Command Center, atau tambahkan API key untuk percakapan bebas.` });
+    const names = new Set((req.tools ?? []).map((t) => t.name));
+    const kind = /buat \d+ (\w[\w ]*?) untuk/i.exec(text)?.[1]?.toLowerCase() ?? '';
+    const out = produce(key, parse(text), kind);
+    const results: Record<string, string> = {};
+    for (const m of req.messages) for (const b of m.content) if (b.type === 'tool_result') { const id = (b as any).tool_use_id as string; results[id.split(':')[0]] = (b as any).content; }
+    const done = req.messages.some((m) => m.content.some((b) => b.type === 'tool_result'));
+    if (!done) {
+      const calls: { id: string; name: string; input: Record<string, unknown> }[] = [];
+      if (names.has('create_content_item')) for (const it of out.items.slice(0, 30)) calls.push({ id: `create_content_item:${id()}`, name: 'create_content_item', input: it as any });
+      if (names.has('schedule_content')) for (const c of out.calendar) calls.push({ id: `schedule_content:${id()}`, name: 'schedule_content', input: c });
+      for (const t of out.tools) if (names.has(t.name)) calls.push({ id: `${t.name}:${id()}`, name: t.name, input: t.input });
+      if (calls.length) return res({ toolCalls: calls, stopReason: 'tool_use' });
+    }
+    const md = out.build(results) || `# ${task}\n\nTemplate untuk peran ${role.label} belum tersedia di Local Engine.`;
     return res({ text: md, usage: { input: Math.ceil(req.system.length / 4) + 300, output: Math.ceil(md.length / 4) } });
   }
 }

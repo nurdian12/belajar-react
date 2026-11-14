@@ -6,7 +6,7 @@ CEO (manusia) → AI Manager (Maya) → 11 AI karyawan berprompt/tools berbeda. 
 ```
 cd agency && npm i && cp .env.example .env.local && npm run dev
 ```
-- Tanpa env: **mode demo** (store JSON di `.data/`, tanpa login) + **MOCK adapter** (hanya dev, output berlabel simulasi).
+- Tanpa env: **mode demo** (store JSON di `.data/`, tanpa login) + **Local Template Engine** (tanpa API key; template terstruktur terisi dari instruksi, bukan LLM).
 - Isi `ANTHROPIC_API_KEY` / `OPENAI_API_KEY` untuk AI nyata (server-side saja).
 - Produksi: isi 3 env Supabase, jalankan `supabase/migrations/0001_schema.sql` (22+ tabel, FK, index, RLS per-org, bucket storage).
 - Worker queue: in-process poller (server Node) atau panggil `GET /api/worker/tick` dengan `Authorization: Bearer $CRON_SECRET` dari cron.
