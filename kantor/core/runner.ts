@@ -16,7 +16,9 @@ export async function runAgent(agentId: string, prompt: string): Promise<RunResu
 
   try {
     const { text, biayaUsd } =
-      process.env.KANTOR_MOCK === "1" ? await mock(agentId, prompt) : await panggilClaude(agent, prompt);
+      process.env.KANTOR_MOCK === "1" ? await mock(agentId, prompt)
+      : process.env.KANTOR_OTAK === "api" ? await panggilApi(agent, prompt)
+      : await panggilClaude(agent, prompt);
     db.prepare("UPDATE jobs SET status='selesai', output=?, biaya_usd=?, selesai=datetime('now') WHERE id=?")
       .run(text, biayaUsd, jobId);
     return { jobId, text, biayaUsd };
@@ -67,6 +69,43 @@ function panggilClaude(agent: ReturnType<typeof loadAgent>, prompt: string) {
       }
     });
   });
+}
+
+/**
+ * Otak alternatif: Anthropic API langsung (KANTOR_OTAK=api + ANTHROPIC_API_KEY).
+ * Untuk mesin yang tidak bisa menjalankan Claude Code (mis. CPU tanpa SSE4.2). Biaya per pemakaian.
+ * Agent dengan tool "WebSearch" memakai server tool web_search milik API.
+ */
+async function panggilApi(agent: ReturnType<typeof loadAgent>, prompt: string) {
+  const key = process.env.ANTHROPIC_API_KEY;
+  if (!key) throw new Error("KANTOR_OTAK=api tetapi ANTHROPIC_API_KEY belum diisi di kantor/.env");
+  const base = (process.env.ANTHROPIC_BASE_URL || "https://api.anthropic.com").replace(/\/$/, "");
+  const model = agent.config.model || process.env.KANTOR_MODEL || "claude-sonnet-5-5";
+  const tools = agent.config.tools?.includes("WebSearch")
+    ? [{ type: "web_search_20250305", name: "web_search", max_uses: 5 }] : undefined;
+
+  const messages: any[] = [{ role: "user", content: prompt }];
+  for (let putaran = 0; putaran < 5; putaran++) {
+    const res = await fetch(`${base}/v1/messages`, {
+      method: "POST",
+      headers: { "x-api-key": key, "anthropic-version": "2023-06-01", "content-type": "application/json" },
+      body: JSON.stringify({ model, max_tokens: 4096, system: agent.systemPrompt, messages, ...(tools && { tools }) }),
+      signal: AbortSignal.timeout(5 * 60_000),
+    });
+    const raw = await res.text();
+    if (!res.ok) throw new Error(`Anthropic API ${res.status}: ${raw.slice(0, 500)}`);
+    const j = JSON.parse(raw);
+    if (j.stop_reason === "pause_turn") {   // pencarian web panjang: lanjutkan giliran yang sama
+      messages.push({ role: "assistant", content: j.content });
+      continue;
+    }
+    // Ambil teks setelah blok non-teks terakhir (abaikan narasi sebelum/selama pencarian).
+    let teks = "";
+    for (const b of j.content ?? []) teks = b.type === "text" ? teks + b.text : "";
+    if (!teks.trim()) throw new Error("Balasan API kosong");
+    return { text: teks, biayaUsd: null as number | null };
+  }
+  throw new Error("Pencarian web terlalu panjang (5 putaran)");
 }
 
 async function mock(agentId: string, prompt: string) {

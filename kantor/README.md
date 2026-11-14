@@ -13,6 +13,21 @@ npm run kantor:tulis -- "topik video"   # buat naskah dari terminal
 
 Butuh Node 22.18+ (memakai `node:sqlite` dan TypeScript langsung tanpa build) dan `claude` terpasang & sudah login.
 
+## Di laptop yang tidak bisa menjalankan Claude Code (Windows)
+
+Claude Code butuh CPU dengan SSE4.2. Di mesin lama, pakai mode API (biaya per pemakaian, terpisah dari langganan Claude):
+
+```cmd
+git clone https://github.com/nurdian12/belajar-react.git
+cd belajar-react
+git checkout claude/animation-blueprint-9req4g
+npm install
+copy kantor\.env.example kantor\.env
+```
+
+Edit `kantor\.env` (Notepad): `KANTOR_OTAK=api`, `ANTHROPIC_API_KEY=...`, lalu `ELEVENLABS_API_KEY=...`. Jalankan `npm run kantor`, buka http://127.0.0.1:4321.
+Render video memakai Chromium (diunduh Remotion saat pertama) dan bisa lambat di mesin lama.
+
 ## Struktur
 
 - `agents/<id>/AGENT.md` peran & aturan · `skills/*.md` skill · `config.json` nama, model, tools
