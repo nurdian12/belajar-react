@@ -17,8 +17,8 @@ fs.mkdirSync(OUT, { recursive: true });
   await page.route("**/api/status", (r) => r.fulfill({ json: status }));
   await page.route("**/api/repliz/akun", (r) => r.fulfill({ json: { adaKunci: true, mentah: {}, akun: [
     { id: "a1", nama: "TikTok utama", platform: "tiktok" }, { id: "a2", nama: "Instagram Reels", platform: "instagram" }] } }));
-  await page.goto(URL);
-  await page.addStyleTag({ content: "main{max-width:1400px!important} #scene3d{height:640px!important} #demo3d{display:none!important} .lbl3d{font-size:15px!important;padding:4px 10px!important} #topik-list,#naskah .card,#video-list .card{max-width:820px}" });
+  await page.goto(URL + "#beranda");
+  await page.addStyleTag({ content: "main{max-width:1400px!important} #scene3d{height:640px!important} #demo3d{display:none!important} .lbl3d{font-size:15px!important;padding:4px 10px!important} #topik-list,#naskah .card,#video-list .card{max-width:820px} .panelkiri{display:none!important} .beranda{grid-template-columns:1fr!important} .bar{display:none!important}" });
   await page.waitForTimeout(2500);
 
   // Tangkapan berdasarkan koordinat halaman (tidak menunggu elemen "stabil": adegan 3D selalu bergerak).
@@ -37,6 +37,7 @@ fs.mkdirSync(OUT, { recursive: true });
     await simpan(nama, await klip(page.locator("#scene3d"), nama + ".jpg"));
   }
 
+  await page.evaluate(() => (location.hash = '#konten')); await page.waitForTimeout(600);   // kartu ada di tab Konten
   // daftar topik: dari judul "Topik dari Rina" sampai akhir daftar
   {
     const h = await page.locator("h2", { hasText: "Topik dari Rina" }).boundingBox(), l = await page.locator("#topik-list").boundingBox();

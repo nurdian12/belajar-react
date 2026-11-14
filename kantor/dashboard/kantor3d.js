@@ -130,6 +130,8 @@ export function mulaiKantor3D(el, ambilStatus) {
 
   const v = new THREE.Vector3(), t0 = performance.now();
   function frame(now) {
+    // Tab lain sedang dibuka (adegan tersembunyi): jangan menggambar, hemat CPU.
+    if (!el.clientWidth || document.hidden) { requestAnimationFrame(frame); return; }
     const t = (now - t0) / 1000;
     if (demo) {   // siklus demo: Rina → Maya → kamu menyetujui → Dewi
       const f = Math.floor((now - demoMulai) / 2800) % 5;

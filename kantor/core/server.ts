@@ -2,7 +2,7 @@ import { createServer } from "node:http";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { db, ROOT } from "./db.ts";
-import { listAgents } from "./agents.ts";
+import { listAgents, detailAgent } from "./agents.ts";
 import { buatNaskah, revisiNaskah, setStatus, riset, sedangRiset, tulisDariTopik, buangTopik } from "./pipeline.ts";
 import { mulaiScheduler } from "./scheduler.ts";
 import { buatVideo, VIDEO_DIR } from "./video.ts";
@@ -67,6 +67,19 @@ createServer(async (req, res) => {
       });
     }
     if (req.method === "GET" && p === "/api/agents") return json(res, listAgents());
+    const da = p.match(/^\/api\/agents\/([a-z-]+)$/);
+    if (req.method === "GET" && da) return json(res, detailAgent(da[1]));
+    if (req.method === "GET" && p === "/api/pengaturan") {
+      const e = process.env;   // hanya status ada/tidaknya kunci, tidak pernah nilainya
+      return json(res, {
+        ...bacaPengaturan(),
+        otak: e.KANTOR_MOCK === "1" ? "mock" : e.KANTOR_OTAK === "api" ? "api" : "claude",
+        model: e.KANTOR_MODEL || null,
+        suara: { voice: e.ELEVENLABS_VOICE_ID || null, model: e.ELEVENLABS_MODEL || "eleven_v3" },
+        kunci: { elevenlabs: Boolean(e.ELEVENLABS_API_KEY), repliz: adaKunciRepliz(), anthropic: Boolean(e.ANTHROPIC_API_KEY) },
+        maksVideoPerHari: Number(e.KANTOR_MAKS_VIDEO_PER_HARI ?? 5),
+      });
+    }
     if (req.method === "GET" && p === "/api/jobs")
       return json(res, db.prepare("SELECT id,agent,status,error,biaya_usd,dibuat,selesai FROM jobs ORDER BY id DESC LIMIT 50").all());
     if (req.method === "GET" && p === "/api/naskah")

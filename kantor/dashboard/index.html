@@ -9,7 +9,7 @@
   @media (prefers-color-scheme: dark) { :root { --bg:#161412; --card:#211e1b; --ink:#f1ebe3; --mut:#9c9288; --line:#332e29; } }
   * { box-sizing: border-box; }
   body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.5 system-ui,sans-serif; }
-  main { max-width:880px; margin:0 auto; padding:24px 16px 64px; }
+  main { max-width:1100px; margin:0 auto; padding:24px 16px 64px; }
   h1 { font-size:22px; margin:0 0 4px; } h2 { font-size:13px; margin:28px 0 10px; color:var(--mut); text-transform:uppercase; letter-spacing:.06em; }
   .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:14px 16px; margin-bottom:10px; }
   .row { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
@@ -28,41 +28,91 @@
   .lbl3d { position:absolute; left:0; top:0; pointer-events:none; white-space:nowrap; font-size:12px; line-height:1.3; background:#fff; color:#1f1b16; border-radius:8px; padding:3px 8px; box-shadow:0 2px 8px #0003; text-align:center; z-index:1; }
   .lbl3d .j { display:none; } .lbl3d { font-size:11px; padding:2px 7px; } .lbl3d .s { display:block; font-weight:600; }
   .lbl3d[data-s="kerja"] .s { color:#0e7c6b; } .lbl3d[data-s="tunggu"] { background:#fdecd2; } .lbl3d[data-s="tunggu"] .s { color:#a3480a; } .lbl3d[data-s="belum"] { opacity:.7; }
+  .bar { position:sticky; top:0; z-index:5; background:var(--bg); border-bottom:1px solid var(--line); }
+  .bar .in { max-width:1100px; margin:0 auto; padding:10px 16px; display:flex; gap:14px 20px; align-items:center; flex-wrap:wrap; }
+  .brand { font-weight:700; font-size:18px; display:flex; gap:8px; align-items:center; }
+  .brand i { width:26px; height:26px; border-radius:7px; background:var(--acc); display:inline-grid; place-items:center; color:#fff; font-style:normal; font-size:14px; }
+  nav { display:flex; gap:4px; flex-wrap:wrap; } nav a { color:var(--mut); text-decoration:none; padding:6px 12px; border-radius:99px; font-size:14px; }
+  nav a[aria-current="page"] { background:var(--ink); color:var(--bg); } nav a:focus-visible { outline:2px solid var(--acc); }
+  .tab[hidden] { display:none; }
+  .beranda { display:grid; grid-template-columns:330px minmax(0,1fr); gap:14px; align-items:start; margin-top:14px; }
+  @media (max-width:820px) { .beranda { grid-template-columns:1fr; } }
+  .beranda #scene3d { margin:0; }
+  .tblwrap { overflow-x:auto; } table.t { width:100%; border-collapse:collapse; font-size:14px; }
+  table.t th { text-align:left; color:var(--mut); font-weight:500; font-size:12px; padding:6px 10px; border-bottom:1px solid var(--line); }
+  table.t td { padding:10px; border-bottom:1px solid var(--line); vertical-align:middle; }
+  .av { width:34px; height:34px; border-radius:50%; background:var(--acc); color:#fff; display:inline-grid; place-items:center; font-weight:700; font-size:13px; margin-right:8px; vertical-align:middle; }
+  .item { display:flex; justify-content:space-between; gap:8px; align-items:center; padding:10px 0; border-top:1px solid var(--line); cursor:pointer; }
+  .item:first-of-type { border-top:0; }
+  .badge { min-width:22px; text-align:center; padding:1px 8px; border-radius:99px; background:var(--acc); color:#fff; font-size:12px; font-weight:700; }
+  .kv { display:grid; grid-template-columns:minmax(120px,170px) 1fr; gap:8px 14px; font-size:14px; margin:0; } .kv dt { color:var(--mut); } .kv dd { margin:0; overflow-wrap:anywhere; }
+  .dot { display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--mut); margin-right:6px; } .dot.kerja { background:var(--ok); } .dot.tunggu { background:var(--acc); }
+  h3.sec { font-size:15px; margin:0 0 10px; } .grp td { background:transparent; color:var(--mut); font-size:12px; text-transform:uppercase; letter-spacing:.06em; padding-top:16px; border-bottom:0; }
 </style>
 </head>
 <body>
+<header class="bar"><div class="in">
+  <div class="brand"><i>K</i> Kantor</div>
+  <nav aria-label="Navigasi">
+    <a href="#beranda">Beranda</a><a href="#agent">Agent</a><a href="#channel">Channel</a><a href="#konten">Konten</a><a href="#jadwal">Jadwal</a>
+  </nav>
+  <span class="mut" id="mode-info" style="margin-left:auto"></span>
+</div></header>
 <main>
-  <h1>Kantor</h1>
-  <div class="mut">Dashboard persetujuan. Semua jalan di PC kamu.</div>
+  <section class="tab" data-tab="beranda">
+    <div class="beranda">
+      <div class="card panelkiri" style="margin:0">
+        <h3 class="sec" style="display:flex;justify-content:space-between;align-items:center">Perlu keputusan kamu <span class="badge" id="n-keputusan">0</span></h3>
+        <div id="keputusan"></div>
+        <h3 class="sec" style="margin-top:18px">Berikutnya</h3>
+        <div id="berikutnya" class="mut"></div>
+      </div>
+      <div id="scene3d" hidden>
+        <div class="row" style="position:absolute;top:10px;right:10px;z-index:2"><button class="ghost" id="demo3d" aria-pressed="false">Demo animasi</button></div>
+      </div>
+    </div>
+  </section>
 
-  <div id="scene3d" hidden>
-    <div class="row" style="position:absolute;top:10px;right:10px;z-index:2"><button class="ghost" id="demo3d" aria-pressed="false">Demo animasi</button></div>
-  </div>
+  <section class="tab" data-tab="agent" hidden>
+    <h2>Tim kamu</h2>
+    <div class="card tblwrap" style="padding:6px 10px"><div id="agent-tabel"></div></div>
+    <div id="jobdesk"></div>
+    <h2>Riwayat job</h2>
+    <div id="jobs" class="mut"></div>
+  </section>
 
-  <h2>Agent</h2>
-  <div id="agents" class="row"></div>
+  <section class="tab" data-tab="channel" hidden>
+    <h2>Channel: Keseharian</h2>
+    <div id="channel-info"></div>
+  </section>
 
-  <h2>Topik dari Rina</h2>
-  <div class="row" style="margin-bottom:10px">
-    <button id="riset">Minta Rina riset sekarang</button>
-    <span class="mut" id="risetInfo">Otomatis tiap hari sesuai pengaturan.json.</span>
-  </div>
-  <div id="topik-list"></div>
+  <section class="tab" data-tab="konten" hidden>
+    <h2>Topik dari Rina</h2>
+    <div class="row" style="margin-bottom:10px">
+      <button id="riset">Minta Rina riset sekarang</button>
+      <span class="mut" id="risetInfo">Otomatis tiap hari sesuai pengaturan.json.</span>
+    </div>
+    <div id="topik-list"></div>
 
-  <h2>Naskah baru</h2>
-  <form class="row" id="form">
-    <input id="topik" placeholder="Topik video, mis. kenapa uang gaji cepat habis" required>
-    <button>Minta Maya menulis</button>
-  </form>
+    <h2>Naskah baru</h2>
+    <form class="row" id="form">
+      <input id="topik" placeholder="Topik video, mis. kenapa uang gaji cepat habis" required>
+      <button>Minta Maya menulis</button>
+    </form>
 
-  <h2>Naskah</h2>
-  <div id="naskah"></div>
+    <h2>Naskah</h2>
+    <div id="naskah"></div>
 
-  <h2>Video</h2>
-  <div id="video-list"></div>
+    <h2>Video</h2>
+    <div id="video-list"></div>
+  </section>
 
-  <h2>Riwayat job</h2>
-  <div id="jobs" class="mut"></div>
+  <section class="tab" data-tab="jadwal" hidden>
+    <h2>Jadwal harian</h2>
+    <div id="jadwal-harian"></div>
+    <h2>Posting</h2>
+    <div id="jadwal-posting"></div>
+  </section>
 </main>
 <script type="importmap">{ "imports": { "three": "/vendor/three.module.js" } }</script>
 <script type="module">
@@ -106,7 +156,7 @@ $("#video-list").addEventListener("click", async (e) => {
 });
 
 async function muat() {
-  const [agents, naskah, jobs, tp, videos, pst] = await Promise.all([api("/api/agents"), api("/api/naskah"), api("/api/jobs"), api("/api/topik"), api("/api/video"), api("/api/posting")]);
+  const [agents, naskah, jobs, tp, videos, pst, peng, stat] = await Promise.all([api("/api/agents"), api("/api/naskah"), api("/api/jobs"), api("/api/topik"), api("/api/video"), api("/api/posting"), api("/api/pengaturan"), api("/api/status")]);
   if (!akunRepliz) akunRepliz = await api("/api/repliz/akun");  // sekali saja, jangan memanggil Repliz tiap 3 detik
   const postingPerVideo = {};
   pst.posting.forEach((x) => (postingPerVideo[x.video_id] ||= []).push(x));
@@ -136,8 +186,10 @@ async function muat() {
       ${src.length ? `<div class="mut">${src.map((u) => `<a href="${esc(u)}" target="_blank" rel="noopener noreferrer">${esc(new URL(u, "http://x").hostname)}</a>`).join(" · ")}</div>` : ""}
       <div class="row" style="margin-top:8px"><button data-t="tulis" data-id="${t.id}">Tulis naskah</button><button class="ghost" data-t="buang" data-id="${t.id}">Buang</button></div></div>`;
   }).join("") || `<div class="mut">Belum ada topik baru.</div>`;
-  $("#agents").innerHTML = agents.map((a) =>
-    `<span class="card" style="margin:0"><b>${esc(a.nama)}</b> <span class="mut">${esc(a.jabatan)}</span> <span class="tag">${a.aktif ? "siap" : "belum aktif"}</span></span>`).join("");
+  renderBeranda(naskah, tp, videos, pst, peng);
+  renderAgent(agents, stat, peng);
+  renderChannel(peng);
+  renderJadwal(peng, pst, videos, naskah);
   $("#naskah").innerHTML = naskah.map((n) => {
     const visual = JSON.parse(n.rencana_visual || "[]");
     const aksi = n.status === "menunggu" ? `
@@ -180,6 +232,75 @@ $("#naskah").addEventListener("click", async (e) => {
   }
   muat();
 });
+
+// ---------- tab & tampilan baru ----------
+const TABS = ["beranda", "agent", "channel", "konten", "jadwal"];
+function rute() {
+  const h = (location.hash || "#beranda").slice(1), t = TABS.includes(h) ? h : "beranda";
+  document.querySelectorAll(".tab").forEach((x) => (x.hidden = x.dataset.tab !== t));
+  document.querySelectorAll("nav a").forEach((a) => (a.getAttribute("href") === "#" + t ? a.setAttribute("aria-current", "page") : a.removeAttribute("aria-current")));
+}
+addEventListener("hashchange", rute); rute();
+
+const OTAK = { claude: "Claude Code (langganan)", api: "Anthropic API", mock: "Mode uji (tanpa AI)" };
+function renderBeranda(naskah, tp, videos, pst, peng) {
+  const menunggu = naskah.filter((n) => n.status === "menunggu");
+  const sudahPosting = new Set(pst.posting.map((x) => x.video_id));
+  const siap = videos.filter((v) => v.status === "selesai" && !sudahPosting.has(v.id));
+  const baru = tp.topik.filter((t) => t.status === "baru").length;
+  const judul = Object.fromEntries(naskah.map((n) => [n.id, n.judul || n.topik]));
+  const baris = [
+    ...menunggu.map((n) => `<div class="item" data-ke="konten"><span><b>Naskah menunggu</b><div class="mut">${esc(n.judul || n.topik)}</div></span><span class="mut">Buka &rsaquo;</span></div>`),
+    ...siap.map((v) => `<div class="item" data-ke="konten"><span><b>Video siap dijadwalkan</b><div class="mut">${esc(judul[v.naskah_id] ?? "Video #" + v.id)}</div></span><span class="mut">Buka &rsaquo;</span></div>`),
+    ...(baru ? [`<div class="item" data-ke="konten"><span><b>${baru} topik baru dari Rina</b><div class="mut">Pilih yang mau ditulis</div></span><span class="mut">Buka &rsaquo;</span></div>`] : []),
+  ];
+  $("#n-keputusan").textContent = menunggu.length + siap.length;
+  $("#keputusan").innerHTML = baris.join("") || `<div class="mut">Tidak ada yang menunggu kamu.</div>`;
+  $("#berikutnya").innerHTML = peng.jadwal.map((j) => `${esc(j.jam)} · ${j.agent === "periset" ? "Rina riset topik" : esc(j.agent)}`).join("<br>") || "Belum ada jadwal.";
+  $("#mode-info").textContent = `Mode ${peng.naskahOtomatis ? "otomatis" : "manual"} · otak: ${OTAK[peng.otak]}`;
+}
+const TAMPIL = { periset: ["Rina", "Riset"], penulis: ["Maya", "Konten"], animator: ["Dewi", "Konten"], "cs-wa": ["Putri", "Operasional"] };
+const KUNCI_STATUS = { periset: "rina", penulis: "maya", animator: "dewi", "cs-wa": "putri" };
+const TEKS_STATUS = { siap: "siap", kerja: "bekerja", tunggu: "menunggu kamu", belum: "belum dibangun" };
+function renderAgent(agents, stat, peng) {
+  const jadwalDari = (id) => id === "periset" ? (peng.jadwal.filter((j) => j.agent === "periset").map((j) => "Setiap hari " + j.jam).join(", ") || "Manual")
+    : id === "penulis" ? (peng.naskahOtomatis ? "Setelah Rina selesai" : "Saat kamu memilih topik") : id === "animator" ? "Setelah naskah disetujui" : "Belum ada";
+  const otak = (a) => a.model || OTAK[peng.otak === "mock" ? "mock" : peng.otak];
+  let grup = "", html = "";
+  for (const a of Object.keys(TAMPIL).map((id) => agents.find((x) => x.id === id)).filter(Boolean)) {
+    const [nama, g] = TAMPIL[a.id], st = stat[KUNCI_STATUS[a.id]] ?? "siap";
+    if (g !== grup) { grup = g; html += `<tr class="grp"><td colspan="5">${g}</td></tr>`; }
+    html += `<tr><td><span class="av">${nama.slice(0, 2).toUpperCase()}</span><b>${nama}</b> <span class="mut">${esc(a.jabatan)}</span></td>
+      <td><span class="dot ${st}"></span>${TEKS_STATUS[st] ?? st}</td><td>${esc(a.id === "animator" ? "Tanpa AI: Remotion + ElevenLabs" : a.id === "cs-wa" ? "-" : otak(a))}</td><td>${esc(jadwalDari(a.id))}</td>
+      <td><button class="ghost" data-jd="${a.id}">Job desk</button></td></tr>`;
+  }
+  $("#agent-tabel").innerHTML = `<table class="t"><thead><tr><th>Agent</th><th>Status</th><th>Otak AI</th><th>Jadwal</th><th></th></tr></thead><tbody>${html}</tbody></table>`;
+}
+$("#agent-tabel").addEventListener("click", async (e) => {
+  const b = e.target.closest("button[data-jd]"); if (!b) return;
+  const d = await api("/api/agents/" + b.dataset.jd);
+  $("#jobdesk").innerHTML = `<div class="card" style="margin-top:12px"><div class="row" style="justify-content:space-between"><b>Job desk: ${esc(d.id)}</b><span class="mut">kantor/agents/${esc(d.id)}/AGENT.md</span></div><pre>${esc(d.jobdesk)}</pre>
+    ${d.skills.map((k) => `<div class="mut" style="margin-top:8px">Skill: ${esc(k.nama)}</div><pre>${esc(k.isi)}</pre>`).join("")}</div>`;
+});
+function renderChannel(peng) {
+  const ya = (v) => (v ? '<span class="tag disetujui">terisi</span>' : '<span class="tag gagal">belum diisi</span>');
+  const akun = akunRepliz && akunRepliz.akun.length ? akunRepliz.akun.map((a) => esc(a.nama)).join(", ") : "belum terbaca";
+  $("#channel-info").innerHTML = `
+    <div class="card"><h3 class="sec">Identitas & gaya</h3><dl class="kv"><dt>Niche</dt><dd>Keseharian orang Indonesia</dd><dt>Gaya naskah</dt><dd>Ubah di <code>kantor/agents/penulis/skills/gaya-channel.md</code></dd></dl></div>
+    <div class="card"><h3 class="sec">Suara narasi</h3><dl class="kv"><dt>Penyedia</dt><dd>ElevenLabs</dd><dt>Model</dt><dd>${esc(peng.suara.model)}</dd><dt>Voice ID</dt><dd>${esc(peng.suara.voice || "bawaan (Inggris), isi ELEVENLABS_VOICE_ID")}</dd><dt>Kunci API</dt><dd>${ya(peng.kunci.elevenlabs)}</dd></dl></div>
+    <div class="card"><h3 class="sec">Video</h3><dl class="kv"><dt>Template</dt><dd>Teks Kinetik · 1080×1920 · 30 fps</dd><dt>Batas per hari</dt><dd>${peng.maksVideoPerHari} video</dd></dl></div>
+    <div class="card"><h3 class="sec">Jadwal & mode</h3><dl class="kv"><dt>Persetujuan</dt><dd>${peng.naskahOtomatis ? "Otomatis: topik langsung ditulis" : "Manual: kamu memilih dan menyetujui"}</dd><dt>Riset</dt><dd>${peng.jadwal.map((j) => esc(j.jam)).join(", ") || "-"}</dd></dl></div>
+    <div class="card"><h3 class="sec">Akun posting</h3><dl class="kv"><dt>Repliz</dt><dd>${ya(peng.kunci.repliz)}</dd><dt>Akun terbaca</dt><dd>${akun}</dd><dt>Jam posting</dt><dd>${(peng.repliz?.jamPosting ?? []).map(esc).join(", ") || "-"}</dd><dt>Kirim nyata</dt><dd>${peng.repliz?.kirimNyata ? "Aktif" : "Mati (dry-run)"}</dd></dl></div>
+    <p class="mut">Halaman ini hanya menampilkan pengaturan. Ubah lewat <code>kantor/.env</code> dan <code>kantor/pengaturan.json</code>, lalu mulai ulang.</p>`;
+}
+function renderJadwal(peng, pst, videos, naskah) {
+  $("#jadwal-harian").innerHTML = `<div class="card">${peng.jadwal.map((j) => `<div class="row" style="justify-content:space-between"><span><b>${esc(j.jam)}</b> · ${j.agent === "periset" ? "Rina riset 3 topik baru" : esc(j.agent)}</span><span class="tag">setiap hari</span></div>`).join("") || '<span class="mut">Belum ada jadwal.</span>'}</div>`;
+  const vj = Object.fromEntries(videos.map((v) => [v.id, (naskah.find((n) => n.id === v.naskah_id) || {}).judul]));
+  $("#jadwal-posting").innerHTML = pst.posting.map((x) => `<div class="card"><div class="row" style="justify-content:space-between"><b>${esc(vj[x.video_id] ?? "Video #" + x.video_id)}</b><span class="tag ${x.status === "gagal" ? "gagal" : "disetujui"}">${x.status}</span></div>
+    <div class="mut">${new Date(x.jadwal).toLocaleString()} · akun ${esc(x.akun_id)}${x.error ? " · " + esc(x.error.slice(0, 200)) : ""}</div></div>`).join("") || '<div class="mut">Belum ada posting terjadwal.</div>';
+}
+document.addEventListener("click", (e) => { const i = e.target.closest("[data-ke]"); if (i) location.hash = "#" + i.dataset.ke; });
+
 muat(); setInterval(muat, 3000);
 </script>
 </body>
