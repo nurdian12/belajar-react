@@ -1,0 +1,22 @@
+[Unit]
+Description=Kantor (kantor AI pribadi)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=__PENGGUNA__
+WorkingDirectory=__APP__
+# claude dipasang di ~/.local/bin oleh pemasang resminya
+Environment=PATH=__RUMAH__/.local/bin:/usr/local/bin:/usr/bin:/bin
+Environment=NODE_ENV=production
+ExecStart=/usr/bin/env node --disable-warning=ExperimentalWarning kantor/core/server.ts
+Restart=always
+RestartSec=5
+
+# Pengamanan dasar
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+
+[Install]
+WantedBy=multi-user.target

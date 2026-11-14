@@ -28,6 +28,22 @@ copy kantor\.env.example kantor\.env
 Edit `kantor\.env` (Notepad): `KANTOR_OTAK=api`, `ANTHROPIC_API_KEY=...`, lalu `ELEVENLABS_API_KEY=...`. Jalankan `npm run kantor`, buka http://127.0.0.1:4321.
 Render video memakai Chromium (diunduh Remotion saat pertama) dan bisa lambat di mesin lama.
 
+## Di VPS (disarankan jika laptop tidak kuat)
+
+Claude Code, render video, dan semua agen jalan di VPS Linux; laptop hanya membuka dashboard di browser lewat SSH tunnel. Dashboard sengaja **tidak** dibuka ke internet (tidak punya login).
+
+```bash
+# di VPS Ubuntu 22.04/24.04, sebagai root
+git clone -b claude/animation-blueprint-9req4g https://github.com/nurdian12/belajar-react.git && cd belajar-react
+sudo bash kantor/deploy/setup-vps.sh
+sudo -u kantor -i claude          # login Claude sekali (langganan kamu)
+sudo -u kantor nano /home/kantor/belajar-react/kantor/.env
+sudo systemctl start kantor && journalctl -u kantor -f
+```
+Dari laptop Windows (CMD, OpenSSH bawaan Windows 10): `ssh -L 4321:127.0.0.1:4321 <pengguna>@<IP-VPS>`, lalu buka http://127.0.0.1:4321 selama jendela SSH terbuka.
+Perkiraan spek: 4 vCPU dan 8 GB RAM nyaman untuk render; 2 vCPU dan 4 GB bisa tetapi lebih lambat. Skrip ini belum diuji di VPS sungguhan.
+Cadangkan `kantor/data/` (database dan video) secara berkala. Memperbarui: `sudo -u kantor git -C /home/kantor/belajar-react pull && sudo -u kantor bash -lc 'cd /home/kantor/belajar-react && npm install' && sudo systemctl restart kantor`.
+
 ## Pandu (asisten kantor)
 
 Tombol **Tanya Pandu** di kanan bawah semua tab. Ketik apa yang kamu mau ("aku mulai dari mana?", "ganti niche jadi kuliner", "kenapa videoku senyap?"), Pandu menjawab singkat dan menawarkan tombol aksi:
