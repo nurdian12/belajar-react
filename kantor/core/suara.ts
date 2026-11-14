@@ -23,7 +23,7 @@ export async function buatNarasi(id: number, teks: string): Promise<Narasi> {
 // ---------- ElevenLabs (alignment per karakter -> waktu per kata) ----------
 async function elevenlabs(id: number, teks: string, key: string): Promise<Narasi> {
   const voice = process.env.ELEVENLABS_VOICE_ID || "21m00Tcm4TlvDq8ikWAM";
-  const model = process.env.ELEVENLABS_MODEL || "eleven_multilingual_v2";
+  const model = process.env.ELEVENLABS_MODEL || "eleven_v3";
   const res = await fetch(
     `https://api.elevenlabs.io/v1/text-to-speech/${voice}/with-timestamps?output_format=mp3_44100_128`,
     {
