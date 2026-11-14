@@ -10,7 +10,7 @@ import { decideApproval, requestApproval, publishContent } from '../src/lib/appr
 import { retrieveMemories, remember } from '../src/lib/memory';
 
 const A = '00000000-0000-4000-8000-0000000000aa', B = '00000000-0000-4000-8000-0000000000bb';
-async function settle() { for (let i = 0; i < 20; i++) { const n = await drain(); if (!n) { await new Promise((r) => setTimeout(r, 300)); if (!(await drain())) return; } } }
+async function settle() { const s = await getStore(); for (let i = 0; i < 100; i++) { await drain(); const open = (await s.list('jobs', A)).filter((j) => j.status === 'pending' || j.status === 'running'); if (!open.length) return; await new Promise((r) => setTimeout(r, 200)); } }
 
 test('seeds 12 distinct AI employees with own prompts', async () => {
   await ensureOrgSeeded(A, 'A'); const s = await getStore();
@@ -25,7 +25,7 @@ test('CEO instruction → plan → dependency-ordered execution → review → C
   const p = await submitInstruction(A, null, 'Buatkan strategi marketing untuk brand skincare selama 30 hari');
   await settle();
   const proj = (await s.get('projects', A, p.id))!;
-  assert.equal(proj.status, 'awaiting_ceo', JSON.stringify(proj.plan));
+  assert.equal(proj.status, 'awaiting_ceo', JSON.stringify((await s.list('jobs', A)).filter((j) => j.status !== 'done').map((j) => [j.type, j.status, j.attempts, j.last_error])));
   const tasks = await s.list('tasks', A, { project_id: p.id });
   const top = tasks.filter((t) => !t.parent_task_id);
   assert.ok(top.length >= 3);
