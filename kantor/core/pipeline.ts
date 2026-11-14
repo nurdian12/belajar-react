@@ -51,6 +51,7 @@ export type Pengaturan = {
   naskahOtomatis: boolean;
   maksNaskahOtomatis?: number;
   repliz?: { kirimNyata: boolean; jamPosting?: string[] };
+  cs?: { mode: "draf" | "otomatis"; kirimNyata: boolean };
 };
 export function bacaPengaturan(): Pengaturan {
   return JSON.parse(readFileSync(join(ROOT, "pengaturan.json"), "utf8"));

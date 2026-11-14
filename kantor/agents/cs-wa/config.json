@@ -1,1 +1,1 @@
-{ "nama": "Putri", "jabatan": "CS WhatsApp", "aktif": false }
+{ "nama": "Putri", "jabatan": "CS WhatsApp", "model": null, "maxTurns": 2, "tools": [] }

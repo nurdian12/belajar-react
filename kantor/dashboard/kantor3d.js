@@ -9,7 +9,7 @@ const STATUS_TEKS = {
   maya: { kerja: "menulis naskah…", siap: "siap" },
   dewi: { kerja: "membuat video…", siap: "siap" },
   kamu: { tunggu: "ada yang menunggu kamu", siap: "tidak ada antrean" },
-  putri: { belum: "belum dibangun" },
+  putri: { kerja: "membalas chat…", tunggu: "chat butuh kamu", siap: "siap" },
 };
 
 const mat = (c, o = {}) => new THREE.MeshLambertMaterial({ color: c, ...o });
@@ -105,8 +105,6 @@ export function mulaiKantor3D(el, ambilStatus) {
   const awan = [];
   for (let i = 0; i < 4; i++) { const a = new THREE.Group(); [[0, 0, 1], [1, 0.1, 0.8], [-1, 0, 0.7]].forEach(([x, y, s]) => sph(a, s, 0xffffff, x, y, 0, { transparent: true, opacity: 0.9 })); a.position.set(-22 + i * 12, 9 + (i % 2) * 2, -14 + i * 5); awan.push(a); scene.add(a); }
 
-  // tembus pandang untuk ruang yang belum dibangun
-  putri.g.traverse((o) => { if (o.material) { o.material = o.material.clone(); o.material.transparent = true; o.material.opacity = 0.32; } });
 
   // ---- label DOM di atas kepala ----
   const info = { rina: ["Rina", "Periset"], maya: ["Maya", "Penulis naskah"], dewi: ["Dewi", "Video"], putri: ["Putri", "CS WhatsApp"], kamu: ["Kamu", "Bos"] };
@@ -115,7 +113,7 @@ export function mulaiKantor3D(el, ambilStatus) {
     d.innerHTML = `<b>${info[id][0]}</b> <span class="j">${info[id][1]}</span><span class="s"></span>`; el.appendChild(d); r.label = d; r.status = "siap";
   }
 
-  const target = Object.fromEntries(Object.keys(ruang).map((k) => [k, k === "putri" ? "belum" : "siap"]));
+  const target = Object.fromEntries(Object.keys(ruang).map((k) => [k, "siap"]));
   let demo = false, demoMulai = 0;
   async function sedot() { try { Object.assign(target, await ambilStatus()); } catch { /* biarkan status terakhir */ } }
   sedot(); const poll = setInterval(() => { if (!demo && !document.hidden) sedot(); }, 2500);

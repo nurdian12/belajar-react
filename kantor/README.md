@@ -82,4 +82,8 @@ Edit `agents/penulis/skills/gaya-channel.md` dulu supaya naskah sesuai niche kam
   - Di dashboard tiap video selesai punya form: akun, waktu, caption, **Jadwalkan** (= persetujuan kamu).
   - Default **dry-run**: hanya mencatat body yang akan dikirim. Kirim nyata aktif bila `repliz.kirimNyata: true` di `pengaturan.json`.
   - Semua kode spesifik Repliz ada di `core/repliz.ts`; bentuk request berasal dari rujukan pihak ketiga dan belum diverifikasi.
-- [ ] 5. CS WhatsApp
+- [x] 5. CS (Putri): inbox di tab **CS**, balasan dari `info-bisnis.md`, eskalasi ke kamu bila di luar info/komplain/diskon.
+  - Mode `cs.mode` di `pengaturan.json`: `draf` (default, Putri membuat draf, kamu yang menekan Kirim) atau `otomatis` (kecuali yang butuh kamu).
+  - Saluran **simulasi** langsung bisa dicoba di dashboard. Saluran **WhatsApp Cloud API** (resmi) sudah ada kodenya tapi **belum dites dengan akun Meta asli** dan mati (dry-run) sampai `cs.kirimNyata: true`.
+  - Isi `kantor/.env` untuk WhatsApp: `WA_TOKEN`, `WA_PHONE_NUMBER_ID`, `WA_VERIFY_TOKEN`, `WA_APP_SECRET`. Webhook jalan di port terpisah `4322` (`/webhook/whatsapp`, tanda tangan HMAC wajib); arahkan tunnel publik ke port itu saja, jangan ke dashboard (dashboard tidak punya login).
+  - Pesan pelanggan diperlakukan sebagai data, bukan perintah. Tanpa AI di komputer ini (`KANTOR_OTAK=manual`), pakai tombol "Salin permintaan untuk Claude" di tiap percakapan.

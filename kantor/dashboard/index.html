@@ -51,13 +51,20 @@
   .kv { display:grid; grid-template-columns:minmax(120px,170px) 1fr; gap:8px 14px; font-size:14px; margin:0; } .kv dt { color:var(--mut); } .kv dd { margin:0; overflow-wrap:anywhere; }
   .dot { display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--mut); margin-right:6px; } .dot.kerja { background:var(--ok); } .dot.tunggu { background:var(--acc); }
   h3.sec { font-size:15px; margin:0 0 10px; } .grp td { background:transparent; color:var(--mut); font-size:12px; text-transform:uppercase; letter-spacing:.06em; padding-top:16px; border-bottom:0; }
+  .cs { display:grid; grid-template-columns:340px minmax(0,1fr); gap:14px; align-items:start; }
+  @media (max-width:820px) { .cs { grid-template-columns:1fr; } }
+  .conv { padding:10px 12px; border:1px solid var(--line); border-radius:10px; background:var(--card); margin-bottom:8px; cursor:pointer; }
+  .conv[aria-current="true"] { border-color:var(--acc); } .conv .t { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .bub { max-width:82%; padding:8px 12px; border-radius:14px; margin:6px 0; white-space:pre-wrap; overflow-wrap:anywhere; }
+  .bub.masuk { background:var(--card); border:1px solid var(--line); } .bub.keluar { background:var(--acc); color:#fff; margin-left:auto; }
+  .bub .c { font-size:11px; opacity:.8; }
 </style>
 </head>
 <body>
 <header class="bar"><div class="in">
   <div class="brand"><i>K</i> Kantor</div>
   <nav aria-label="Navigasi">
-    <a href="#beranda">Beranda</a><a href="#agent">Agent</a><a href="#channel">Channel</a><a href="#konten">Konten</a><a href="#jadwal">Jadwal</a>
+    <a href="#beranda">Beranda</a><a href="#agent">Agent</a><a href="#channel">Channel</a><a href="#konten">Konten</a><a href="#cs">CS</a><a href="#jadwal">Jadwal</a>
   </nav>
   <span class="mut" id="mode-info" style="margin-left:auto"></span>
 </div></header>
@@ -122,6 +129,24 @@
     <div id="video-list"></div>
   </section>
 
+  <section class="tab" data-tab="cs" hidden>
+    <h2>Customer service</h2>
+    <p class="mut" id="cs-info" style="margin-top:-4px"></p>
+    <div class="cs">
+      <div>
+        <div class="card" style="padding:12px">
+          <b style="font-size:14px">Simulasi pesan masuk</b>
+          <div class="mut" style="margin:2px 0 8px">Coba tanpa WhatsApp: berpura-pura jadi pelanggan.</div>
+          <input id="cs-kontak" value="Budi" aria-label="Nama pelanggan" style="width:100%;margin-bottom:6px">
+          <textarea id="cs-teks" rows="2" placeholder="mis. Kopi arabika berapa harganya kak?"></textarea>
+          <div class="row" style="margin-top:6px"><button id="cs-masuk">Kirim sebagai pelanggan</button><span class="mut" id="cs-masuk-info"></span></div>
+        </div>
+        <div id="cs-list" style="margin-top:10px"></div>
+      </div>
+      <div id="cs-detail"><div class="mut">Pilih percakapan di kiri.</div></div>
+    </div>
+  </section>
+
   <section class="tab" data-tab="jadwal" hidden>
     <h2>Jadwal harian</h2>
     <div id="jadwal-harian"></div>
@@ -171,7 +196,7 @@ $("#video-list").addEventListener("click", async (e) => {
 });
 
 async function muat() {
-  const [agents, naskah, jobs, tp, videos, pst, peng, stat] = await Promise.all([api("/api/agents"), api("/api/naskah"), api("/api/jobs"), api("/api/topik"), api("/api/video"), api("/api/posting"), api("/api/pengaturan"), api("/api/status")]);
+  const [agents, naskah, jobs, tp, videos, pst, peng, stat, csList] = await Promise.all([api("/api/agents"), api("/api/naskah"), api("/api/jobs"), api("/api/topik"), api("/api/video"), api("/api/posting"), api("/api/pengaturan"), api("/api/status"), api("/api/cs")]);
   if (!akunRepliz) akunRepliz = await api("/api/repliz/akun");  // sekali saja, jangan memanggil Repliz tiap 3 detik
   const postingPerVideo = {};
   pst.posting.forEach((x) => (postingPerVideo[x.video_id] ||= []).push(x));
@@ -203,7 +228,8 @@ async function muat() {
       ${src.length ? `<div class="mut">${src.map((u) => `<a href="${esc(u)}" target="_blank" rel="noopener noreferrer">${esc(new URL(u, "http://x").hostname)}</a>`).join(" · ")}</div>` : ""}
       <div class="row" style="margin-top:8px"><button data-t="tulis" data-id="${t.id}">Tulis naskah</button><button class="ghost" data-t="buang" data-id="${t.id}">Buang</button></div></div>`;
   }).join("") || `<div class="mut">Belum ada topik baru.</div>`;
-  renderBeranda(naskah, tp, videos, pst, peng);
+  renderBeranda(naskah, tp, videos, pst, peng, csList);
+  renderCS(csList, peng);
   renderAgent(agents, stat, peng);
   renderChannel(peng);
   renderJadwal(peng, pst, videos, naskah);
@@ -251,7 +277,7 @@ $("#naskah").addEventListener("click", async (e) => {
 });
 
 // ---------- tab & tampilan baru ----------
-const TABS = ["beranda", "agent", "channel", "konten", "jadwal"];
+const TABS = ["beranda", "agent", "channel", "konten", "cs", "jadwal"];
 function rute() {
   const h = (location.hash || "#beranda").slice(1), t = TABS.includes(h) ? h : "beranda";
   document.querySelectorAll(".tab").forEach((x) => (x.hidden = x.dataset.tab !== t));
@@ -260,7 +286,7 @@ function rute() {
 addEventListener("hashchange", rute); rute();
 
 const OTAK = { claude: "Claude Code (langganan)", api: "Anthropic API", manual: "Manual (tempel dari Claude)", mock: "Mode uji (tanpa AI)" };
-function renderBeranda(naskah, tp, videos, pst, peng) {
+function renderBeranda(naskah, tp, videos, pst, peng, csList) {
   const menunggu = naskah.filter((n) => n.status === "menunggu");
   const sudahPosting = new Set(pst.posting.map((x) => x.video_id));
   const siap = videos.filter((v) => v.status === "selesai" && !sudahPosting.has(v.id));
@@ -269,9 +295,10 @@ function renderBeranda(naskah, tp, videos, pst, peng) {
   const baris = [
     ...menunggu.map((n) => `<div class="item" data-ke="konten"><span><b>Naskah menunggu</b><div class="mut">${esc(n.judul || n.topik)}</div></span><span class="mut">Buka &rsaquo;</span></div>`),
     ...siap.map((v) => `<div class="item" data-ke="konten"><span><b>Video siap dijadwalkan</b><div class="mut">${esc(judul[v.naskah_id] ?? "Video #" + v.id)}</div></span><span class="mut">Buka &rsaquo;</span></div>`),
+    ...csList.filter((c) => c.status === "butuh-kamu").map((c) => `<div class="item" data-ke="cs"><span><b>Chat butuh kamu</b><div class="mut">${esc(c.kontak)}: ${esc(c.terakhir || "")}</div></span><span class="mut">Buka &rsaquo;</span></div>`),
     ...(baru ? [`<div class="item" data-ke="konten"><span><b>${baru} topik baru dari Rina</b><div class="mut">Pilih yang mau ditulis</div></span><span class="mut">Buka &rsaquo;</span></div>`] : []),
   ];
-  $("#n-keputusan").textContent = menunggu.length + siap.length;
+  $("#n-keputusan").textContent = menunggu.length + siap.length + csList.filter((c) => c.status === "butuh-kamu").length;
   $("#keputusan").innerHTML = baris.join("") || `<div class="mut">Tidak ada yang menunggu kamu.</div>`;
   $("#berikutnya").innerHTML = peng.jadwal.map((j) => `${esc(j.jam)} · ${j.agent === "periset" ? "Rina riset topik" : esc(j.agent)}`).join("<br>") || "Belum ada jadwal.";
   $("#mode-info").textContent = `Mode ${peng.naskahOtomatis ? "otomatis" : "manual"} · otak: ${OTAK[peng.otak]}`;
@@ -281,14 +308,14 @@ const KUNCI_STATUS = { periset: "rina", penulis: "maya", animator: "dewi", "cs-w
 const TEKS_STATUS = { siap: "siap", kerja: "bekerja", tunggu: "menunggu kamu", belum: "belum dibangun" };
 function renderAgent(agents, stat, peng) {
   const jadwalDari = (id) => id === "periset" ? (peng.jadwal.filter((j) => j.agent === "periset").map((j) => "Setiap hari " + j.jam).join(", ") || "Manual")
-    : id === "penulis" ? (peng.naskahOtomatis ? "Setelah Rina selesai" : "Saat kamu memilih topik") : id === "animator" ? "Setelah naskah disetujui" : "Belum ada";
+    : id === "penulis" ? (peng.naskahOtomatis ? "Setelah Rina selesai" : "Saat kamu memilih topik") : id === "animator" ? "Setelah naskah disetujui" : "Saat ada pesan masuk";
   const otak = (a) => a.model || OTAK[peng.otak === "mock" ? "mock" : peng.otak];
   let grup = "", html = "";
   for (const a of Object.keys(TAMPIL).map((id) => agents.find((x) => x.id === id)).filter(Boolean)) {
     const [nama, g] = TAMPIL[a.id], st = stat[KUNCI_STATUS[a.id]] ?? "siap";
     if (g !== grup) { grup = g; html += `<tr class="grp"><td colspan="5">${g}</td></tr>`; }
     html += `<tr><td><span class="av">${nama.slice(0, 2).toUpperCase()}</span><b>${nama}</b> <span class="mut">${esc(a.jabatan)}</span></td>
-      <td><span class="dot ${st}"></span>${TEKS_STATUS[st] ?? st}</td><td>${esc(a.id === "animator" ? "Tanpa AI: Remotion + ElevenLabs" : a.id === "cs-wa" ? "-" : otak(a))}</td><td>${esc(jadwalDari(a.id))}</td>
+      <td><span class="dot ${st}"></span>${TEKS_STATUS[st] ?? st}</td><td>${esc(a.id === "animator" ? "Tanpa AI: Remotion + ElevenLabs" : otak(a))}</td><td>${esc(jadwalDari(a.id))}</td>
       <td><button class="ghost" data-jd="${a.id}">Job desk</button></td></tr>`;
   }
   $("#agent-tabel").innerHTML = `<table class="t"><thead><tr><th>Agent</th><th>Status</th><th>Otak AI</th><th>Jadwal</th><th></th></tr></thead><tbody>${html}</tbody></table>`;
@@ -329,6 +356,62 @@ $("#m-simpan").addEventListener("click", async () => {
   if (r.error) { $("#m-info").textContent = r.error; return; }
   $("#m-isi").value = ""; $("#m-info").textContent = "Naskah tersimpan, menunggu persetujuanmu di bawah."; muat();
 });
+// ---------- CS ----------
+let csAktif = null;
+const CS_TAG = { "butuh-kamu": "gagal", draf: "menunggu", baru: "", dibalas: "disetujui", selesai: "" };
+const CS_TEKS = { "butuh-kamu": "butuh kamu", draf: "draf siap", baru: "baru", dibalas: "dibalas", selesai: "selesai" };
+function renderCS(list, peng) {
+  const wa = peng.kunci.whatsapp && peng.kunci.webhook;
+  $("#cs-info").innerHTML = `Saluran: <b>simulasi</b>${wa ? " dan WhatsApp" : " (WhatsApp belum disambungkan)"} · mode balasan: <b>${peng.cs?.mode === "otomatis" ? "otomatis" : "draf, kamu yang mengirim"}</b>${peng.cs?.kirimNyata ? "" : " · WhatsApp: dry-run"}.
+    Putri menjawab hanya dari <code>kantor/info-bisnis.md</code>.`;
+  $("#cs-list").innerHTML = list.map((c) => `<div class="conv" data-cs="${c.id}" ${csAktif === c.id ? 'aria-current="true"' : ""}>
+    <div class="row" style="justify-content:space-between"><b>${esc(c.kontak)}</b><span class="tag ${CS_TAG[c.status]}">${c.membalas ? "Putri menulis…" : CS_TEKS[c.status]}</span></div>
+    <div class="t mut">${esc(c.terakhir || "")}</div>${c.alasan ? `<div class="mut" style="color:var(--bad)">${esc(c.alasan)}</div>` : ""}</div>`).join("") || '<div class="mut">Belum ada percakapan.</div>';
+  if (csAktif) muatCsDetail(peng);
+}
+async function muatCsDetail(peng) {
+  const box = $("#cs-detail"), ada = box.querySelector("#cs-draf");
+  const d = await api("/api/cs/" + csAktif); if (d.error) return;
+  const draf = d.pesan.filter((m) => m.arah === "draf").pop();
+  const sig = JSON.stringify([d.percakapan.status, d.percakapan.membalas, d.pesan.length, draf?.id]);
+  if (box.dataset.sig === sig && ada) return;   // jangan mengganggu ketikan saat tidak ada perubahan
+  box.dataset.sig = sig;
+  const manual = peng.otak === "manual";
+  box.innerHTML = `<div class="card"><div class="row" style="justify-content:space-between"><b>${esc(d.percakapan.kontak)}</b><span class="mut">${esc(d.percakapan.saluran)}</span></div>
+    ${d.percakapan.alasan ? `<div class="mut" style="color:var(--bad);margin:6px 0">Perlu kamu: ${esc(d.percakapan.alasan)}</div>` : ""}
+    <div style="margin:10px 0">${d.pesan.filter((m) => m.arah !== "draf").map((m) => `<div class="bub ${m.arah}">${esc(m.teks)}${m.catatan ? `<div class="c">${esc(m.catatan)}</div>` : ""}</div>`).join("")}</div>
+    <label class="mut" for="cs-draf">${draf ? "Draf dari Putri (boleh diedit)" : "Balasan"}</label>
+    <textarea id="cs-draf" rows="3">${esc(draf?.teks ?? "")}</textarea>
+    <div class="row" style="margin-top:8px"><button data-cs-a="kirim">Kirim balasan</button>
+      <button class="ghost" data-cs-a="draf" ${manual || d.percakapan.membalas ? "disabled" : ""}>${d.percakapan.membalas ? "Putri menulis…" : "Minta Putri membuat draf"}</button>
+      <button class="ghost" data-cs-a="selesai">Tandai selesai</button></div>
+    ${manual ? `<details style="margin-top:10px"><summary class="mut">Tanpa AI di komputer ini: tempel dari Claude</summary>
+      <div class="row" style="margin:8px 0"><button class="ghost" data-cs-a="salin">Salin permintaan untuk Claude</button><span class="mut" id="cs-m-info"></span></div>
+      <textarea id="cs-tempel" rows="4" placeholder="Tempel balasan Claude di sini"></textarea>
+      <div class="row" style="margin-top:6px"><button class="ghost" data-cs-a="tempel">Jadikan draf</button></div></details>` : ""}</div>`;
+}
+$("#cs-list").addEventListener("click", (e) => { const c = e.target.closest("[data-cs]"); if (!c) return; csAktif = Number(c.dataset.cs); $("#cs-detail").dataset.sig = ""; muat(); });
+$("#cs-masuk").addEventListener("click", async () => {
+  const r = await post("/api/cs/masuk", { kontak: $("#cs-kontak").value, teks: $("#cs-teks").value });
+  if (r.error) { $("#cs-masuk-info").textContent = r.error; return; }
+  $("#cs-teks").value = ""; $("#cs-masuk-info").textContent = ""; csAktif = r.id; $("#cs-detail").dataset.sig = ""; muat();
+});
+$("#cs-detail").addEventListener("click", async (e) => {
+  const b = e.target.closest("button[data-cs-a]"); if (!b || !csAktif) return;
+  const a = b.dataset.csA, id = csAktif; let r = {};
+  if (a === "kirim") r = await post(`/api/cs/${id}/kirim`, { teks: $("#cs-draf").value });
+  else if (a === "draf") r = await post(`/api/cs/${id}/draf`);
+  else if (a === "selesai") r = await post(`/api/cs/${id}/selesai`);
+  else if (a === "tempel") r = await post(`/api/cs/${id}/balasan-manual`, { teks: $("#cs-tempel").value });
+  else if (a === "salin") {
+    const { teks } = await api(`/api/cs/${id}/prompt`);
+    try { await navigator.clipboard.writeText(teks); $("#cs-m-info").textContent = "Tersalin. Tempel di Claude."; } catch { $("#cs-m-info").textContent = "Gagal menyalin otomatis."; }
+    return;
+  }
+  if (r.error) alert(r.error);
+  $("#cs-detail").dataset.sig = ""; muat();
+});
+
 muat(); setInterval(muat, 3000);
 </script>
 </body>

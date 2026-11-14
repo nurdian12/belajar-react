@@ -7,5 +7,9 @@
   "repliz": {
     "kirimNyata": false,
     "jamPosting": ["16:00"]
+  },
+  "cs": {
+    "mode": "draf",
+    "kirimNyata": false
   }
 }

@@ -122,6 +122,13 @@ async function mock(agentId: string, prompt: string) {
       }),
     };
   }
+  if (agentId === "cs-wa") {
+    const terakhir = prompt.split("[Pelanggan]").pop() ?? "";
+    const eskalasi = /refund|komplain|marah|rusak|diskon|tipu/i.test(terakhir);
+    return { biayaUsd: 0, text: JSON.stringify(eskalasi
+      ? { balasan: "Mohon maaf kak, kami teruskan ke tim ya, segera kami bantu.", butuh_manusia: true, alasan: "[MOCK] pelanggan komplain atau minta di luar info" }
+      : { balasan: "[MOCK] Halo kak, terima kasih sudah menghubungi kami. Ada yang bisa dibantu?", butuh_manusia: false, alasan: "" }) };
+  }
   if (agentId === "periset") {
     return {
       biayaUsd: 0,

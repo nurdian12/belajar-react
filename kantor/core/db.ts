@@ -48,6 +48,23 @@ CREATE TABLE IF NOT EXISTS video (
   dibuat TEXT NOT NULL DEFAULT (datetime('now')),
   selesai TEXT
 );
+CREATE TABLE IF NOT EXISTS percakapan (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  saluran TEXT NOT NULL,           -- simulasi | whatsapp
+  kontak TEXT NOT NULL,
+  status TEXT NOT NULL DEFAULT 'baru',   -- baru | draf | butuh-kamu | dibalas | selesai
+  alasan TEXT,
+  diperbarui TEXT NOT NULL DEFAULT (datetime('now')),
+  UNIQUE (saluran, kontak)
+);
+CREATE TABLE IF NOT EXISTS pesan (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  percakapan_id INTEGER NOT NULL,
+  arah TEXT NOT NULL,              -- masuk | keluar | draf
+  teks TEXT NOT NULL,
+  catatan TEXT,
+  dibuat TEXT NOT NULL DEFAULT (datetime('now'))
+);
 CREATE TABLE IF NOT EXISTS posting (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   video_id INTEGER NOT NULL,

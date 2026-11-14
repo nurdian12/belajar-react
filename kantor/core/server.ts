@@ -5,6 +5,8 @@ import { db, ROOT } from "./db.ts";
 import { listAgents, detailAgent, loadAgent } from "./agents.ts";
 import { buatNaskah, revisiNaskah, setStatus, simpanManual, riset, sedangRiset, tulisDariTopik, buangTopik } from "./pipeline.ts";
 import { mulaiScheduler } from "./scheduler.ts";
+import { pesanMasuk, buatDraf, kirimBalasan, selesaikan, simpanHasil, promptManual, sedangMembalas } from "./cs.ts";
+import { mulaiWebhook } from "./webhook.ts";
 import { buatVideo, VIDEO_DIR } from "./video.ts";
 import { buatPosting } from "./posting.ts";
 import { adaKunciRepliz, daftarAkun } from "./repliz.ts";
@@ -62,9 +64,35 @@ createServer(async (req, res) => {
         rina: sedangRiset() || ada("SELECT 1 FROM jobs WHERE agent='periset' AND status='berjalan'") ? "kerja" : "siap",
         maya: ada("SELECT 1 FROM jobs WHERE agent='penulis' AND status='berjalan'") || ada("SELECT 1 FROM naskah WHERE status='menyusun'") ? "kerja" : "siap",
         dewi: ada("SELECT 1 FROM video WHERE status IN ('menyiapkan','suara','render')") ? "kerja" : "siap",
-        kamu: ada("SELECT 1 FROM naskah WHERE status='menunggu'") ? "tunggu" : "siap",
-        putri: "belum",
+        kamu: ada("SELECT 1 FROM naskah WHERE status='menunggu'") || ada("SELECT 1 FROM percakapan WHERE status='butuh-kamu'") ? "tunggu" : "siap",
+        putri: ada("SELECT 1 FROM jobs WHERE agent='cs-wa' AND status='berjalan'") ? "kerja" : ada("SELECT 1 FROM percakapan WHERE status='butuh-kamu'") ? "tunggu" : "siap",
       });
+    }
+    // ---- customer service ----
+    if (req.method === "GET" && p === "/api/cs")
+      return json(res, db.prepare(`SELECT c.*, (SELECT teks FROM pesan WHERE percakapan_id=c.id AND arah!='draf' ORDER BY id DESC LIMIT 1) AS terakhir
+        FROM percakapan c ORDER BY CASE c.status WHEN 'butuh-kamu' THEN 0 WHEN 'draf' THEN 1 WHEN 'baru' THEN 2 ELSE 3 END, c.diperbarui DESC LIMIT 60`).all()
+        .map((c: any) => ({ ...c, membalas: sedangMembalas(c.id) })));
+    if (req.method === "POST" && p === "/api/cs/masuk") {
+      const { kontak, teks } = await body(req);
+      try { return json(res, { id: pesanMasuk("simulasi", String(kontak ?? ""), String(teks ?? "")) }, 202); }
+      catch (e) { return json(res, { error: e instanceof Error ? e.message : String(e) }, 400); }
+    }
+    const cs = p.match(/^\/api\/cs\/(\d+)(?:\/(draf|kirim|selesai|prompt|balasan-manual))?$/);
+    if (cs) {
+      const id = Number(cs[1]), aksi = cs[2];
+      try {
+        if (req.method === "GET" && !aksi) {
+          const c = db.prepare("SELECT * FROM percakapan WHERE id=?").get(id);
+          if (!c) return json(res, { error: "tidak ditemukan" }, 404);
+          return json(res, { percakapan: { ...c, membalas: sedangMembalas(id) }, pesan: db.prepare("SELECT * FROM pesan WHERE percakapan_id=? ORDER BY id").all(id) });
+        }
+        if (req.method === "GET" && aksi === "prompt") return json(res, { teks: promptManual(id) });
+        if (req.method === "POST" && aksi === "draf") { void buatDraf(id); return json(res, { ok: true }, 202); }
+        if (req.method === "POST" && aksi === "kirim") { await kirimBalasan(id, String((await body(req)).teks ?? "")); return json(res, { ok: true }); }
+        if (req.method === "POST" && aksi === "selesai") { selesaikan(id); return json(res, { ok: true }); }
+        if (req.method === "POST" && aksi === "balasan-manual") { await simpanHasil(id, String((await body(req)).teks ?? "")); return json(res, { ok: true }); }
+      } catch (e) { return json(res, { error: e instanceof Error ? e.message : String(e) }, 400); }
     }
     if (req.method === "GET" && p === "/api/prompt") {
       const topik = (url.searchParams.get("topik") ?? "").trim();
@@ -86,7 +114,7 @@ createServer(async (req, res) => {
         otak: e.KANTOR_MOCK === "1" ? "mock" : e.KANTOR_OTAK === "api" ? "api" : e.KANTOR_OTAK === "manual" ? "manual" : "claude",
         model: e.KANTOR_MODEL || null,
         suara: { voice: e.ELEVENLABS_VOICE_ID || null, model: e.ELEVENLABS_MODEL || "eleven_v3" },
-        kunci: { elevenlabs: Boolean(e.ELEVENLABS_API_KEY), repliz: adaKunciRepliz(), anthropic: Boolean(e.ANTHROPIC_API_KEY) },
+        kunci: { elevenlabs: Boolean(e.ELEVENLABS_API_KEY), repliz: adaKunciRepliz(), anthropic: Boolean(e.ANTHROPIC_API_KEY), whatsapp: Boolean(e.WA_TOKEN && e.WA_PHONE_NUMBER_ID), webhook: Boolean(e.WA_VERIFY_TOKEN && e.WA_APP_SECRET) },
         maksVideoPerHari: Number(e.KANTOR_MAKS_VIDEO_PER_HARI ?? 5),
       });
     }
@@ -151,4 +179,5 @@ createServer(async (req, res) => {
 }).listen(PORT, "127.0.0.1", () => {
   console.log(`Kantor berjalan di http://127.0.0.1:${PORT}${process.env.KANTOR_MOCK === "1" ? " (MOCK)" : ""}`);
   mulaiScheduler();
+  mulaiWebhook();
 });
