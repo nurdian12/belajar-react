@@ -34,6 +34,21 @@ Di bagian atas dashboard ada kantor isometrik (Three.js, low-poly) dengan lima r
 (`/api/status`): Rina riset, Maya menulis, Dewi merender, dan meja Kamu menyala amber saat ada naskah menunggu persetujuan.
 Putri tembus pandang karena belum dibangun. Tombol **Demo animasi** memutar siklus contoh. Bila WebGL tidak ada, dashboard tetap jalan tanpa adegan.
 
+## Video tur
+
+Video tur gaya Kantorin (jendela dashboard, zoom, lencana langkah, subtitle kata menyala, narasi) dibuat dari papan cerita `tur/skrip.ts`:
+
+```bash
+# 1. (opsional) rekam ulang tangkapan layar: isi data contoh, jalankan dashboard, lalu rekam
+KANTOR_MOCK=1 KANTOR_DATA=/folder/kosong node kantor/tur/seed.ts
+KANTOR_MOCK=1 KANTOR_DATA=/folder/kosong npm run kantor     # terminal lain
+KANTOR_URL=http://127.0.0.1:4321/ node kantor/tur/rekam.cjs  # butuh: npm i -D playwright
+# 2. render (suara ElevenLabs bila ada kunci, kalau tidak senyap)  ->  kantor/data/tur.mp4
+npm run kantor:tur
+```
+Gambar hasil rekam sudah ada di `public/tur/`, jadi langkah 2 bisa langsung dijalankan. Satu kalimat narasi = satu adegan; ubah teks dan fokus zoom di `skrip.ts`.
+Preview/edit visual: `npm run dev`, komposisi `TurKantor`.
+
 ## Struktur
 
 - `agents/<id>/AGENT.md` peran & aturan · `skills/*.md` skill · `config.json` nama, model, tools

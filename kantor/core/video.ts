@@ -46,11 +46,11 @@ async function proses(id: number, n: any) {
   }
 }
 
-function render(propsFile: string, out: string) {
+export function render(propsFile: string, out: string, komposisi = "KantorVideo") {
   const cli = join(REPO, "node_modules", "@remotion", "cli", "remotion-cli.js");
   // Argumen tambahan, mis. KANTOR_RENDER_ARGS="--browser-executable=/opt/pw-browsers/chromium --gl=swangle"
   const extra = (process.env.KANTOR_RENDER_ARGS ?? "").split(/\s+/).filter(Boolean);
-  const args = [cli, "render", "src/index.ts", "KantorVideo", out, `--props=${propsFile}`, "--log=error", ...extra];
+  const args = [cli, "render", "src/index.ts", komposisi, out, `--props=${propsFile}`, "--log=error", ...extra];
   return new Promise<void>((ok, gagal) => {
     const p = spawn(process.execPath, args, { cwd: REPO, stdio: ["ignore", "pipe", "pipe"] });
     let log = "";
