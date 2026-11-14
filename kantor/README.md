@@ -28,6 +28,12 @@ copy kantor\.env.example kantor\.env
 Edit `kantor\.env` (Notepad): `KANTOR_OTAK=api`, `ANTHROPIC_API_KEY=...`, lalu `ELEVENLABS_API_KEY=...`. Jalankan `npm run kantor`, buka http://127.0.0.1:4321.
 Render video memakai Chromium (diunduh Remotion saat pertama) dan bisa lambat di mesin lama.
 
+## Tanpa AI di komputer ini (mode manual)
+
+Kalau Claude Code tidak bisa jalan dan kamu belum punya kunci API: isi `kantor\.env` dengan `KANTOR_OTAK=manual`. Naskah ditulis lewat Claude biasa (claude.ai, langganan kamu)
+lalu ditempel di tab **Konten**: isi topik, **Salin permintaan untuk Claude**, tempel di Claude, salin balasannya, **Simpan sebagai naskah**. Setelah itu setujui dan buat video seperti biasa.
+Tanpa `ELEVENLABS_API_KEY` video dibuat senyap (hanya teks bergerak).
+
 ## Dashboard
 
 Lima tab seperti di video contoh: **Beranda** (kantor 3D + panel "Perlu keputusan kamu"), **Agent** (tim, status, job desk), **Channel** (pengaturan, hanya baca), **Konten** (topik, naskah, video, jadwal posting), **Jadwal**.

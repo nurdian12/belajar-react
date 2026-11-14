@@ -2,8 +2,8 @@ import { createServer } from "node:http";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { db, ROOT } from "./db.ts";
-import { listAgents, detailAgent } from "./agents.ts";
-import { buatNaskah, revisiNaskah, setStatus, riset, sedangRiset, tulisDariTopik, buangTopik } from "./pipeline.ts";
+import { listAgents, detailAgent, loadAgent } from "./agents.ts";
+import { buatNaskah, revisiNaskah, setStatus, simpanManual, riset, sedangRiset, tulisDariTopik, buangTopik } from "./pipeline.ts";
 import { mulaiScheduler } from "./scheduler.ts";
 import { buatVideo, VIDEO_DIR } from "./video.ts";
 import { buatPosting } from "./posting.ts";
@@ -66,6 +66,16 @@ createServer(async (req, res) => {
         putri: "belum",
       });
     }
+    if (req.method === "GET" && p === "/api/prompt") {
+      const topik = (url.searchParams.get("topik") ?? "").trim();
+      if (!topik) return json(res, { error: "topik wajib diisi" }, 400);
+      return json(res, { teks: `${loadAgent("penulis").systemPrompt}\n\n---\n\nTulis naskah video pendek tentang topik: ${topik}` });
+    }
+    if (req.method === "POST" && p === "/api/naskah/manual") {
+      const { topik, teks } = await body(req);
+      try { return json(res, { id: simpanManual(String(topik ?? "").trim(), String(teks ?? "")) }, 201); }
+      catch (e) { return json(res, { error: e instanceof Error ? e.message : String(e) }, 400); }
+    }
     if (req.method === "GET" && p === "/api/agents") return json(res, listAgents());
     const da = p.match(/^\/api\/agents\/([a-z-]+)$/);
     if (req.method === "GET" && da) return json(res, detailAgent(da[1]));
@@ -73,7 +83,7 @@ createServer(async (req, res) => {
       const e = process.env;   // hanya status ada/tidaknya kunci, tidak pernah nilainya
       return json(res, {
         ...bacaPengaturan(),
-        otak: e.KANTOR_MOCK === "1" ? "mock" : e.KANTOR_OTAK === "api" ? "api" : "claude",
+        otak: e.KANTOR_MOCK === "1" ? "mock" : e.KANTOR_OTAK === "api" ? "api" : e.KANTOR_OTAK === "manual" ? "manual" : "claude",
         model: e.KANTOR_MODEL || null,
         suara: { voice: e.ELEVENLABS_VOICE_ID || null, model: e.ELEVENLABS_MODEL || "eleven_v3" },
         kunci: { elevenlabs: Boolean(e.ELEVENLABS_API_KEY), repliz: adaKunciRepliz(), anthropic: Boolean(e.ANTHROPIC_API_KEY) },

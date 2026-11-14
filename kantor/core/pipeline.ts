@@ -66,6 +66,27 @@ export function buatNaskah(topik: string): number {
   return id;
 }
 
+/**
+ * Mode manual: simpan naskah yang ditulis sendiri atau ditempel dari Claude (tanpa memanggil AI).
+ * Menerima JSON {judul, naskah, rencana_visual} atau teks biasa (baris pertama pendek = judul).
+ */
+export function simpanManual(topik: string, teks: string): number {
+  const t = teks.trim();
+  if (!t) throw new Error("Naskah kosong");
+  let judul = topik, isi = t, visual: string[] = [];
+  try {
+    const d = ekstrakJson<Draf>(t);
+    if (d && typeof d.naskah === "string" && d.naskah.trim()) { judul = d.judul || topik; isi = d.naskah.trim(); visual = d.rencana_visual ?? []; }
+  } catch {
+    const [baris1, ...sisa] = t.split(/\r?\n/);
+    if (sisa.join("").trim() && baris1.length <= 90) { judul = baris1.replace(/^#+\s*/, "").trim(); isi = sisa.join("\n").trim(); }
+  }
+  const { lastInsertRowid } = db.prepare(
+    "INSERT INTO naskah (topik, judul, isi, rencana_visual, status) VALUES (?,?,?,?, 'menunggu')",
+  ).run(topik || judul, judul, isi, JSON.stringify(visual));
+  return Number(lastInsertRowid);
+}
+
 /** Minta revisi: penulis memperbaiki naskah sebelumnya sesuai catatan. */
 export function revisiNaskah(id: number, catatan: string) {
   const n = db.prepare("SELECT * FROM naskah WHERE id=?").get(id) as any;

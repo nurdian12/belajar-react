@@ -13,8 +13,11 @@
   h1 { font-size:22px; margin:0 0 4px; } h2 { font-size:13px; margin:28px 0 10px; color:var(--mut); text-transform:uppercase; letter-spacing:.06em; }
   .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:14px 16px; margin-bottom:10px; }
   .row { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  textarea { width:100%; padding:9px 11px; border:1px solid var(--line); border-radius:8px; background:var(--bg); color:var(--ink); font:inherit; resize:vertical; }
+  details.card summary { cursor:pointer; }
   input { flex:1; min-width:0; padding:9px 11px; border:1px solid var(--line); border-radius:8px; background:var(--bg); color:var(--ink); font:inherit; }
   button { padding:8px 14px; border:0; border-radius:8px; background:var(--acc); color:#fff; font:inherit; cursor:pointer; }
+  button:disabled { opacity:.45; cursor:default; }
   button.ghost { background:transparent; color:var(--ink); border:1px solid var(--line); }
   button.ok { background:var(--ok); } button.bad { background:var(--bad); }
   .tag { font-size:12px; padding:2px 8px; border-radius:99px; border:1px solid var(--line); color:var(--mut); }
@@ -100,6 +103,18 @@
       <button>Minta Maya menulis</button>
     </form>
 
+    <details class="card" id="manual" style="margin-top:12px">
+      <summary><b>Tulis manual atau tempel dari Claude</b> <span class="mut">(tanpa AI di komputer ini)</span></summary>
+      <ol class="mut" style="margin:10px 0">
+        <li>Isi topik, lalu klik <b>Salin permintaan</b>.</li>
+        <li>Tempel di Claude (claude.ai atau aplikasinya), lalu salin balasannya.</li>
+        <li>Tempel balasan di kotak bawah dan klik <b>Simpan sebagai naskah</b>. JSON dari Claude atau teks biasa sama-sama bisa.</li>
+      </ol>
+      <div class="row"><input id="m-topik" placeholder="Topik video"><button type="button" class="ghost" id="m-salin">Salin permintaan untuk Claude</button></div>
+      <textarea id="m-isi" rows="8" style="margin-top:8px" placeholder="Tempel balasan Claude di sini, atau tulis naskah sendiri (baris pertama = judul)"></textarea>
+      <div class="row" style="margin-top:8px"><button type="button" id="m-simpan">Simpan sebagai naskah</button><span class="mut" id="m-info"></span></div>
+    </details>
+
     <h2>Naskah</h2>
     <div id="naskah"></div>
 
@@ -178,8 +193,10 @@ async function muat() {
         ${(postingPerVideo[v.id] || []).map((x) => `<div class="mut">Posting #${x.id}: <span class="tag ${x.status === "gagal" ? "gagal" : "disetujui"}">${x.status}</span> ${new Date(x.jadwal).toLocaleString()}${x.error ? " · " + esc(x.error.slice(0, 200)) : ""}</div>`).join("")}
         ${modeKirim}</div>` : ""}</div>`).join("") || `<div class="mut">Belum ada video. Setujui naskah, lalu klik Buat video.</div>`;
   if ($("#video-list").dataset.h !== vhtml) { $("#video-list").innerHTML = vhtml; $("#video-list").dataset.h = vhtml; }
-  $("#riset").disabled = tp.sedangRiset;
-  $("#risetInfo").textContent = tp.sedangRiset ? "Rina sedang riset…" : "Otomatis tiap hari sesuai pengaturan.json.";
+  const manual = peng.otak === "manual";
+  $("#riset").disabled = tp.sedangRiset || manual; $("#form button").disabled = manual;
+  if (manual) { $("#risetInfo").textContent = "Mode manual: tidak ada AI di komputer ini."; if (!$("#manual").dataset.buka) { $("#manual").open = true; $("#manual").dataset.buka = "1"; } }
+  if (!manual) $("#risetInfo").textContent = tp.sedangRiset ? "Rina sedang riset…" : "Otomatis tiap hari sesuai pengaturan.json.";
   $("#topik-list").innerHTML = tp.topik.filter((t) => t.status === "baru").map((t) => {
     const src = JSON.parse(t.sumber || "[]");
     return `<div class="card"><b>${esc(t.judul)}</b><div class="mut">${esc(t.ringkasan)}</div>
@@ -242,7 +259,7 @@ function rute() {
 }
 addEventListener("hashchange", rute); rute();
 
-const OTAK = { claude: "Claude Code (langganan)", api: "Anthropic API", mock: "Mode uji (tanpa AI)" };
+const OTAK = { claude: "Claude Code (langganan)", api: "Anthropic API", manual: "Manual (tempel dari Claude)", mock: "Mode uji (tanpa AI)" };
 function renderBeranda(naskah, tp, videos, pst, peng) {
   const menunggu = naskah.filter((n) => n.status === "menunggu");
   const sudahPosting = new Set(pst.posting.map((x) => x.video_id));
@@ -301,6 +318,17 @@ function renderJadwal(peng, pst, videos, naskah) {
 }
 document.addEventListener("click", (e) => { const i = e.target.closest("[data-ke]"); if (i) location.hash = "#" + i.dataset.ke; });
 
+$("#m-salin").addEventListener("click", async () => {
+  const topik = $("#m-topik").value.trim(); if (!topik) { $("#m-info").textContent = "Isi topik dulu."; return; }
+  const { teks } = await api("/api/prompt?topik=" + encodeURIComponent(topik));
+  try { await navigator.clipboard.writeText(teks); $("#m-info").textContent = "Tersalin. Tempel di Claude."; }
+  catch { const t = document.createElement("textarea"); t.value = teks; document.body.append(t); t.select(); const ok = document.execCommand("copy"); t.remove(); $("#m-info").textContent = ok ? "Tersalin. Tempel di Claude." : "Gagal menyalin otomatis."; }
+});
+$("#m-simpan").addEventListener("click", async () => {
+  const r = await post("/api/naskah/manual", { topik: $("#m-topik").value, teks: $("#m-isi").value });
+  if (r.error) { $("#m-info").textContent = r.error; return; }
+  $("#m-isi").value = ""; $("#m-info").textContent = "Naskah tersimpan, menunggu persetujuanmu di bawah."; muat();
+});
 muat(); setInterval(muat, 3000);
 </script>
 </body>

@@ -15,6 +15,8 @@ export async function runAgent(agentId: string, prompt: string): Promise<RunResu
   const jobId = Number(lastInsertRowid);
 
   try {
+    if (process.env.KANTOR_OTAK === "manual" && process.env.KANTOR_MOCK !== "1")
+      throw new Error("Mode manual: tidak ada AI di komputer ini. Tempel naskah di tab Konten.");
     const { text, biayaUsd } =
       process.env.KANTOR_MOCK === "1" ? await mock(agentId, prompt)
       : process.env.KANTOR_OTAK === "api" ? await panggilApi(agent, prompt)
