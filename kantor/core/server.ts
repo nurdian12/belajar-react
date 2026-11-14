@@ -7,6 +7,7 @@ import { buatNaskah, revisiNaskah, setStatus, simpanManual, riset, sedangRiset, 
 import { mulaiScheduler } from "./scheduler.ts";
 import { pesanMasuk, buatDraf, kirimBalasan, selesaikan, simpanHasil, promptManual, sedangMembalas } from "./cs.ts";
 import { mulaiWebhook } from "./webhook.ts";
+import { tanya, urai, promptManual as promptPandu, ubahBerkas } from "./pandu.ts";
 import { buatVideo, VIDEO_DIR } from "./video.ts";
 import { buatPosting } from "./posting.ts";
 import { adaKunciRepliz, daftarAkun } from "./repliz.ts";
@@ -67,6 +68,23 @@ createServer(async (req, res) => {
         kamu: ada("SELECT 1 FROM naskah WHERE status='menunggu'") || ada("SELECT 1 FROM percakapan WHERE status='butuh-kamu'") ? "tunggu" : "siap",
         putri: ada("SELECT 1 FROM jobs WHERE agent='cs-wa' AND status='berjalan'") ? "kerja" : ada("SELECT 1 FROM percakapan WHERE status='butuh-kamu'") ? "tunggu" : "siap",
       });
+    }
+    // ---- Pandu, asisten kantor ----
+    if (req.method === "POST" && p === "/api/pandu") {
+      const { pesan, riwayat, tempel } = await body(req);
+      try {
+        if (typeof tempel === "string" && tempel.trim()) return json(res, urai(tempel));   // balasan Claude yang ditempel (mode manual)
+        return json(res, await tanya(String(pesan ?? ""), riwayat));
+      } catch (e) { return json(res, { error: e instanceof Error ? e.message : String(e) }, 400); }
+    }
+    if (req.method === "POST" && p === "/api/pandu/prompt") {
+      const { pesan, riwayat } = await body(req);
+      return json(res, { teks: promptPandu(String(pesan ?? ""), riwayat) });
+    }
+    if (req.method === "POST" && p === "/api/pandu/ubah") {
+      const { berkas, teks } = await body(req);
+      try { ubahBerkas(String(berkas ?? ""), String(teks ?? "")); return json(res, { ok: true }); }
+      catch (e) { return json(res, { error: e instanceof Error ? e.message : String(e) }, 400); }
     }
     // ---- customer service ----
     if (req.method === "GET" && p === "/api/cs")

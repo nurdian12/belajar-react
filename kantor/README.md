@@ -28,6 +28,13 @@ copy kantor\.env.example kantor\.env
 Edit `kantor\.env` (Notepad): `KANTOR_OTAK=api`, `ANTHROPIC_API_KEY=...`, lalu `ELEVENLABS_API_KEY=...`. Jalankan `npm run kantor`, buka http://127.0.0.1:4321.
 Render video memakai Chromium (diunduh Remotion saat pertama) dan bisa lambat di mesin lama.
 
+## Pandu (asisten kantor)
+
+Tombol **Tanya Pandu** di kanan bawah semua tab. Ketik apa yang kamu mau ("aku mulai dari mana?", "ganti niche jadi kuliner", "kenapa videoku senyap?"), Pandu menjawab singkat dan menawarkan tombol aksi:
+buka tab, minta Rina riset, minta Maya menulis naskah, atau mengusulkan isi baru untuk `gaya-channel.md` / `info-bisnis.md`. Pandu **tidak menjalankan apa pun sendiri**: tiap aksi harus kamu klik, dan perubahan berkas
+tampil sebagai pratinjau dengan tombol **Terapkan** (file lama dicadangkan di `kantor/data/cadangan/`). Pandu hanya mendapat ringkasan angka dan status kunci (bukan isi kunci, naskah, atau chat pelanggan), dan aksinya divalidasi di server dengan daftar putih.
+Dengan `KANTOR_OTAK=manual`, permintaan disalin otomatis untuk ditempel di Claude, lalu balasannya ditempel kembali.
+
 ## Tanpa AI di komputer ini (mode manual)
 
 Kalau Claude Code tidak bisa jalan dan kamu belum punya kunci API: isi `kantor\.env` dengan `KANTOR_OTAK=manual`. Naskah ditulis lewat Claude biasa (claude.ai, langganan kamu)

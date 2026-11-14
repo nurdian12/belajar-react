@@ -122,6 +122,14 @@ async function mock(agentId: string, prompt: string) {
       }),
     };
   }
+  if (agentId === "pandu") {
+    const pesan = (prompt.match(/<pesan>\n([\s\S]*?)\n<\/pesan>/) ?? [])[1] ?? "";
+    const gaya = /niche|kuliner|gaya/i.test(pesan);
+    return { biayaUsd: 0, text: JSON.stringify(gaya
+      ? { balasan: "[MOCK] Boleh. Ini usulan gaya channel baru, cek pratinjaunya lalu terapkan kalau cocok.", aksi: [
+          { tipe: "ubah", berkas: "gaya", teks: "# Skill: Gaya channel\n\n- Niche: kuliner rumahan\n- Nada: hangat, menggugah selera", label: "Terapkan gaya kuliner" }, { tipe: "buka", tab: "channel", label: "Lihat Channel" }] }
+      : { balasan: "[MOCK] Mulai dari riset topik, lalu pilih satu untuk ditulis Maya.", aksi: [{ tipe: "riset", label: "Mulai riset" }, { tipe: "buka", tab: "konten", label: "Buka Konten" }] }) };
+  }
   if (agentId === "cs-wa") {
     const terakhir = prompt.split("[Pelanggan]").pop() ?? "";
     const eskalasi = /refund|komplain|marah|rusak|diskon|tipu/i.test(terakhir);

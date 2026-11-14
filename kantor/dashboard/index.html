@@ -58,6 +58,16 @@
   .bub { max-width:82%; padding:8px 12px; border-radius:14px; margin:6px 0; white-space:pre-wrap; overflow-wrap:anywhere; }
   .bub.masuk { background:var(--card); border:1px solid var(--line); } .bub.keluar { background:var(--acc); color:#fff; margin-left:auto; }
   .bub .c { font-size:11px; opacity:.8; }
+  .pandu-fab { position:fixed; right:max(16px, env(safe-area-inset-right,0px)); bottom:max(16px, env(safe-area-inset-bottom,0px)); z-index:20; border-radius:99px; padding:11px 18px; box-shadow:0 6px 20px #0003; font-weight:600; }
+  #pandu { position:fixed; right:max(16px, env(safe-area-inset-right,0px)); bottom:max(16px, env(safe-area-inset-bottom,0px)); z-index:30; width:min(400px, calc(100vw - 32px)); max-height:min(640px, calc(100vh - 32px)); display:flex; flex-direction:column; background:var(--card); border:1px solid var(--line); border-radius:16px; box-shadow:0 12px 40px #0004; }
+  #pandu[hidden] { display:none; }
+  #pandu .ph { display:flex; gap:8px; align-items:center; padding:12px 14px; border-bottom:1px solid var(--line); } #pandu .ph button { margin-left:auto; padding:2px 10px; }
+  #pandu-log { padding:12px 14px; overflow:auto; flex:1; min-height:140px; }
+  .pb { max-width:88%; padding:8px 12px; border-radius:14px; margin:6px 0; white-space:pre-wrap; overflow-wrap:anywhere; }
+  .pb.kamu { background:var(--acc); color:#fff; margin-left:auto; } .pb.pandu { background:var(--bg); border:1px solid var(--line); }
+  .chips { display:flex; gap:6px; flex-wrap:wrap; margin:4px 0 8px; } .chips button { padding:5px 12px; font-size:13px; border-radius:99px; }
+  .prev { border:1px dashed var(--acc); border-radius:10px; padding:8px 10px; margin:6px 0; } .prev pre { max-height:160px; overflow:auto; font-size:12.5px; margin:6px 0; }
+  #pandu form { display:flex; gap:6px; padding:10px 12px; border-top:1px solid var(--line); }
 </style>
 </head>
 <body>
@@ -154,6 +164,18 @@
     <div id="jadwal-posting"></div>
   </section>
 </main>
+<button class="pandu-fab" id="pandu-buka">Tanya Pandu</button>
+<aside id="pandu" hidden aria-label="Pandu, asisten kantor">
+  <div class="ph"><span class="av" style="margin:0">PA</span><span><b>Pandu</b><div class="mut">Asisten kantor: bilang saja kamu mau apa</div></span><button class="ghost" id="pandu-tutup" aria-label="Tutup">&times;</button></div>
+  <div id="pandu-log" aria-live="polite"></div>
+  <div class="chips" id="pandu-saran" style="padding:0 14px"></div>
+  <div id="pandu-manual" hidden style="padding:0 14px 8px">
+    <div class="mut">Tanpa AI di komputer ini: permintaan sudah disalin. Tempel di Claude, lalu tempel balasannya di sini.</div>
+    <textarea id="pandu-tempel" rows="3" placeholder="Balasan Claude"></textarea>
+    <div class="row" style="margin-top:6px"><button type="button" class="ghost" id="pandu-pakai">Gunakan balasan</button></div>
+  </div>
+  <form id="pandu-form"><input id="pandu-input" placeholder="Mau ngapain hari ini?" autocomplete="off"><button>Kirim</button></form>
+</aside>
 <script type="importmap">{ "imports": { "three": "/vendor/three.module.js" } }</script>
 <script type="module">
   // Kantor 3D bersifat tambahan: bila WebGL tidak tersedia, dashboard tetap jalan tanpa adegan.
@@ -285,6 +307,7 @@ function rute() {
 }
 addEventListener("hashchange", rute); rute();
 
+let otakMode = "claude";
 const OTAK = { claude: "Claude Code (langganan)", api: "Anthropic API", manual: "Manual (tempel dari Claude)", mock: "Mode uji (tanpa AI)" };
 function renderBeranda(naskah, tp, videos, pst, peng, csList) {
   const menunggu = naskah.filter((n) => n.status === "menunggu");
@@ -301,14 +324,15 @@ function renderBeranda(naskah, tp, videos, pst, peng, csList) {
   $("#n-keputusan").textContent = menunggu.length + siap.length + csList.filter((c) => c.status === "butuh-kamu").length;
   $("#keputusan").innerHTML = baris.join("") || `<div class="mut">Tidak ada yang menunggu kamu.</div>`;
   $("#berikutnya").innerHTML = peng.jadwal.map((j) => `${esc(j.jam)} · ${j.agent === "periset" ? "Rina riset topik" : esc(j.agent)}`).join("<br>") || "Belum ada jadwal.";
+  otakMode = peng.otak;
   $("#mode-info").textContent = `Mode ${peng.naskahOtomatis ? "otomatis" : "manual"} · otak: ${OTAK[peng.otak]}`;
 }
-const TAMPIL = { periset: ["Rina", "Riset"], penulis: ["Maya", "Konten"], animator: ["Dewi", "Konten"], "cs-wa": ["Putri", "Operasional"] };
-const KUNCI_STATUS = { periset: "rina", penulis: "maya", animator: "dewi", "cs-wa": "putri" };
+const TAMPIL = { periset: ["Rina", "Riset"], penulis: ["Maya", "Konten"], animator: ["Dewi", "Konten"], "cs-wa": ["Putri", "Operasional"], pandu: ["Pandu", "Asisten"] };
+const KUNCI_STATUS = { periset: "rina", penulis: "maya", animator: "dewi", "cs-wa": "putri", pandu: "pandu" };
 const TEKS_STATUS = { siap: "siap", kerja: "bekerja", tunggu: "menunggu kamu", belum: "belum dibangun" };
 function renderAgent(agents, stat, peng) {
   const jadwalDari = (id) => id === "periset" ? (peng.jadwal.filter((j) => j.agent === "periset").map((j) => "Setiap hari " + j.jam).join(", ") || "Manual")
-    : id === "penulis" ? (peng.naskahOtomatis ? "Setelah Rina selesai" : "Saat kamu memilih topik") : id === "animator" ? "Setelah naskah disetujui" : "Saat ada pesan masuk";
+    : id === "penulis" ? (peng.naskahOtomatis ? "Setelah Rina selesai" : "Saat kamu memilih topik") : id === "animator" ? "Setelah naskah disetujui" : id === "pandu" ? "Saat kamu bertanya" : "Saat ada pesan masuk";
   const otak = (a) => a.model || OTAK[peng.otak === "mock" ? "mock" : peng.otak];
   let grup = "", html = "";
   for (const a of Object.keys(TAMPIL).map((id) => agents.find((x) => x.id === id)).filter(Boolean)) {
@@ -356,6 +380,62 @@ $("#m-simpan").addEventListener("click", async () => {
   if (r.error) { $("#m-info").textContent = r.error; return; }
   $("#m-isi").value = ""; $("#m-info").textContent = "Naskah tersimpan, menunggu persetujuanmu di bawah."; muat();
 });
+// ---------- Pandu ----------
+const pandu = { riwayat: [], aksi: [], sibuk: false, pesanTerakhir: "" };
+const SARAN = ["Aku mulai dari mana?", "Ganti niche channel", "Kenapa videoku senyap?", "Apa yang belum bisa?"];
+function renderPandu() {
+  const log = $("#pandu-log");
+  log.innerHTML = (pandu.riwayat.length ? "" : `<div class="pb pandu">Hai, aku Pandu. Bilang saja kamu mau apa, nanti kutunjukkan langkahnya dan tombol yang perlu diklik.</div>`)
+    + pandu.riwayat.map((g) => `<div class="pb ${g.dari}">${esc(g.teks)}</div>`).join("")
+    + (pandu.sibuk ? `<div class="pb pandu mut">Pandu menulis…</div>` : "")
+    + `<div class="chips">${pandu.aksi.map((a, i) => a.tipe === "ubah" ? "" : `<button class="ghost" data-pa="${i}">${esc(a.label)}</button>`).join("")}</div>`
+    + pandu.aksi.map((a, i) => a.tipe !== "ubah" ? "" : `<div class="prev"><b>${esc(a.label)}</b><div class="mut">Isi baru untuk ${a.berkas === "gaya" ? "gaya channel" : "info bisnis"}, file lama dicadangkan:</div><pre>${esc(a.teks)}</pre>
+      <div class="row"><button data-pa="${i}">Terapkan</button><button class="ghost" data-pb="${i}">Batal</button></div></div>`).join("");
+  log.scrollTop = log.scrollHeight;
+  $("#pandu-saran").innerHTML = pandu.riwayat.length ? "" : SARAN.map((t) => `<button class="ghost" data-ps="${esc(t)}">${esc(t)}</button>`).join("");
+  $("#pandu-manual").hidden = otakMode !== "manual" || !pandu.menungguTempel;
+}
+async function tanyaPandu(pesan) {
+  pesan = pesan.trim(); if (!pesan || pandu.sibuk) return;
+  const riwayat = pandu.riwayat.slice(-6);
+  pandu.riwayat.push({ dari: "kamu", teks: pesan }); pandu.aksi = []; pandu.pesanTerakhir = pesan; $("#pandu-input").value = "";
+  if (otakMode === "manual") {
+    const { teks } = await post("/api/pandu/prompt", { pesan, riwayat });
+    try { await navigator.clipboard.writeText(teks); } catch { /* pemilik bisa menyalin manual */ }
+    pandu.riwayat.push({ dari: "pandu", teks: "Tidak ada AI di komputer ini, jadi permintaanmu sudah kusalin. Tempel di Claude, lalu tempel balasannya di kotak bawah." });
+    pandu.menungguTempel = { pesan, riwayat }; renderPandu(); return;
+  }
+  pandu.sibuk = true; renderPandu();
+  const r = await post("/api/pandu", { pesan, riwayat });
+  pandu.sibuk = false; pandu.riwayat.push({ dari: "pandu", teks: r.error ? "Maaf, aku gagal menjawab: " + r.error : r.balasan }); pandu.aksi = r.aksi || []; renderPandu();
+}
+async function jalankanAksi(a) {
+  if (a.tipe === "buka") location.hash = "#" + a.tab;
+  else if (a.tipe === "riset") { const r = await post("/api/riset"); if (r.error) alert(r.error); location.hash = "#konten"; }
+  else if (a.tipe === "naskah") {
+    location.hash = "#konten";
+    if (otakMode === "manual") { $("#m-topik").value = a.topik; $("#manual").open = true; $("#m-topik").focus(); }
+    else { const r = await post("/api/naskah", { topik: a.topik }); if (r.error) alert(r.error); }
+  } else if (a.tipe === "ubah") {
+    const r = await post("/api/pandu/ubah", { berkas: a.berkas, teks: a.teks });
+    pandu.riwayat.push({ dari: "pandu", teks: r.error ? "Gagal menerapkan: " + r.error : "Sudah kuterapkan. File lama dicadangkan di kantor/data/cadangan." });
+  }
+  pandu.aksi = pandu.aksi.filter((x) => x !== a); renderPandu(); muat();
+}
+$("#pandu-buka").addEventListener("click", () => { $("#pandu").hidden = false; $("#pandu-buka").hidden = true; renderPandu(); $("#pandu-input").focus(); });
+$("#pandu-tutup").addEventListener("click", () => { $("#pandu").hidden = true; $("#pandu-buka").hidden = false; });
+$("#pandu-form").addEventListener("submit", (e) => { e.preventDefault(); tanyaPandu($("#pandu-input").value); });
+$("#pandu").addEventListener("click", (e) => {
+  const sa = e.target.closest("[data-ps]"); if (sa) return tanyaPandu(sa.dataset.ps);
+  const a = e.target.closest("[data-pa]"); if (a) return jalankanAksi(pandu.aksi[Number(a.dataset.pa)]);
+  const b = e.target.closest("[data-pb]"); if (b) { pandu.aksi.splice(Number(b.dataset.pb), 1); renderPandu(); }
+});
+$("#pandu-pakai").addEventListener("click", async () => {
+  const t = $("#pandu-tempel").value; if (!t.trim() || !pandu.menungguTempel) return;
+  pandu.menungguTempel = null; $("#pandu-tempel").value = "";
+  const r = await post("/api/pandu", { tempel: t }); pandu.riwayat.push({ dari: "pandu", teks: r.balasan || r.error || "" }); pandu.aksi = r.aksi || []; renderPandu();
+});
+
 // ---------- CS ----------
 let csAktif = null;
 const CS_TAG = { "butuh-kamu": "gagal", draf: "menunggu", baru: "", dibalas: "disetujui", selesai: "" };
