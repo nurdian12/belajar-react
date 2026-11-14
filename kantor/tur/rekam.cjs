@@ -18,7 +18,7 @@ fs.mkdirSync(OUT, { recursive: true });
   await page.route("**/api/repliz/akun", (r) => r.fulfill({ json: { adaKunci: true, mentah: {}, akun: [
     { id: "a1", nama: "TikTok utama", platform: "tiktok" }, { id: "a2", nama: "Instagram Reels", platform: "instagram" }] } }));
   await page.goto(URL);
-  await page.addStyleTag({ content: "main{max-width:1400px!important} #scene3d{height:640px!important} #demo3d{display:none!important} .lbl3d{font-size:15px!important;padding:4px 10px!important}" });
+  await page.addStyleTag({ content: "main{max-width:1400px!important} #scene3d{height:640px!important} #demo3d{display:none!important} .lbl3d{font-size:15px!important;padding:4px 10px!important} #topik-list,#naskah .card,#video-list .card{max-width:820px}" });
   await page.waitForTimeout(2500);
 
   // Tangkapan berdasarkan koordinat halaman (tidak menunggu elemen "stabil": adegan 3D selalu bergerak).
@@ -51,7 +51,11 @@ fs.mkdirSync(OUT, { recursive: true });
   {
     await page.evaluate(() => new Promise((ok) => { const v = document.querySelector("#video-list video"); if (!v) return ok(); v.addEventListener("seeked", () => ok(), { once: true }); v.currentTime = 2.4; setTimeout(ok, 3000); }));
     await page.waitForTimeout(500);
-    await simpan("kartu-video", await klip(page.locator("#video-list .card").first(), "kartu-video.jpg"));
+    const kartu = page.locator("#video-list .card").first();
+    const k = await kartu.evaluate((e) => { const r = e.getBoundingClientRect(), v = e.querySelector("video").getBoundingClientRect(); return { x: r.x + scrollX, y: r.y + scrollY, w: r.width, vb: v.bottom - r.top }; });
+    const clip = { x: k.x, y: k.y, width: 600, height: k.vb + 14 };
+    await page.screenshot({ path: path.join(OUT, "video.jpg"), fullPage: true, clip, type: "jpeg", quality: 88 }); await simpan("video", { w: clip.width, h: clip.height });
+    await simpan("form-jadwal", await klip(page.locator("#video-list .post").first(), "form-jadwal.jpg"));
   }
 
   fs.writeFileSync(path.join(OUT, "manifest.json"), JSON.stringify(manifest, null, 2));

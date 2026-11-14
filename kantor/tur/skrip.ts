@@ -5,7 +5,7 @@
  */
 export type Langkah = {
   teks: string;
-  gambar: "kantor-idle" | "kantor-rina" | "kantor-maya" | "kantor-dewi" | "kantor-kamu" | "topik" | "naskah" | "kartu-video";
+  gambar: "kantor-idle" | "kantor-rina" | "kantor-maya" | "kantor-dewi" | "kantor-kamu" | "topik" | "naskah" | "video" | "form-jadwal";
   fokus: { x: number; y: number; zoom: number };
   lencana?: { nomor?: string; teks: string };
   judul?: { besar: string; kecil: string };
@@ -20,7 +20,7 @@ export const SKRIP: Langkah[] = [
   { teks: "Lalu Maya menulis naskah dengan gaya channel kamu.", gambar: "kantor-maya", fokus: { x: 0.58, y: 0.34, zoom: 1.9 }, lencana: { nomor: "2", teks: "Naskah" } },
   { teks: "Naskahnya muncul di sini, kamu setujui, revisi, atau tolak.", gambar: "naskah", fokus: { x: 0.35, y: 0.88, zoom: 1.5 }, lencana: { nomor: "2", teks: "Naskah" } },
   { teks: "Setelah disetujui, Dewi membuat suara narasi dan merender videonya.", gambar: "kantor-dewi", fokus: { x: 0.72, y: 0.5, zoom: 1.9 }, lencana: { nomor: "3", teks: "Video" } },
-  { teks: "Hasilnya langsung bisa diputar di dashboard.", gambar: "kartu-video", fokus: { x: 0.12, y: 0.45, zoom: 1.7 }, lencana: { nomor: "3", teks: "Video" } },
-  { teks: "Terakhir, pilih akun dan jam posting, lalu jadwalkan lewat Repliz.", gambar: "kartu-video", fokus: { x: 0.5, y: 0.9, zoom: 1.5 }, lencana: { nomor: "4", teks: "Posting" } },
+  { teks: "Hasilnya langsung bisa diputar di dashboard.", gambar: "video", fokus: { x: 0.3, y: 0.55, zoom: 1.2 }, lencana: { nomor: "3", teks: "Video" } },
+  { teks: "Terakhir, pilih akun dan jam posting, lalu jadwalkan lewat Repliz.", gambar: "form-jadwal", fokus: { x: 0.5, y: 0.45, zoom: 1.15 }, lencana: { nomor: "4", teks: "Posting" } },
   { teks: "Semuanya jalan di komputer kamu, tugasmu cuma menyetujui.", gambar: "kantor-kamu", fokus: { x: 0.46, y: 0.5, zoom: 1.8 } },
 ];

@@ -32,5 +32,5 @@ const propsFile = join(DATA, "props-tur.json");
 writeFileSync(propsFile, JSON.stringify({ audio: narasi.audio, durasi: akhir, adegan }));
 const out = join(DATA, "tur.mp4");
 console.log(`Narasi: ${narasi.sumber}, ${narasi.durasi.toFixed(1)} dtk. Merender…`);
-await render(propsFile, out, "TurKantor");
+await render(propsFile, out, "TurKantor", 120);
 console.log(`Selesai: ${out}`);

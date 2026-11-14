@@ -46,7 +46,7 @@ async function proses(id: number, n: any) {
   }
 }
 
-export function render(propsFile: string, out: string, komposisi = "KantorVideo") {
+export function render(propsFile: string, out: string, komposisi = "KantorVideo", batasMenit = 15) {
   const cli = join(REPO, "node_modules", "@remotion", "cli", "remotion-cli.js");
   // Argumen tambahan, mis. KANTOR_RENDER_ARGS="--browser-executable=/opt/pw-browsers/chromium --gl=swangle"
   const extra = (process.env.KANTOR_RENDER_ARGS ?? "").split(/\s+/).filter(Boolean);
@@ -56,7 +56,7 @@ export function render(propsFile: string, out: string, komposisi = "KantorVideo"
     let log = "";
     p.stdout.on("data", (d) => (log += d));
     p.stderr.on("data", (d) => (log += d));
-    const timer = setTimeout(() => { p.kill(); gagal(new Error("Render melebihi 15 menit")); }, 15 * 60_000);
+    const timer = setTimeout(() => { p.kill(); gagal(new Error(`Render melebihi ${batasMenit} menit`)); }, batasMenit * 60_000);
     p.on("error", (e) => { clearTimeout(timer); gagal(e); });
     p.on("close", (code) => {
       clearTimeout(timer);

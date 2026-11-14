@@ -24,23 +24,25 @@ export type TurProps = {audio: string | null; durasi: number; adegan: TurAdegan[
 export const TUR_DEFAULT: TurProps = {audio: null, durasi: 4, adegan: []};
 
 const AKSEN = '#5eead4';
-const FADE = 0.45;
+const MASUK = 0.35;
+const KELUAR = 0.25;
 
 const Jendela: React.FC<{a: TurAdegan; t: number; fps: number}> = ({a, t, fps}) => {
   const lama = Math.max(0.5, a.selesai - a.mulai);
-  const p = interpolate(t, [a.mulai, a.mulai + lama + FADE], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: Easing.inOut(Easing.cubic)});
+  const p = interpolate(t, [a.mulai, a.mulai + lama], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp', easing: Easing.inOut(Easing.cubic)});
   const zoom = interpolate(p, [0, 1], [1, a.fokus.zoom]);
   const maksW = a.judul ? 1560 : 1500, maksH = 790;
   let w = maksW, h = w / a.rasio;
   if (h > maksH) { h = maksH; w = h * a.rasio; }
+  // Satu jendela pada satu waktu: yang lama memudar habis tepat saat yang baru mulai muncul.
   const opacity = Math.min(
-    interpolate(t, [a.mulai - FADE, a.mulai], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'}),
-    interpolate(t, [a.selesai, a.selesai + FADE], [1, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'}),
+    a.mulai <= 0 ? 1 : interpolate(t, [a.mulai, a.mulai + MASUK], [0, 1], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'}),
+    interpolate(t, [a.selesai - KELUAR, a.selesai], [1, 0], {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'}),
   );
-  if (opacity <= 0) return null;
+  if (t < a.mulai || t >= a.selesai || opacity <= 0) return null;
   return (
     <AbsoluteFill style={{alignItems: 'center', justifyContent: 'center', opacity, paddingBottom: 150}}>
-      <div style={{width: w, borderRadius: 22, overflow: 'hidden', boxShadow: '0 40px 120px rgba(0,0,0,.55)', background: '#fff', transform: `scale(${interpolate(opacity, [0, 1], [0.97, 1])})`}}>
+      <div style={{width: w, borderRadius: 22, overflow: 'hidden', boxShadow: '0 24px 48px rgba(0,0,0,.45)', background: '#fff', transform: `scale(${interpolate(opacity, [0, 1], [0.97, 1])})`}}>
         <div style={{height: 44, background: '#e9edef', display: 'flex', alignItems: 'center', gap: 10, padding: '0 18px'}}>
           {['#ff5f57', '#febc2e', '#28c840'].map((c) => <i key={c} style={{width: 14, height: 14, borderRadius: 7, background: c, display: 'block'}} />)}
           <div style={{marginLeft: 24, padding: '3px 22px', borderRadius: 14, background: '#fff', color: '#5b6b68', fontSize: 20, fontFamily: 'system-ui, sans-serif'}}>127.0.0.1:4321</div>
