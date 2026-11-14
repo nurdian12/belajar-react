@@ -100,11 +100,12 @@ Edit `agents/penulis/skills/gaya-channel.md` dulu supaya naskah sesuai niche kam
   - **Tanpa API key** video tetap dibuat tapi senyap, dengan waktu kata diperkirakan (berguna untuk uji tampilan).
   - Batas video per hari: `KANTOR_MAKS_VIDEO_PER_HARI` (default 5). Render pertama mengunduh Chrome (agak lama).
   - Preview/edit template: `npm run dev` lalu pilih komposisi `KantorVideo`.
-- [~] 4. Posting terjadwal lewat Repliz. Alur & UI selesai; **kirim nyata belum aktif** (cara unggah video ke Repliz belum diketahui).
-  - Isi `kantor/.env`: `REPLIZ_ACCESS_KEY`, `REPLIZ_SECRET_KEY`. Tes baca akun (aman, tidak membuat posting): `npm run kantor:tes-repliz`.
+- [~] 4. Posting terjadwal lewat Repliz. Alur lengkap selesai: unggah video (init → PUT → complete) lalu `POST /public/schedule`, mengikuti dokumentasi Repliz.
+  - Dites terhadap server Repliz **tiruan** (urutan, header, body); **belum dites dengan akun Repliz asli**. Isi `kantor/.env`: `REPLIZ_ACCESS_KEY`, `REPLIZ_SECRET_KEY`. Tes baca akun (aman): `npm run kantor:tes-repliz`.
   - Di dashboard tiap video selesai punya form: akun, waktu, caption, **Jadwalkan** (= persetujuan kamu).
-  - Default **dry-run**: hanya mencatat body yang akan dikirim. Kirim nyata aktif bila `repliz.kirimNyata: true` di `pengaturan.json`.
-  - Semua kode spesifik Repliz ada di `core/repliz.ts`; bentuk request berasal dari rujukan pihak ketiga dan belum diverifikasi.
+  - Default **dry-run**: hanya mencatat body yang akan dikirim. Kirim nyata aktif bila `repliz.kirimNyata: true` di `pengaturan.json`. Privasi posting: `repliz.privasi` (default `public`).
+  - Percobaan pertama yang aman: jadwalkan satu video ke akun uji, jam beberapa jam ke depan, lalu cek (dan hapus bila perlu) di dashboard Repliz. Hati-hati: `public` berarti benar-benar tayang.
+  - Kode spesifik Repliz hanya di `core/repliz.ts`. Bila respons akun/jadwal berbeda dari dugaan, pesan error Repliz ditampilkan apa adanya.
 - [x] 5. CS (Putri): inbox di tab **CS**, balasan dari `info-bisnis.md`, eskalasi ke kamu bila di luar info/komplain/diskon.
   - Mode `cs.mode` di `pengaturan.json`: `draf` (default, Putri membuat draf, kamu yang menekan Kirim) atau `otomatis` (kecuali yang butuh kamu).
   - Saluran **simulasi** langsung bisa dicoba di dashboard. Saluran **WhatsApp Cloud API** (resmi) sudah ada kodenya tapi **belum dites dengan akun Meta asli** dan mati (dry-run) sampai `cs.kirimNyata: true`.

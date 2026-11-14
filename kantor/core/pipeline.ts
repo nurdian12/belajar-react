@@ -50,7 +50,7 @@ export type Pengaturan = {
   jadwal: { agent: string; jam: string }[];
   naskahOtomatis: boolean;
   maksNaskahOtomatis?: number;
-  repliz?: { kirimNyata: boolean; jamPosting?: string[] };
+  repliz?: { kirimNyata: boolean; jamPosting?: string[]; privasi?: string };
   cs?: { mode: "draf" | "otomatis"; kirimNyata: boolean };
 };
 export function bacaPengaturan(): Pengaturan {

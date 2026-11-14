@@ -18,7 +18,7 @@ export async function buatPosting(videoId: number, akunId: string, caption: stri
 
   const req: PermintaanPosting = {
     akunId, judul: v.judul ?? v.topik, caption: caption.trim() || (v.judul ?? v.topik),
-    jadwalISO: waktu.toISOString(), fileVideo: join(VIDEO_DIR, v.file),
+    jadwalISO: waktu.toISOString(), fileVideo: join(VIDEO_DIR, v.file), privasi: bacaPengaturan().repliz?.privasi,
   };
   const id = Number(db.prepare(
     "INSERT INTO posting (video_id, akun_id, caption, jadwal, status) VALUES (?,?,?,?, 'menyiapkan')",
