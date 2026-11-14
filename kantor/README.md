@@ -34,5 +34,9 @@ Edit `agents/penulis/skills/gaya-channel.md` dulu supaya naskah sesuai niche kam
   - **Tanpa API key** video tetap dibuat tapi senyap, dengan waktu kata diperkirakan (berguna untuk uji tampilan).
   - Batas video per hari: `KANTOR_MAKS_VIDEO_PER_HARI` (default 5). Render pertama mengunduh Chrome (agak lama).
   - Preview/edit template: `npm run dev` lalu pilih komposisi `KantorVideo`.
-- [ ] 4. Posting terjadwal lewat Repliz
+- [~] 4. Posting terjadwal lewat Repliz. Alur & UI selesai; **kirim nyata belum aktif** (cara unggah video ke Repliz belum diketahui).
+  - Isi `kantor/.env`: `REPLIZ_ACCESS_KEY`, `REPLIZ_SECRET_KEY`. Tes baca akun (aman, tidak membuat posting): `npm run kantor:tes-repliz`.
+  - Di dashboard tiap video selesai punya form: akun, waktu, caption, **Jadwalkan** (= persetujuan kamu).
+  - Default **dry-run**: hanya mencatat body yang akan dikirim. Kirim nyata aktif bila `repliz.kirimNyata: true` di `pengaturan.json`.
+  - Semua kode spesifik Repliz ada di `core/repliz.ts`; bentuk request berasal dari rujukan pihak ketiga dan belum diverifikasi.
 - [ ] 5. CS WhatsApp

@@ -6,6 +6,9 @@ import { listAgents } from "./agents.ts";
 import { buatNaskah, revisiNaskah, setStatus, riset, sedangRiset, tulisDariTopik, buangTopik } from "./pipeline.ts";
 import { mulaiScheduler } from "./scheduler.ts";
 import { buatVideo, VIDEO_DIR } from "./video.ts";
+import { buatPosting } from "./posting.ts";
+import { adaKunciRepliz, daftarAkun } from "./repliz.ts";
+import { bacaPengaturan } from "./pipeline.ts";
 import { createReadStream, existsSync, statSync } from "node:fs";
 
 /** Kirim mp4 dengan dukungan Range supaya bisa di-seek di browser. */
@@ -50,6 +53,19 @@ createServer(async (req, res) => {
       return json(res, db.prepare("SELECT * FROM naskah ORDER BY id DESC LIMIT 50").all());
     if (req.method === "GET" && p === "/api/video")
       return json(res, db.prepare("SELECT * FROM video ORDER BY id DESC LIMIT 30").all());
+    if (req.method === "GET" && p === "/api/repliz/akun") {
+      try { return json(res, { adaKunci: adaKunciRepliz(), ...(await daftarAkun()) }); }
+      catch (e) { return json(res, { adaKunci: adaKunciRepliz(), akun: [], error: e instanceof Error ? e.message : String(e) }); }
+    }
+    if (req.method === "GET" && p === "/api/posting")
+      return json(res, { jamPosting: bacaPengaturan().repliz?.jamPosting ?? [], kirimNyata: Boolean(bacaPengaturan().repliz?.kirimNyata),
+        posting: db.prepare("SELECT * FROM posting ORDER BY id DESC LIMIT 30").all() });
+    const vp = p.match(/^\/api\/video\/(\d+)\/posting$/);
+    if (req.method === "POST" && vp) {
+      const { akunId, caption, jadwal } = await body(req);
+      try { return json(res, { id: await buatPosting(Number(vp[1]), String(akunId ?? ""), String(caption ?? ""), String(jadwal ?? "")) }, 202); }
+      catch (e) { return json(res, { error: e instanceof Error ? e.message : String(e) }, 400); }
+    }
     const vn = p.match(/^\/api\/naskah\/(\d+)\/video$/);
     if (req.method === "POST" && vn) {
       try { return json(res, { id: buatVideo(Number(vn[1])) }, 202); }

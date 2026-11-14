@@ -60,8 +60,37 @@ const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&":"&amp;","<":
 const api = (p, o) => fetch(p, o).then((r) => r.json());
 const post = (p, b) => api(p, { method:"POST", headers:{ "content-type":"application/json" }, body:JSON.stringify(b ?? {}) });
 
+let akunRepliz = null;
+/** Nilai default datetime-local: jam posting terdekat yang belum lewat (waktu lokal browser). */
+function jadwalDefault(jam = "16:00") {
+  const [h, m] = jam.split(":").map(Number);
+  const d = new Date(); d.setHours(h, m, 0, 0);
+  if (d.getTime() < Date.now() + 5 * 60_000) d.setDate(d.getDate() + 1);
+  const p = (n) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`;
+}
+$("#video-list").addEventListener("click", async (e) => {
+  const b = e.target.closest("button[data-p]"); if (!b) return;
+  const box = b.closest(".post");
+  if (!box.querySelector(".jadwal").value) return alert("Isi waktu jadwal dulu.");
+  const r = await post(`/api/video/${box.dataset.vid}/posting`, {
+    akunId: box.querySelector(".akun").value,
+    caption: box.querySelector(".caption").value,
+    jadwal: new Date(box.querySelector(".jadwal").value).toISOString(),
+  });
+  if (r.error) alert(r.error);
+  $("#video-list").dataset.h = ""; muat();
+});
+
 async function muat() {
-  const [agents, naskah, jobs, tp, videos] = await Promise.all([api("/api/agents"), api("/api/naskah"), api("/api/jobs"), api("/api/topik"), api("/api/video")]);
+  const [agents, naskah, jobs, tp, videos, pst] = await Promise.all([api("/api/agents"), api("/api/naskah"), api("/api/jobs"), api("/api/topik"), api("/api/video"), api("/api/posting")]);
+  if (!akunRepliz) akunRepliz = await api("/api/repliz/akun");  // sekali saja, jangan memanggil Repliz tiap 3 detik
+  const postingPerVideo = {};
+  pst.posting.forEach((x) => (postingPerVideo[x.video_id] ||= []).push(x));
+  const modeKirim = pst.kirimNyata ? "" : `<div class="mut" style="margin-top:6px">Mode uji (dry-run): jadwal hanya dicatat, belum dikirim ke Repliz. Ubah <code>repliz.kirimNyata</code> di pengaturan.json untuk kirim nyata.</div>`;
+  const opsiAkun = akunRepliz.akun.length
+    ? `<select class="akun">${akunRepliz.akun.map((a) => `<option value="${esc(a.id)}">${esc(a.nama)}${a.platform ? " (" + esc(a.platform) + ")" : ""}</option>`).join("")}</select>`
+    : `<input class="akun" placeholder="ID akun Repliz" title="${esc(akunRepliz.error || "")}">`;
   const sibuk = new Set(videos.filter((v) => ["menyiapkan", "suara", "render"].includes(v.status)).map((v) => v.naskah_id));
   const judulNaskah = Object.fromEntries(naskah.map((n) => [n.id, n.judul || n.topik]));
   // Jangan bangun ulang <video> yang sedang diputar: hanya render ulang bila datanya berubah.
@@ -69,7 +98,12 @@ async function muat() {
       <div class="row"><b>${esc(judulNaskah[v.naskah_id] ?? "Naskah #" + v.naskah_id)}</b><span class="tag ${v.status === "selesai" ? "disetujui" : v.status}">${v.status}</span>
       <span class="mut">#${v.id}${v.sumber_suara ? " · suara: " + v.sumber_suara : ""}${v.durasi ? " · " + v.durasi.toFixed(0) + " dtk" : ""}</span></div>
       ${v.error ? `<div class="mut">${esc(v.error.slice(0, 300))}</div>` : ""}
-      ${v.file ? `<video controls preload="metadata" src="/video/${esc(v.file)}" style="height:420px;margin-top:8px;border-radius:8px"></video>` : ""}</div>`).join("") || `<div class="mut">Belum ada video. Setujui naskah, lalu klik Buat video.</div>`;
+      ${v.file ? `<video controls preload="metadata" src="/video/${esc(v.file)}" style="height:420px;margin-top:8px;border-radius:8px"></video>` : ""}
+      ${v.file ? `<div class="post" data-vid="${v.id}" style="margin-top:10px">
+        <div class="row">${opsiAkun}<input class="jadwal" type="datetime-local" value="${jadwalDefault(pst.jamPosting[0])}" style="flex:0 0 auto"></div>
+        <div class="row" style="margin-top:8px"><input class="caption" placeholder="Caption (kosong = pakai judul)" value="${esc(judulNaskah[v.naskah_id] ?? "")}"><button data-p="jadwalkan">Jadwalkan</button></div>
+        ${(postingPerVideo[v.id] || []).map((x) => `<div class="mut">Posting #${x.id}: <span class="tag ${x.status === "gagal" ? "gagal" : "disetujui"}">${x.status}</span> ${new Date(x.jadwal).toLocaleString()}${x.error ? " · " + esc(x.error.slice(0, 200)) : ""}</div>`).join("")}
+        ${modeKirim}</div>` : ""}</div>`).join("") || `<div class="mut">Belum ada video. Setujui naskah, lalu klik Buat video.</div>`;
   if ($("#video-list").dataset.h !== vhtml) { $("#video-list").innerHTML = vhtml; $("#video-list").dataset.h = vhtml; }
   $("#riset").disabled = tp.sedangRiset;
   $("#risetInfo").textContent = tp.sedangRiset ? "Rina sedang riset…" : "Otomatis tiap hari sesuai pengaturan.json.";

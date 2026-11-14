@@ -50,6 +50,7 @@ export type Pengaturan = {
   jadwal: { agent: string; jam: string }[];
   naskahOtomatis: boolean;
   maksNaskahOtomatis?: number;
+  repliz?: { kirimNyata: boolean; jamPosting?: string[] };
 };
 export function bacaPengaturan(): Pengaturan {
   return JSON.parse(readFileSync(join(ROOT, "pengaturan.json"), "utf8"));

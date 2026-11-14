@@ -11,7 +11,8 @@
     "kantor": "node kantor/core/server.ts",
     "kantor:mock": "KANTOR_MOCK=1 node kantor/core/server.ts",
     "kantor:tulis": "node kantor/core/cli.ts",
-    "kantor:tes-suara": "node kantor/core/tes-suara.ts"
+    "kantor:tes-suara": "node kantor/core/tes-suara.ts",
+    "kantor:tes-repliz": "node kantor/core/tes-repliz.ts"
   },
   "dependencies": {
     "@remotion/cli": "4.0.541",

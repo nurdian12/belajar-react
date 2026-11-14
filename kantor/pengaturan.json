@@ -3,5 +3,9 @@
     { "agent": "periset", "jam": "06:00" }
   ],
   "naskahOtomatis": false,
-  "maksNaskahOtomatis": 1
+  "maksNaskahOtomatis": 1,
+  "repliz": {
+    "kirimNyata": false,
+    "jamPosting": ["16:00"]
+  }
 }
