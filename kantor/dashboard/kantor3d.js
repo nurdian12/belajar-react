@@ -10,6 +10,7 @@ const STATUS_TEKS = {
   dewi: { kerja: "membuat video…", siap: "siap" },
   kamu: { tunggu: "ada yang menunggu kamu", siap: "tidak ada antrean" },
   laras: { kerja: "menyusun ide…", siap: "siap" },
+  pandu: { kerja: "menjawab…", siap: "siap membantu" },
   putri: { kerja: "membalas chat…", tunggu: "chat butuh kamu", siap: "siap" },
 };
 
@@ -32,7 +33,7 @@ function orang(baju, rambut) {
   return { g, kepala, kiri: lengan(-0.36), kanan: lengan(0.36) };
 }
 
-export function mulaiKantor3D(el, ambilStatus) {
+export function mulaiKantor3D(el, ambilStatus, onKlik) {
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
   el.prepend(renderer.domElement);
@@ -94,6 +95,16 @@ export function mulaiKantor3D(el, ambilStatus) {
   layar(kamu, -0.5, -0.2, 0.8);
   const nampan = box(kamu.meja, 0.7, 0.12, 0.5, 0xe0b04b, 0.75, 0.8, 0.1); nampan.userData.y0 = nampan.position.y;
   const pesan = box(kamu.meja, 0.5, 0.05, 0.35, 0xffffff, 0.75, 0.92, 0.1);
+  // Pandu, asisten kantor: duduk di meja bulat kecil di samping ruang Kamu
+  {
+    const g = new THREE.Group(); dunia.add(g);
+    const mj = new THREE.Group(); mj.position.set(2.0, 0.35, 4.2); g.add(mj);
+    cyl(mj, 0.6, 0.6, 0.06, 0xb68a5a, 0, 0.7, 0); cyl(mj, 0.08, 0.08, 0.7, 0x8a6a45, 0, 0, 0);
+    const tablet = box(mj, 0.55, 0.04, 0.38, 0x24303a, 0, 0.77, 0, { emissive: 0x7c5cff, emissiveIntensity: 0.2 });
+    cyl(g, 0.28, 0.28, 0.45, 0x4a5568, 2.0, 0.35, 5.0);
+    const p = orang(0x7c5cff, 0x222222); p.g.position.set(2.0, 0.35, 5.0); p.g.rotation.y = Math.PI; g.add(p.g);
+    ruang.pandu = { g, meja: mj, p, layar: [tablet], ghost: false, cx: 2.0, cz: 5.9, status: "siap", nama: "pandu" };
+  }
   // ruang marketing (Laras): papan strategi dengan catatan warna-warni dan sofa tamu
   const laras = siapRuang("laras", 6, 3, 0xe05a8a, 0x5a2d82);
   layar(laras, -0.5, -0.2, 0.8);
@@ -111,10 +122,10 @@ export function mulaiKantor3D(el, ambilStatus) {
 
 
   // ---- label DOM di atas kepala ----
-  const info = { rina: ["Rina", "Periset"], maya: ["Maya", "Penulis naskah"], dewi: ["Dewi", "Video"], putri: ["Putri", "CS WhatsApp"], laras: ["Laras", "Marketing"], kamu: ["Kamu", "Bos"] };
+  const info = { rina: ["Rina", "Periset"], maya: ["Maya", "Penulis naskah"], dewi: ["Dewi", "Video"], putri: ["Putri", "CS WhatsApp"], laras: ["Laras", "Marketing"], pandu: ["Pandu", "Asisten"], kamu: ["Kamu", "Bos"] };
   for (const id of Object.keys(ruang)) {
     const r = ruang[id], d = document.createElement("div"); d.className = "lbl3d";
-    d.innerHTML = `<b>${info[id][0]}</b> <span class="j">${info[id][1]}</span><span class="s"></span>`; el.appendChild(d); r.label = d; r.status = "siap";
+    d.innerHTML = `<b>${info[id][0]}</b> <span class="j">${info[id][1]}</span><span class="s"></span>`; d.title = "Klik untuk membuka"; d.addEventListener("click", () => onKlik && onKlik(id)); el.appendChild(d); r.label = d; r.status = "siap";
   }
 
   const target = Object.fromEntries(Object.keys(ruang).map((k) => [k, "siap"]));

@@ -67,6 +67,7 @@ createServer(async (req, res) => {
         maya: ada("SELECT 1 FROM jobs WHERE agent='penulis' AND status='berjalan'") || ada("SELECT 1 FROM naskah WHERE status='menyusun'") ? "kerja" : "siap",
         dewi: ada("SELECT 1 FROM video WHERE status IN ('menyiapkan','suara','render')") ? "kerja" : "siap",
         kamu: ada("SELECT 1 FROM naskah WHERE status='menunggu'") || ada("SELECT 1 FROM percakapan WHERE status='butuh-kamu'") ? "tunggu" : "siap",
+        pandu: ada("SELECT 1 FROM jobs WHERE agent='pandu' AND status='berjalan'") ? "kerja" : "siap",
         laras: sedangMenyusun() || ada("SELECT 1 FROM jobs WHERE agent='marketing' AND status='berjalan'") ? "kerja" : "siap",
         putri: ada("SELECT 1 FROM jobs WHERE agent='cs-wa' AND status='berjalan'") ? "kerja" : ada("SELECT 1 FROM percakapan WHERE status='butuh-kamu'") ? "tunggu" : "siap",
       });

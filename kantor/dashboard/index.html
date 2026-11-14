@@ -5,13 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Kantor</title>
 <style>
-  :root { --bg:#f6f1ea; --card:#fff; --ink:#1f1b16; --mut:#7a7168; --line:#e6ddd1; --acc:#d9622b; --ok:#2e7d4f; --bad:#b3372c; }
-  @media (prefers-color-scheme: dark) { :root { --bg:#161412; --card:#211e1b; --ink:#f1ebe3; --mut:#9c9288; --line:#332e29; } }
+  :root { --bg:#f6f1ea; --card:#fff; --ink:#1f1b16; --mut:#6f665d; --line:#e6ddd1; --acc:#d9622b; --ok:#2e7d4f; --bad:#b3372c; --soft:#faf7f2; --shadow:0 1px 2px #0000000d, 0 4px 14px #0000000a; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#14120f; --card:#1e1b17; --ink:#f1ebe3; --mut:#a39a8f; --line:#352f29; --acc:#ee7a45; --ok:#62d08f; --bad:#f08a80; --soft:#25211c; --shadow:0 1px 2px #0006; color-scheme:dark; } }
   * { box-sizing: border-box; }
-  body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.5 system-ui,sans-serif; }
-  main { max-width:1100px; margin:0 auto; padding:24px 16px 64px; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.5 Inter,"Segoe UI",system-ui,-apple-system,sans-serif; -webkit-font-smoothing:antialiased; }
+  main { max-width:1100px; margin:0 auto; padding:20px max(16px, env(safe-area-inset-left,0px)) 110px; }
   h1 { font-size:22px; margin:0 0 4px; } h2 { font-size:13px; margin:28px 0 10px; color:var(--mut); text-transform:uppercase; letter-spacing:.06em; }
-  .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:14px 16px; margin-bottom:10px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:14px 16px; margin-bottom:10px; box-shadow:var(--shadow); }
   .row { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
   textarea { width:100%; padding:9px 11px; border:1px solid var(--line); border-radius:8px; background:var(--bg); color:var(--ink); font:inherit; resize:vertical; }
   details.card summary { cursor:pointer; }
@@ -35,7 +35,9 @@
   .bar .in { max-width:1100px; margin:0 auto; padding:10px 16px; display:flex; gap:14px 20px; align-items:center; flex-wrap:wrap; }
   .brand { font-weight:700; font-size:18px; display:flex; gap:8px; align-items:center; }
   .brand i { width:26px; height:26px; border-radius:7px; background:var(--acc); display:inline-grid; place-items:center; color:#fff; font-style:normal; font-size:14px; }
-  nav { display:flex; gap:4px; flex-wrap:wrap; } nav a { color:var(--mut); text-decoration:none; padding:6px 12px; border-radius:99px; font-size:14px; }
+  nav { display:flex; gap:2px; overflow-x:auto; max-width:100%; scrollbar-width:none; } nav::-webkit-scrollbar { display:none; }
+  nav a { color:var(--mut); text-decoration:none; padding:7px 13px; border-radius:99px; font-size:14px; display:inline-flex; gap:7px; align-items:center; white-space:nowrap; font-weight:500; }
+  nav a:hover { color:var(--ink); background:var(--soft); } nav svg { width:16px; height:16px; fill:none; stroke:currentColor; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; flex:none; }
   nav a[aria-current="page"] { background:var(--ink); color:var(--bg); } nav a:focus-visible { outline:2px solid var(--acc); }
   .tab[hidden] { display:none; }
   .beranda { display:grid; grid-template-columns:330px minmax(0,1fr); gap:14px; align-items:start; margin-top:14px; }
@@ -68,18 +70,33 @@
   .chips { display:flex; gap:6px; flex-wrap:wrap; margin:4px 0 8px; } .chips button { padding:5px 12px; font-size:13px; border-radius:99px; }
   .prev { border:1px dashed var(--acc); border-radius:10px; padding:8px 10px; margin:6px 0; } .prev pre { max-height:160px; overflow:auto; font-size:12.5px; margin:6px 0; }
   #pandu form { display:flex; gap:6px; padding:10px 12px; border-top:1px solid var(--line); }
+  .stats { display:flex; gap:8px; overflow-x:auto; padding:2px 0 4px; scrollbar-width:none; } .stats::-webkit-scrollbar { display:none; }
+  .stat { flex:1 0 auto; min-width:118px; padding:10px 14px; border:1px solid var(--line); border-radius:12px; background:var(--card); cursor:pointer; box-shadow:var(--shadow); }
+  .stat b { display:block; font-size:22px; line-height:1.1; } .stat span { font-size:12.5px; color:var(--mut); }
+  .stat.hot { border-color:var(--acc); } .stat.hot b { color:var(--acc); } .stat:hover { transform:translateY(-1px); }
+  h2 { margin-top:26px; } h2:first-child { margin-top:6px; }
+  .tab > h2:first-child { font-size:20px; text-transform:none; letter-spacing:0; color:var(--ink); margin:6px 0 10px; }
+  button:active { transform:translateY(1px); } button:focus-visible, nav a:focus-visible, .stat:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible { outline:2px solid var(--acc); outline-offset:2px; }
+  textarea:focus-visible { outline-offset:0; }
+  .lbl3d { pointer-events:auto !important; cursor:pointer; transition:transform .1s; } .lbl3d:hover { outline:2px solid var(--acc); }
+  .item > span:last-child { white-space:nowrap; }
+  #demo3d { background:var(--card); color:var(--ink); border:1px solid var(--line); box-shadow:var(--shadow); }
+  .kosong { border:1px dashed var(--line); border-radius:12px; padding:18px; text-align:center; color:var(--mut); background:var(--soft); }
+  @media (prefers-reduced-motion: reduce) { * { transition:none !important; animation:none !important; } }
+  @media (max-width:560px) { .lbl3d[data-s="siap"] .s { display:none; } .lbl3d { font-size:10px; padding:1px 6px; } .bar .in { padding:8px 12px; gap:8px 12px; } #mode-info { display:none; } .brand { font-size:16px; } }
 </style>
 </head>
 <body>
 <header class="bar"><div class="in">
   <div class="brand"><i>K</i> Kantor</div>
   <nav aria-label="Navigasi">
-    <a href="#beranda">Beranda</a><a href="#agent">Agent</a><a href="#channel">Channel</a><a href="#konten">Konten</a><a href="#marketing">Marketing</a><a href="#cs">CS</a><a href="#jadwal">Jadwal</a>
+    <a href="#beranda"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 9.5 10 4l7 5.5V16a1 1 0 0 1-1 1h-3.5v-5h-5v5H4a1 1 0 0 1-1-1z"/></svg>Beranda</a><a href="#agent"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="7" r="3"/><path d="M4 16c.8-3 3-4.5 6-4.5s5.2 1.5 6 4.5"/></svg>Agent</a><a href="#channel"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 6h12M4 10h12M4 14h12"/><circle cx="7" cy="6" r="1.6" fill="var(--bg)"/><circle cx="13" cy="10" r="1.6" fill="var(--bg)"/><circle cx="8" cy="14" r="1.6" fill="var(--bg)"/></svg>Channel</a><a href="#konten"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="3" y="5" width="14" height="11" rx="2"/><path d="M3 9h14M7 5 5 9M12 5l-2 4"/></svg>Konten</a><a href="#marketing"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 8v4h3l6 3.5v-11L7 8z"/><path d="M15.5 8.5a2.5 2.5 0 0 1 0 3"/></svg>Marketing</a><a href="#cs"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 5h12v8H9l-4 3v-3H4z"/></svg>CS</a><a href="#jadwal"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="3.5" y="5" width="13" height="11.5" rx="2"/><path d="M3.5 9h13M7 3.5v3M13 3.5v3"/></svg>Jadwal</a>
   </nav>
   <span class="mut" id="mode-info" style="margin-left:auto"></span>
 </div></header>
 <main>
   <section class="tab" data-tab="beranda">
+    <div class="stats" id="ringkasan" aria-label="Ringkasan"></div>
     <div class="beranda">
       <div class="card panelkiri" style="margin:0">
         <h3 class="sec" style="display:flex;justify-content:space-between;align-items:center">Perlu keputusan kamu <span class="badge" id="n-keputusan">0</span></h3>
@@ -195,7 +212,11 @@
   try {
     const { mulaiKantor3D } = await import("/kantor3d.js");
     const el = document.getElementById("scene3d"); el.hidden = false;
-    const k = mulaiKantor3D(el, () => fetch("/api/status").then((r) => r.json()));
+    const buka = { rina: "konten", maya: "konten", dewi: "konten", kamu: "konten", laras: "marketing", putri: "cs" };
+    const k = mulaiKantor3D(el, () => fetch("/api/status").then((r) => r.json()), (id) => {
+      if (id === "pandu") { document.getElementById("pandu-buka").click(); return; }
+      if (buka[id]) location.hash = "#" + buka[id];
+    });
     document.getElementById("demo3d").addEventListener("click", (e) => {
       const on = e.currentTarget.getAttribute("aria-pressed") !== "true";
       e.currentTarget.setAttribute("aria-pressed", String(on)); e.currentTarget.textContent = on ? "Hentikan demo" : "Demo animasi"; k.setDemo(on);
@@ -338,7 +359,13 @@ function renderBeranda(naskah, tp, videos, pst, peng, csList, rencana) {
     ...(baru ? [`<div class="item" data-ke="konten"><span><b>${baru} topik baru dari Rina</b><div class="mut">Pilih yang mau ditulis</div></span><span class="mut">Buka &rsaquo;</span></div>`] : []),
   ];
   $("#n-keputusan").textContent = baris.length;
-  $("#keputusan").innerHTML = baris.join("") || `<div class="mut">Tidak ada yang menunggu kamu.</div>`;
+  const terjadwal = pst.posting.filter((x) => x.status === "terjadwal" || x.status === "dry-run").length;
+  $("#ringkasan").innerHTML = [
+    [baru, "Topik baru", "konten", false], [menunggu.length, "Naskah menunggu", "konten", true], [siap.length, "Video siap dijadwalkan", "konten", true],
+    [terjadwal, "Posting terjadwal", "jadwal", false], [csList.filter((c) => c.status === "butuh-kamu").length, "Chat butuh kamu", "cs", true],
+    [rencana.ide.filter((i) => i.status === "baru").length, "Ide dari Laras", "marketing", false],
+  ].map(([n, t, ke, penting]) => `<div class="stat ${penting && n ? "hot" : ""}" data-ke="${ke}" role="link" tabindex="0"><b>${n}</b><span>${t}</span></div>`).join("");
+  $("#keputusan").innerHTML = baris.join("") || `<div class="kosong">Semua beres. Tidak ada yang menunggu kamu.</div>`;
   $("#berikutnya").innerHTML = peng.jadwal.map((j) => `${esc(j.jam)} · ${j.agent === "periset" ? "Rina riset topik" : esc(j.agent)}`).join("<br>") || "Belum ada jadwal.";
   otakMode = peng.otak;
   $("#mode-info").textContent = `Mode ${peng.naskahOtomatis ? "otomatis" : "manual"} · otak: ${OTAK[peng.otak]}`;
@@ -384,6 +411,7 @@ function renderJadwal(peng, pst, videos, naskah) {
     <div class="mut">${new Date(x.jadwal).toLocaleString()} · akun ${esc(x.akun_id)}${x.error ? " · " + esc(x.error.slice(0, 200)) : ""}</div></div>`).join("") || '<div class="mut">Belum ada posting terjadwal.</div>';
 }
 document.addEventListener("click", (e) => { const i = e.target.closest("[data-ke]"); if (i) location.hash = "#" + i.dataset.ke; });
+document.addEventListener("keydown", (e) => { if ((e.key === "Enter" || e.key === " ") && e.target.matches?.(".stat[data-ke]")) { e.preventDefault(); location.hash = "#" + e.target.dataset.ke; } });
 
 $("#m-salin").addEventListener("click", async () => {
   const topik = $("#m-topik").value.trim(); if (!topik) { $("#m-info").textContent = "Isi topik dulu."; return; }

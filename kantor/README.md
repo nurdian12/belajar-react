@@ -28,6 +28,11 @@ copy kantor\.env.example kantor\.env
 Edit `kantor\.env` (Notepad): `KANTOR_OTAK=api`, `ANTHROPIC_API_KEY=...`, lalu `ELEVENLABS_API_KEY=...`. Jalankan `npm run kantor`, buka http://127.0.0.1:4321.
 Render video memakai Chromium (diunduh Remotion saat pertama) dan bisa lambat di mesin lama.
 
+## Tampilan
+
+Beranda punya kartu ringkasan (topik baru, naskah menunggu, video siap, posting terjadwal, chat butuh kamu, ide Laras), panel "Perlu keputusan kamu", dan kantor 3D dengan semua karyawan (Rina, Maya, Dewi, Laras, Putri, Pandu, dan meja Kamu).
+**Klik label karyawan di kantor 3D** untuk membuka tab yang relevan (Pandu membuka panel chat). Tema terang dan gelap mengikuti pengaturan perangkat; navigasi bisa digeser di layar kecil.
+
 ## Marketing (Laras)
 
 Tab **Marketing**: Laras menyusun **rencana ide konten 7 hari** sesuai gaya channel (pilar edukasi, relatable, musiman, interaksi) dan menghindari judul yang sudah dipakai; tiap ide punya tombol *Tulis naskah* (ke Maya) atau *Buang*.
