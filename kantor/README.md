@@ -28,6 +28,12 @@ copy kantor\.env.example kantor\.env
 Edit `kantor\.env` (Notepad): `KANTOR_OTAK=api`, `ANTHROPIC_API_KEY=...`, lalu `ELEVENLABS_API_KEY=...`. Jalankan `npm run kantor`, buka http://127.0.0.1:4321.
 Render video memakai Chromium (diunduh Remotion saat pertama) dan bisa lambat di mesin lama.
 
+## Kantor 3D
+
+Di bagian atas dashboard ada kantor isometrik (Three.js, low-poly) dengan lima ruangan. Karakter bergerak sesuai status asli
+(`/api/status`): Rina riset, Maya menulis, Dewi merender, dan meja Kamu menyala amber saat ada naskah menunggu persetujuan.
+Putri tembus pandang karena belum dibangun. Tombol **Demo animasi** memutar siklus contoh. Bila WebGL tidak ada, dashboard tetap jalan tanpa adegan.
+
 ## Struktur
 
 - `agents/<id>/AGENT.md` peran & aturan · `skills/*.md` skill · `config.json` nama, model, tools

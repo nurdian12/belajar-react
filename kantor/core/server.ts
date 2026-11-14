@@ -11,6 +11,12 @@ import { adaKunciRepliz, daftarAkun } from "./repliz.ts";
 import { bacaPengaturan } from "./pipeline.ts";
 import { createReadStream, existsSync, statSync } from "node:fs";
 
+function kirimBerkas(res: any, file: string, tipe: string) {
+  if (!existsSync(file)) { res.writeHead(404); return res.end(); }
+  res.writeHead(200, { "content-type": tipe, "cache-control": "no-cache" });
+  createReadStream(file).pipe(res);
+}
+
 /** Kirim mp4 dengan dukungan Range supaya bisa di-seek di browser. */
 function kirimVideo(req: any, res: any, file: string) {
   if (!existsSync(file)) { res.writeHead(404); return res.end(); }
@@ -45,6 +51,20 @@ createServer(async (req, res) => {
     if (req.method === "GET" && p === "/") {
       res.writeHead(200, { "content-type": "text/html; charset=utf-8" });
       return res.end(readFileSync(join(ROOT, "dashboard", "index.html")));
+    }
+    if (req.method === "GET" && p === "/vendor/three.module.js")
+      return kirimBerkas(res, join(ROOT, "..", "node_modules", "three", "build", "three.module.js"), "text/javascript; charset=utf-8");
+    if (req.method === "GET" && p === "/kantor3d.js")
+      return kirimBerkas(res, join(ROOT, "dashboard", "kantor3d.js"), "text/javascript; charset=utf-8");
+    if (req.method === "GET" && p === "/api/status") {
+      const ada = (sql: string, ...a: any[]) => Boolean(db.prepare(sql).get(...a));
+      return json(res, {
+        rina: sedangRiset() || ada("SELECT 1 FROM jobs WHERE agent='periset' AND status='berjalan'") ? "kerja" : "siap",
+        maya: ada("SELECT 1 FROM jobs WHERE agent='penulis' AND status='berjalan'") || ada("SELECT 1 FROM naskah WHERE status='menyusun'") ? "kerja" : "siap",
+        dewi: ada("SELECT 1 FROM video WHERE status IN ('menyiapkan','suara','render')") ? "kerja" : "siap",
+        kamu: ada("SELECT 1 FROM naskah WHERE status='menunggu'") ? "tunggu" : "siap",
+        putri: "belum",
+      });
     }
     if (req.method === "GET" && p === "/api/agents") return json(res, listAgents());
     if (req.method === "GET" && p === "/api/jobs")
