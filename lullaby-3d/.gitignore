@@ -1,3 +1,3 @@
 node_modules/
 lullaby-3d/out/*.png
-lullaby-3d/out/render.log
+out/render.log
