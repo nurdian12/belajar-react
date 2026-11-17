@@ -1,0 +1,408 @@
+[
+ {
+  "day": 1,
+  "kind": "revisi",
+  "n": 9,
+  "title": "Hasilnya salah format? Begini perbaikannya.",
+  "files": [
+   "01-s1.jpg",
+   "01-s2.jpg",
+   "01-s3.jpg",
+   "01-s4.jpg",
+   "01-s5.jpg"
+  ],
+  "caption": "REVISI PROMPT #9: Hasilnya salah format? Begini perbaikannya.\n\nTunjuk bentuk yang kamu mau, jangan hanya bilang \"salah\".\n\nYang dibahas:\n1. Sebut format yang kamu mau.\n2. Beri satu contoh.\n3. Simpan versi yang berhasil.\n\nKalimat revisi mana yang mau kamu coba duluan? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #claude #otomatisasi #belajarai #aiindonesia #revisiprompt"
+ },
+ {
+  "day": 2,
+  "kind": "tips",
+  "n": 11,
+  "title": "Tulis tujuan akhir, bukan langkahnya.",
+  "files": [
+   "02-s1.jpg",
+   "02-s2.jpg",
+   "02-s3.jpg",
+   "02-s4.jpg",
+   "02-s5.jpg"
+  ],
+  "caption": "TIPS #11: Tulis tujuan akhir, bukan langkahnya.\n\nAgent memilih jalannya sendiri kalau tujuannya jelas.\n\nYang dibahas:\n1. Tulis tujuan dulu.\n2. Tambahkan batasan.\n3. Sebut hasil yang dianggap benar.\n\nTips mana yang paling kamu butuhkan sekarang? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #claude #otomatisasi #belajarai #aiindonesia #tipsai"
+ },
+ {
+  "day": 3,
+  "kind": "trik",
+  "n": 11,
+  "title": "Minta 3 versi, pilih satu.",
+  "files": [
+   "03-s1.jpg",
+   "03-s2.jpg",
+   "03-s3.jpg",
+   "03-s4.jpg",
+   "03-s5.jpg"
+  ],
+  "caption": "TRIK #11: Minta 3 versi, pilih satu.\n\nMembandingkan lebih mudah daripada menebak.\n\nYang dibahas:\n1. Minta tiga versi.\n2. Pilih satu.\n3. Revisi yang terpilih.\n\nTrik ini sudah pernah kamu coba? Ceritakan di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #claude #otomatisasi #belajarai #aiindonesia #triksai"
+ },
+ {
+  "day": 4,
+  "kind": "revisi",
+  "n": 10,
+  "title": "Hasil terlalu panjang? 3 cara memangkasnya.",
+  "files": [
+   "04-s1.jpg",
+   "04-s2.jpg",
+   "04-s3.jpg",
+   "04-s4.jpg",
+   "04-s5.jpg"
+  ],
+  "caption": "REVISI PROMPT #10: Hasil terlalu panjang? 3 cara memangkasnya.\n\nKalimat revisi yang bisa dicoba.\n\nYang dibahas:\n1. Beri batas angka.\n2. Buang basa-basi.\n3. Cek maknanya.\n\nKalimat revisi mana yang mau kamu coba duluan? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #claude #otomatisasi #belajarai #aiindonesia #revisiprompt"
+ },
+ {
+  "day": 5,
+  "kind": "tips",
+  "n": 12,
+  "title": "Beri contoh hasil buruk juga.",
+  "files": [
+   "05-s1.jpg",
+   "05-s2.jpg",
+   "05-s3.jpg",
+   "05-s4.jpg",
+   "05-s5.jpg"
+  ],
+  "caption": "TIPS #12: Beri contoh hasil buruk juga.\n\nContoh yang salah mempersempit tebakan model.\n\nYang dibahas:\n1. Beri contoh benar.\n2. Beri contoh salah.\n3. Tulis alasan singkat.\n\nTips mana yang paling kamu butuhkan sekarang? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #claude #otomatisasi #belajarai #aiindonesia #tipsai"
+ },
+ {
+  "day": 6,
+  "kind": "trik",
+  "n": 12,
+  "title": "Minta agent mengkritik hasilnya sendiri.",
+  "files": [
+   "06-s1.jpg",
+   "06-s2.jpg",
+   "06-s3.jpg",
+   "06-s4.jpg",
+   "06-s5.jpg"
+  ],
+  "caption": "TRIK #12: Minta agent mengkritik hasilnya sendiri.\n\nPutaran kedua sering menangkap kekurangan putaran pertama.\n\nYang dibahas:\n1. Minta kritik.\n2. Minta versi perbaikan.\n3. Tetap cek sendiri.\n\nTrik ini sudah pernah kamu coba? Ceritakan di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #claude #otomatisasi #belajarai #aiindonesia #triksai"
+ },
+ {
+  "day": 7,
+  "kind": "revisi",
+  "n": 11,
+  "title": "Saat AI mengarang: minta batas dan bukti.",
+  "files": [
+   "07-s1.jpg",
+   "07-s2.jpg",
+   "07-s3.jpg",
+   "07-s4.jpg",
+   "07-s5.jpg"
+  ],
+  "caption": "REVISI PROMPT #11: Saat AI mengarang: minta batas dan bukti.\n\nRevisi supaya model mengaku tidak tahu.\n\nYang dibahas:\n1. Beri izin bilang tidak tahu.\n2. Minta penanda tebakan.\n3. Verifikasi sendiri.\n\nKalimat revisi mana yang mau kamu coba duluan? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #claude #otomatisasi #belajarai #aiindonesia #revisiprompt"
+ },
+ {
+  "day": 8,
+  "kind": "tips",
+  "n": 13,
+  "title": "Pisahkan fakta dan asumsi.",
+  "files": [
+   "08-s1.jpg",
+   "08-s2.jpg",
+   "08-s3.jpg",
+   "08-s4.jpg",
+   "08-s5.jpg"
+  ],
+  "caption": "TIPS #13: Pisahkan fakta dan asumsi.\n\nBiar agent tidak mengarang di bagian yang kosong.\n\nYang dibahas:\n1. Pisahkan fakta dan asumsi.\n2. Verifikasi asumsi penting.\n3. Lengkapi data lalu ulangi.\n\nTips mana yang paling kamu butuhkan sekarang? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #claude #otomatisasi #belajarai #aiindonesia #tipsai"
+ },
+ {
+  "day": 9,
+  "kind": "trik",
+  "n": 13,
+  "title": "Pakai peran untuk ganti sudut pandang.",
+  "files": [
+   "09-s1.jpg",
+   "09-s2.jpg",
+   "09-s3.jpg",
+   "09-s4.jpg",
+   "09-s5.jpg"
+  ],
+  "caption": "TRIK #13: Pakai peran untuk ganti sudut pandang.\n\nSatu naskah, tiga pembaca berbeda.\n\nYang dibahas:\n1. Pilih satu peran.\n2. Minta masukan.\n3. Revisi sendiri.\n\nTrik ini sudah pernah kamu coba? Ceritakan di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #claude #otomatisasi #belajarai #aiindonesia #triksai"
+ },
+ {
+  "day": 10,
+  "kind": "revisi",
+  "n": 12,
+  "title": "Revisi nada: dari kaku jadi santai.",
+  "files": [
+   "10-s1.jpg",
+   "10-s2.jpg",
+   "10-s3.jpg",
+   "10-s4.jpg",
+   "10-s5.jpg"
+  ],
+  "caption": "REVISI PROMPT #12: Revisi nada: dari kaku jadi santai.\n\nTiga kalimat yang bisa kamu tempel.\n\nYang dibahas:\n1. Sebut nada yang diinginkan.\n2. Pertahankan isi.\n3. Baca keras-keras.\n\nKalimat revisi mana yang mau kamu coba duluan? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #claude #otomatisasi #belajarai #aiindonesia #revisiprompt"
+ },
+ {
+  "day": 11,
+  "kind": "tips",
+  "n": 14,
+  "title": "Minta agent bertanya dulu sebelum mulai.",
+  "files": [
+   "11-s1.jpg",
+   "11-s2.jpg",
+   "11-s3.jpg",
+   "11-s4.jpg",
+   "11-s5.jpg"
+  ],
+  "caption": "TIPS #14: Minta agent bertanya dulu sebelum mulai.\n\nSatu pertanyaan di awal menghemat tiga revisi.\n\nYang dibahas:\n1. Minta tiga pertanyaan.\n2. Jawab per nomor.\n3. Lanjutkan setelah jelas.\n\nTips mana yang paling kamu butuhkan sekarang? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #claude #otomatisasi #belajarai #aiindonesia #tipsai"
+ },
+ {
+  "day": 12,
+  "kind": "trik",
+  "n": 14,
+  "title": "Minta format tabel untuk perbandingan.",
+  "files": [
+   "12-s1.jpg",
+   "12-s2.jpg",
+   "12-s3.jpg",
+   "12-s4.jpg",
+   "12-s5.jpg"
+  ],
+  "caption": "TRIK #14: Minta format tabel untuk perbandingan.\n\nLebih cepat dibaca daripada paragraf panjang.\n\nYang dibahas:\n1. Sebut kolom.\n2. Batasi baris.\n3. Minta satu kesimpulan.\n\nTrik ini sudah pernah kamu coba? Ceritakan di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #claude #otomatisasi #belajarai #aiindonesia #triksai"
+ },
+ {
+  "day": 13,
+  "kind": "revisi",
+  "n": 13,
+  "title": "Kapan sebaiknya mulai chat baru?",
+  "files": [
+   "13-s1.jpg",
+   "13-s2.jpg",
+   "13-s3.jpg",
+   "13-s4.jpg",
+   "13-s5.jpg"
+  ],
+  "caption": "REVISI PROMPT #13: Kapan sebaiknya mulai chat baru?\n\nKadang mengulang bersih lebih cepat daripada menambal.\n\nYang dibahas:\n1. Kenali tanda melenceng.\n2. Minta rangkuman.\n3. Mulai bersih.\n\nKalimat revisi mana yang mau kamu coba duluan? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #claude #otomatisasi #belajarai #aiindonesia #revisiprompt"
+ },
+ {
+  "day": 14,
+  "kind": "tips",
+  "n": 15,
+  "title": "Mulai dari tugas kecil dan berulang.",
+  "files": [
+   "14-s1.jpg",
+   "14-s2.jpg",
+   "14-s3.jpg",
+   "14-s4.jpg",
+   "14-s5.jpg"
+  ],
+  "caption": "TIPS #15: Mulai dari tugas kecil dan berulang.\n\nHasilnya gampang dicek, manfaatnya terasa cepat.\n\nYang dibahas:\n1. Pilih tugas berulang.\n2. Cek hasilnya manual.\n3. Otomatiskan bertahap.\n\nTips mana yang paling kamu butuhkan sekarang? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #claude #otomatisasi #belajarai #aiindonesia #tipsai"
+ },
+ {
+  "day": 15,
+  "kind": "trik",
+  "n": 15,
+  "title": "Tempel contoh tulisanmu sendiri.",
+  "files": [
+   "15-s1.jpg",
+   "15-s2.jpg",
+   "15-s3.jpg",
+   "15-s4.jpg",
+   "15-s5.jpg"
+  ],
+  "caption": "TRIK #15: Tempel contoh tulisanmu sendiri.\n\nGaya bahasamu lebih mudah ditiru daripada dijelaskan.\n\nYang dibahas:\n1. Tempel contohmu.\n2. Minta ciri gaya.\n3. Sunting hasilnya.\n\nTrik ini sudah pernah kamu coba? Ceritakan di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #claude #otomatisasi #belajarai #aiindonesia #triksai"
+ },
+ {
+  "day": 16,
+  "kind": "revisi",
+  "n": 14,
+  "title": "Revisi dengan contoh sebelum dan sesudah.",
+  "files": [
+   "16-s1.jpg",
+   "16-s2.jpg",
+   "16-s3.jpg",
+   "16-s4.jpg",
+   "16-s5.jpg"
+  ],
+  "caption": "REVISI PROMPT #14: Revisi dengan contoh sebelum dan sesudah.\n\nMenunjukkan lebih jelas daripada menjelaskan.\n\nYang dibahas:\n1. Tulis sebelum dan sesudah.\n2. Beri alasan.\n3. Simpan pasangannya.\n\nKalimat revisi mana yang mau kamu coba duluan? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #claude #otomatisasi #belajarai #aiindonesia #revisiprompt"
+ },
+ {
+  "day": 17,
+  "kind": "tips",
+  "n": 16,
+  "title": "Tentukan kapan agent harus berhenti.",
+  "files": [
+   "17-s1.jpg",
+   "17-s2.jpg",
+   "17-s3.jpg",
+   "17-s4.jpg",
+   "17-s5.jpg"
+  ],
+  "caption": "TIPS #16: Tentukan kapan agent harus berhenti.\n\nTanpa titik berhenti, agent bisa terus mencoba.\n\nYang dibahas:\n1. Batasi langkah.\n2. Tulis kondisi sukses.\n3. Minta laporan saat berhenti.\n\nTips mana yang paling kamu butuhkan sekarang? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #claude #otomatisasi #belajarai #aiindonesia #tipsai"
+ },
+ {
+  "day": 18,
+  "kind": "trik",
+  "n": 16,
+  "title": "Minta ringkasan dulu, baru detail.",
+  "files": [
+   "18-s1.jpg",
+   "18-s2.jpg",
+   "18-s3.jpg",
+   "18-s4.jpg",
+   "18-s5.jpg"
+  ],
+  "caption": "TRIK #16: Minta ringkasan dulu, baru detail.\n\nKamu bisa menghentikan arah yang salah lebih awal.\n\nYang dibahas:\n1. Minta ringkasan.\n2. Setujui arahnya.\n3. Kembangkan per bagian.\n\nTrik ini sudah pernah kamu coba? Ceritakan di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #claude #otomatisasi #belajarai #aiindonesia #triksai"
+ },
+ {
+  "day": 19,
+  "kind": "revisi",
+  "n": 15,
+  "title": "Cara membaca hasil yang meleset.",
+  "files": [
+   "19-s1.jpg",
+   "19-s2.jpg",
+   "19-s3.jpg",
+   "19-s4.jpg",
+   "19-s5.jpg"
+  ],
+  "caption": "REVISI PROMPT #15: Cara membaca hasil yang meleset.\n\nDiagnosis dulu, revisi belakangan.\n\nYang dibahas:\n1. Diagnosis dulu.\n2. Tentukan satu masalah.\n3. Revisi satu hal.\n\nKalimat revisi mana yang mau kamu coba duluan? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #claude #otomatisasi #belajarai #aiindonesia #revisiprompt"
+ },
+ {
+  "day": 20,
+  "kind": "tips",
+  "n": 17,
+  "title": "Simpan prompt yang berhasil.",
+  "files": [
+   "20-s1.jpg",
+   "20-s2.jpg",
+   "20-s3.jpg",
+   "20-s4.jpg",
+   "20-s5.jpg"
+  ],
+  "caption": "TIPS #17: Simpan prompt yang berhasil.\n\nPrompt bagus yang hilang itu sayang.\n\nYang dibahas:\n1. Simpan prompt yang berhasil.\n2. Catat kapan dipakai.\n3. Perbarui tiap revisi.\n\nTips mana yang paling kamu butuhkan sekarang? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #claude #otomatisasi #belajarai #aiindonesia #tipsai"
+ },
+ {
+  "day": 21,
+  "kind": "trik",
+  "n": 17,
+  "title": "Pakai batas kata yang tegas.",
+  "files": [
+   "21-s1.jpg",
+   "21-s2.jpg",
+   "21-s3.jpg",
+   "21-s4.jpg",
+   "21-s5.jpg"
+  ],
+  "caption": "TRIK #17: Pakai batas kata yang tegas.\n\nAngka lebih jelas daripada \"singkat saja\".\n\nYang dibahas:\n1. Pakai angka.\n2. Sebut jumlah poin.\n3. Koreksi dengan selisih.\n\nTrik ini sudah pernah kamu coba? Ceritakan di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #claude #otomatisasi #belajarai #aiindonesia #triksai"
+ },
+ {
+  "day": 22,
+  "kind": "revisi",
+  "n": 16,
+  "title": "Prompt revisi untuk tulisan konten.",
+  "files": [
+   "22-s1.jpg",
+   "22-s2.jpg",
+   "22-s3.jpg",
+   "22-s4.jpg",
+   "22-s5.jpg"
+  ],
+  "caption": "REVISI PROMPT #16: Prompt revisi untuk tulisan konten.\n\nUntuk caption, naskah, atau artikel.\n\nYang dibahas:\n1. Revisi per bagian.\n2. Minta beberapa alternatif.\n3. Baca ulang sebelum posting.\n\nKalimat revisi mana yang mau kamu coba duluan? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #claude #otomatisasi #belajarai #aiindonesia #revisiprompt"
+ },
+ {
+  "day": 23,
+  "kind": "tips",
+  "n": 18,
+  "title": "Cek hasil pakai checklist.",
+  "files": [
+   "23-s1.jpg",
+   "23-s2.jpg",
+   "23-s3.jpg",
+   "23-s4.jpg",
+   "23-s5.jpg"
+  ],
+  "caption": "TIPS #18: Cek hasil pakai checklist.\n\nCepat, konsisten, tidak bergantung perasaan.\n\nYang dibahas:\n1. Buat checklist pendek.\n2. Minta agent memakainya.\n3. Tambah poin dari kesalahan lama.\n\nTips mana yang paling kamu butuhkan sekarang? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #claude #otomatisasi #belajarai #aiindonesia #tipsai"
+ },
+ {
+  "day": 24,
+  "kind": "trik",
+  "n": 18,
+  "title": "Tanya \"apa yang kamu tidak yakin?\"",
+  "files": [
+   "24-s1.jpg",
+   "24-s2.jpg",
+   "24-s3.jpg",
+   "24-s4.jpg",
+   "24-s5.jpg"
+  ],
+  "caption": "TRIK #18: Tanya \"apa yang kamu tidak yakin?\"\n\nCara cepat menemukan bagian yang perlu dicek.\n\nYang dibahas:\n1. Tanya bagian yang ragu.\n2. Verifikasi sendiri.\n3. Revisi setelahnya.\n\nTrik ini sudah pernah kamu coba? Ceritakan di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #claude #otomatisasi #belajarai #aiindonesia #triksai"
+ },
+ {
+  "day": 25,
+  "kind": "revisi",
+  "n": 17,
+  "title": "Revisi untuk hasil kode: 3 kalimat awal.",
+  "files": [
+   "25-s1.jpg",
+   "25-s2.jpg",
+   "25-s3.jpg",
+   "25-s4.jpg",
+   "25-s5.jpg"
+  ],
+  "caption": "REVISI PROMPT #17: Revisi untuk hasil kode: 3 kalimat awal.\n\nBerlaku sebagai pola umum, sesuaikan dengan proyekmu.\n\nYang dibahas:\n1. Tempel pesan error.\n2. Batasi bagian yang diubah.\n3. Uji tiap perubahan.\n\nKalimat revisi mana yang mau kamu coba duluan? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #claude #otomatisasi #belajarai #aiindonesia #revisiprompt"
+ },
+ {
+  "day": 26,
+  "kind": "tips",
+  "n": 19,
+  "title": "Satu sumber data yang disepakati.",
+  "files": [
+   "26-s1.jpg",
+   "26-s2.jpg",
+   "26-s3.jpg",
+   "26-s4.jpg",
+   "26-s5.jpg"
+  ],
+  "caption": "TIPS #19: Satu sumber data yang disepakati.\n\nBiar agent tidak menggabungkan data yang saling bentrok.\n\nYang dibahas:\n1. Tetapkan sumber utama.\n2. Minta lapor bentrok.\n3. Rawat satu sumber.\n\nTips mana yang paling kamu butuhkan sekarang? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #claude #otomatisasi #belajarai #aiindonesia #tipsai"
+ },
+ {
+  "day": 27,
+  "kind": "trik",
+  "n": 19,
+  "title": "Tandai bagian yang boleh diganti.",
+  "files": [
+   "27-s1.jpg",
+   "27-s2.jpg",
+   "27-s3.jpg",
+   "27-s4.jpg",
+   "27-s5.jpg"
+  ],
+  "caption": "TRIK #19: Tandai bagian yang boleh diganti.\n\nTemplate yang rapi bisa dipakai berulang.\n\nYang dibahas:\n1. Tandai bagian variabel.\n2. Simpan sebagai template.\n3. Perbarui rutin.\n\nTrik ini sudah pernah kamu coba? Ceritakan di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #claude #otomatisasi #belajarai #aiindonesia #triksai"
+ },
+ {
+  "day": 28,
+  "kind": "revisi",
+  "n": 18,
+  "title": "Rutinitas revisi prompt 10 menit.",
+  "files": [
+   "28-s1.jpg",
+   "28-s2.jpg",
+   "28-s3.jpg",
+   "28-s4.jpg",
+   "28-s5.jpg"
+  ],
+  "caption": "REVISI PROMPT #18: Rutinitas revisi prompt 10 menit.\n\nCara singkat supaya revisi tidak berantakan.\n\nYang dibahas:\n1. Tentukan tujuan.\n2. Revisi satu hal.\n3. Simpan yang terbaik.\n\nKalimat revisi mana yang mau kamu coba duluan? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #claude #otomatisasi #belajarai #aiindonesia #revisiprompt"
+ },
+ {
+  "day": 29,
+  "kind": "tips",
+  "n": 20,
+  "title": "Tinjau ulang prompt seminggu sekali.",
+  "files": [
+   "29-s1.jpg",
+   "29-s2.jpg",
+   "29-s3.jpg",
+   "29-s4.jpg",
+   "29-s5.jpg"
+  ],
+  "caption": "TIPS #20: Tinjau ulang prompt seminggu sekali.\n\nLima menit untuk membuang aturan yang sudah usang.\n\nYang dibahas:\n1. Jadwalkan tinjauan.\n2. Hapus aturan usang.\n3. Catat perubahannya.\n\nTips mana yang paling kamu butuhkan sekarang? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #claude #otomatisasi #belajarai #aiindonesia #tipsai"
+ }
+]
