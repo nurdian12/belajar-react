@@ -1,4 +1,4 @@
-# Prompt: pabrik konten carousel + jadwal otomatis (AI agent, putih-merah)
+# Prompt: pabrik konten carousel + jadwal otomatis (tema AI agent, 6 jenis, putih-merah)
 
 Salin blok di bawah ke sesi Claude Code baru. Ganti bagian dalam [kurung].
 
@@ -9,18 +9,23 @@ Kamu menjalankan "pabrik konten" carousel Instagram untuk akun [@handle], niche 
 TUJUAN
 [N] postingan carousel, [5] per hari, selama [30] hari, mulai [sekarang / tanggal]. Bahasa Indonesia, audiens Gen Z dan pemula.
 
-JENIS KONTEN (campur supaya engagement beragam)
-1. Revisi Prompt: pengalaman nyata sering merevisi prompt (salin-tempel, tutorial, perbandingan, kesalahan, studi kasus, template).
-2. Tips: praktik yang bisa langsung dicoba.
-3. Trik: kalimat prompt siap tempel.
-4. Fakta unik: hanya yang bisa dirujuk (sumber ditulis di slide dan caption), selalu ditaruh paling akhir di antrean agar saya sempat memverifikasi.
-Aturan isi: tanpa klaim yang tidak bisa diverifikasi, tanpa angka karangan, tanpa placeholder yang tertinggal (kurung [..] hanya boleh jika memang bagian dari template prompt). Contoh buatan wajib berlabel "Contoh ilustrasi".
+TEMA
+Seluruh konten membahas AI AGENT (bukan lagi revisi prompt): apa itu agent, cara membangun, memakai, menguji, dan mengamankannya, untuk pemula sampai menengah.
+
+JENIS KONTEN (6 jenis, rotasi merata, tiap hari campur)
+1. Kesalahan: kesalahan umum saat membangun/memakai AI agent + cara memperbaikinya.
+2. Salin-tempel: prompt, instruksi sistem, template, atau checklist siap tempel untuk agent.
+3. Tutorial: langkah demi langkah membuat atau memakai satu hal spesifik dengan agent.
+4. Perbandingan: dua pendekatan/alat/pola (mis. workflow vs agent), pakai tabel; adil, sebut kapan masing-masing cocok.
+5. Studi kasus: skenario nyata. Pakai pengalaman asli saya jika saya berikan; kalau tidak, WAJIB berlabel "Contoh ilustrasi", tanpa angka hasil karangan.
+6. Opini: pendapat jelas dan berani, wajib berlabel "Opini", dengan alasan; ajak audiens setuju/tidak.
+Aturan isi: tanpa klaim yang tidak bisa diverifikasi, tanpa angka karangan, tanpa placeholder tertinggal (kurung [..] hanya jika bagian dari template). Klaim tentang produk/alat tertentu (mis. Claude Code, Hermes) hanya setelah dicek ke dokumentasi resminya dan sumber ditulis di caption.
 
 STRUKTUR TIAP POSTINGAN (5 slide, 1080x1350)
 1 cover (judul besar, kata kunci distabilo merah **seperti ini**, subjudul, tombol "GESER")
 2-4 isi (kartu bernomor, tabel, kotak prompt gelap salin-tempel, atau dua kotak prompt)
 5 penutup (3 poin ringkas + "SIMPAN POSTINGAN INI")
-Caption: jenis + nomor + judul, subjudul, daftar "Yang dibahas", satu pertanyaan ajakan komentar, ajakan simpan, hashtag.
+Caption: jenis (KESALAHAN / SALIN-TEMPEL / TUTORIAL / PERBANDINGAN / STUDI KASUS / OPINI) + nomor + judul, subjudul, daftar "Yang dibahas", satu pertanyaan ajakan komentar, ajakan simpan, hashtag.
 
 GAYA VISUAL
 Background putih, stabilo merah (#ff3b3b), teks hitam, kartu abu muda, kotak prompt gelap. Font Inter (aktifkan cv08 agar "I" besar dan "l" beda), JetBrains Mono untuk prompt. Footer: nomor halaman kiri, "[@handle]" di tengah bawah dengan dua titik merah, "GESER →" / "SELESAI ✓" kanan. Jangan ada teks yang meluber (auto-fit, lalu cek overflow = 0).
@@ -41,7 +46,7 @@ PERATURAN KERJA
 - Jangan membuat PR kecuali diminta.
 
 SAAT INI
-Sudah terjadwal: 67 postingan (17-30 Nov 2026). Lanjutkan dari 1 Des 2026 jam 07.00 WIB dengan batch berikutnya, campuran Revisi Prompt, Tips, Trik, dan Fakta unik (bersumber). Mulai dengan menulis 30 postingan, tampilkan pratinjau, lalu jadwalkan.
+Sudah terjadwal: 67 postingan (17-30 Nov 2026). Lanjutkan dari 1 Des 2026 jam 07.00 WIB dengan batch berikutnya, campuran enam jenis di atas (kesalahan, salin-tempel, tutorial, perbandingan, studi kasus, opini). Mulai dengan menulis 30 postingan, tampilkan pratinjau, lalu jadwalkan.
 ```
 
 ## Rangkuman singkat apa yang sudah dikerjakan
