@@ -61,7 +61,7 @@ def find_account(username):
 def upload(path, mimetype):
     size = os.path.getsize(path)
     code, init = call('POST', '/public/storage/file/init', {'filename': os.path.basename(path), 'size': size, 'mimetype': mimetype})
-    if code != 200: raise SystemExit(f'init gagal {code}: {init}')
+    if code not in (200, 201): raise SystemExit(f'init gagal {code}: {init}')
     with open(path, 'rb') as f: raw = f.read()
     c2, r2 = call('PUT', init['upload'], raw=raw, headers={'Content-Type': mimetype}, absolute=True)
     if c2 not in (200, 204): raise SystemExit(f'PUT file gagal {c2}: {r2}')
