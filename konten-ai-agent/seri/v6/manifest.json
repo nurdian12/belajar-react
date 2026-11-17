@@ -1,0 +1,926 @@
+[
+ {
+  "day": 1,
+  "kind": "kesalahan",
+  "n": 1,
+  "title": "Langsung bangun agent padahal workflow cukup.",
+  "files": [
+   "01-s1.jpg",
+   "01-s2.jpg",
+   "01-s3.jpg",
+   "01-s4.jpg",
+   "01-s5.jpg"
+  ],
+  "caption": "KESALAHAN #1: Langsung bangun agent padahal workflow cukup.\n\nKesalahan paling mahal untuk pemula.\n\nYang dibahas:\n1. Cek dulu apakah alurnya pasti.\n2. Mulai dari workflow.\n3. Naik ke agent kalau perlu.\n\nKesalahan mana yang pernah kamu alami? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #kesalahanai"
+ },
+ {
+  "day": 2,
+  "kind": "salin",
+  "n": 1,
+  "title": "Instruksi sistem untuk agent riset.",
+  "files": [
+   "02-s1.jpg",
+   "02-s2.jpg",
+   "02-s3.jpg",
+   "02-s4.jpg",
+   "02-s5.jpg"
+  ],
+  "caption": "SALIN-TEMPEL #1: Instruksi sistem untuk agent riset.\n\nSalin, lalu ganti bagian [kurung].\n\nYang dibahas:\n1. Tentukan peran dan tujuan.\n2. Tulis aturan sumber.\n3. Tentukan format hasil.\n\nMau template apa lagi? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #templateprompt"
+ },
+ {
+  "day": 3,
+  "kind": "tutorial",
+  "n": 1,
+  "title": "Agent pertamamu dalam 5 langkah.",
+  "files": [
+   "03-s1.jpg",
+   "03-s2.jpg",
+   "03-s3.jpg",
+   "03-s4.jpg",
+   "03-s5.jpg"
+  ],
+  "caption": "TUTORIAL #1: Agent pertamamu dalam 5 langkah.\n\nKonsep dasar yang berlaku untuk alat apa pun.\n\nYang dibahas:\n1. Mulai dari tugas kecil.\n2. Beri alat sedikit.\n3. Uji sebelum perluas.\n\nSudah coba langkah ini? Ceritakan di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #tutorialai"
+ },
+ {
+  "day": 4,
+  "kind": "banding",
+  "n": 1,
+  "title": "Workflow vs agent.",
+  "files": [
+   "04-s1.jpg",
+   "04-s2.jpg",
+   "04-s3.jpg",
+   "04-s4.jpg",
+   "04-s5.jpg"
+  ],
+  "caption": "PERBANDINGAN #1: Workflow vs agent.\n\nKapan memilih yang mana.\n\nYang dibahas:\n1. Alur pasti: workflow.\n2. Alur bervariasi: agent.\n3. Mulai dari yang sederhana.\n\nKamu tim yang mana? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #perbandingan"
+ },
+ {
+  "day": 5,
+  "kind": "kasus",
+  "n": 1,
+  "title": "Agent perapi catatan rapat.",
+  "files": [
+   "05-s1.jpg",
+   "05-s2.jpg",
+   "05-s3.jpg",
+   "05-s4.jpg",
+   "05-s5.jpg"
+  ],
+  "caption": "STUDI KASUS #1: Agent perapi catatan rapat.\n\nSkenario: rapat tiap minggu, catatan berantakan.\n\nYang dibahas:\n1. Pilih tugas yang jelas.\n2. Tinjau hasilnya.\n3. Perbaiki bertahap.\n\nTugas apa yang ingin kamu serahkan ke agent? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\nCatatan: ini contoh ilustrasi, bukan hasil nyata.\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #studikasus"
+ },
+ {
+  "day": 6,
+  "kind": "opini",
+  "n": 1,
+  "title": "Kebanyakan orang belum butuh agent.",
+  "files": [
+   "06-s1.jpg",
+   "06-s2.jpg",
+   "06-s3.jpg",
+   "06-s4.jpg",
+   "06-s5.jpg"
+  ],
+  "caption": "OPINI #1: Kebanyakan orang belum butuh agent.\n\nWorkflow sering sudah cukup.\n\nYang dibahas:\n1. Mulai dari workflow.\n2. Naik saat benar-benar perlu.\n3. Jangan ikut tren saja.\n\nKamu setuju atau tidak? Tulis alasanmu di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\nCatatan: ini opini pribadi, bukan aturan mutlak.\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #opini"
+ },
+ {
+  "day": 7,
+  "kind": "salin",
+  "n": 2,
+  "title": "Template brief tugas untuk agent.",
+  "files": [
+   "07-s1.jpg",
+   "07-s2.jpg",
+   "07-s3.jpg",
+   "07-s4.jpg",
+   "07-s5.jpg"
+  ],
+  "caption": "SALIN-TEMPEL #2: Template brief tugas untuk agent.\n\nAnggap agent sebagai karyawan baru.\n\nYang dibahas:\n1. Tulis brief lengkap.\n2. Beri contoh hasil.\n3. Simpan yang berhasil.\n\nMau template apa lagi? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #templateprompt"
+ },
+ {
+  "day": 8,
+  "kind": "tutorial",
+  "n": 2,
+  "title": "Cara menulis deskripsi alat yang jelas.",
+  "files": [
+   "08-s1.jpg",
+   "08-s2.jpg",
+   "08-s3.jpg",
+   "08-s4.jpg",
+   "08-s5.jpg"
+  ],
+  "caption": "TUTORIAL #2: Cara menulis deskripsi alat yang jelas.\n\nTiga langkah sederhana.\n\nYang dibahas:\n1. Nama dan fungsi jelas.\n2. Tulis kondisi pakai.\n3. Beri contoh.\n\nSudah coba langkah ini? Ceritakan di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #tutorialai"
+ },
+ {
+  "day": 9,
+  "kind": "banding",
+  "n": 2,
+  "title": "Satu agent vs banyak agent.",
+  "files": [
+   "09-s1.jpg",
+   "09-s2.jpg",
+   "09-s3.jpg",
+   "09-s4.jpg",
+   "09-s5.jpg"
+  ],
+  "caption": "PERBANDINGAN #2: Satu agent vs banyak agent.\n\nLebih banyak tidak selalu lebih baik.\n\nYang dibahas:\n1. Mulai dari satu.\n2. Pisahkan saat peran bentrok.\n3. Siapkan pengujian.\n\nKamu tim yang mana? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #perbandingan"
+ },
+ {
+  "day": 10,
+  "kind": "kasus",
+  "n": 2,
+  "title": "Agent penyusun balasan pelanggan.",
+  "files": [
+   "10-s1.jpg",
+   "10-s2.jpg",
+   "10-s3.jpg",
+   "10-s4.jpg",
+   "10-s5.jpg"
+  ],
+  "caption": "STUDI KASUS #2: Agent penyusun balasan pelanggan.\n\nSkenario: pertanyaan berulang di pesan masuk.\n\nYang dibahas:\n1. Pilih tugas yang jelas.\n2. Tinjau hasilnya.\n3. Perbaiki bertahap.\n\nTugas apa yang ingin kamu serahkan ke agent? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\nCatatan: ini contoh ilustrasi, bukan hasil nyata.\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #studikasus"
+ },
+ {
+  "day": 11,
+  "kind": "opini",
+  "n": 2,
+  "title": "Agent tanpa log itu berbahaya.",
+  "files": [
+   "11-s1.jpg",
+   "11-s2.jpg",
+   "11-s3.jpg",
+   "11-s4.jpg",
+   "11-s5.jpg"
+  ],
+  "caption": "OPINI #2: Agent tanpa log itu berbahaya.\n\nKalau tidak bisa dilacak, tidak bisa dipercaya.\n\nYang dibahas:\n1. Catat tiap langkah.\n2. Log sederhana cukup.\n3. Baca log saat gagal.\n\nKamu setuju atau tidak? Tulis alasanmu di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\nCatatan: ini opini pribadi, bukan aturan mutlak.\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #opini"
+ },
+ {
+  "day": 12,
+  "kind": "kesalahan",
+  "n": 2,
+  "title": "Memberi agent akses terlalu luas.",
+  "files": [
+   "12-s1.jpg",
+   "12-s2.jpg",
+   "12-s3.jpg",
+   "12-s4.jpg",
+   "12-s5.jpg"
+  ],
+  "caption": "KESALAHAN #2: Memberi agent akses terlalu luas.\n\nSemakin luas akses, semakin besar dampak kalau salah.\n\nYang dibahas:\n1. Beri akses minimum.\n2. Mulai dari baca saja.\n3. Pisahkan akun uji.\n\nKesalahan mana yang pernah kamu alami? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #kesalahanai"
+ },
+ {
+  "day": 13,
+  "kind": "tutorial",
+  "n": 3,
+  "title": "Membuat checkpoint persetujuan manusia.",
+  "files": [
+   "13-s1.jpg",
+   "13-s2.jpg",
+   "13-s3.jpg",
+   "13-s4.jpg",
+   "13-s5.jpg"
+  ],
+  "caption": "TUTORIAL #3: Membuat checkpoint persetujuan manusia.\n\nAgent berhenti dulu sebelum aksi penting.\n\nYang dibahas:\n1. Tentukan aksi berisiko.\n2. Minta persetujuan.\n3. Uji berhenti dan lanjut.\n\nSudah coba langkah ini? Ceritakan di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #tutorialai"
+ },
+ {
+  "day": 14,
+  "kind": "banding",
+  "n": 3,
+  "title": "Otomatis penuh vs persetujuan manusia.",
+  "files": [
+   "14-s1.jpg",
+   "14-s2.jpg",
+   "14-s3.jpg",
+   "14-s4.jpg",
+   "14-s5.jpg"
+  ],
+  "caption": "PERBANDINGAN #3: Otomatis penuh vs persetujuan manusia.\n\nKecepatan lawan keamanan.\n\nYang dibahas:\n1. Otomatis untuk aksi ringan.\n2. Persetujuan untuk aksi penting.\n3. Longgarkan setelah teruji.\n\nKamu tim yang mana? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #perbandingan"
+ },
+ {
+  "day": 15,
+  "kind": "kasus",
+  "n": 3,
+  "title": "Agent pengelompok ide konten.",
+  "files": [
+   "15-s1.jpg",
+   "15-s2.jpg",
+   "15-s3.jpg",
+   "15-s4.jpg",
+   "15-s5.jpg"
+  ],
+  "caption": "STUDI KASUS #3: Agent pengelompok ide konten.\n\nSkenario: daftar ide menumpuk tanpa urutan.\n\nYang dibahas:\n1. Pilih tugas yang jelas.\n2. Tinjau hasilnya.\n3. Perbaiki bertahap.\n\nTugas apa yang ingin kamu serahkan ke agent? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\nCatatan: ini contoh ilustrasi, bukan hasil nyata.\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #studikasus"
+ },
+ {
+  "day": 16,
+  "kind": "opini",
+  "n": 3,
+  "title": "Persetujuan manusia bukan kelemahan.",
+  "files": [
+   "16-s1.jpg",
+   "16-s2.jpg",
+   "16-s3.jpg",
+   "16-s4.jpg",
+   "16-s5.jpg"
+  ],
+  "caption": "OPINI #3: Persetujuan manusia bukan kelemahan.\n\nIa bagian dari desain yang baik.\n\nYang dibahas:\n1. Minta izin untuk aksi penting.\n2. Longgarkan bertahap.\n3. Ukur dengan risiko.\n\nKamu setuju atau tidak? Tulis alasanmu di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\nCatatan: ini opini pribadi, bukan aturan mutlak.\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #opini"
+ },
+ {
+  "day": 17,
+  "kind": "kesalahan",
+  "n": 3,
+  "title": "Tidak ada batas langkah dan biaya.",
+  "files": [
+   "17-s1.jpg",
+   "17-s2.jpg",
+   "17-s3.jpg",
+   "17-s4.jpg",
+   "17-s5.jpg"
+  ],
+  "caption": "KESALAHAN #3: Tidak ada batas langkah dan biaya.\n\nAgent yang tidak dibatasi bisa terus berputar.\n\nYang dibahas:\n1. Batasi jumlah langkah.\n2. Tulis kondisi berhenti.\n3. Pantau saat berjalan.\n\nKesalahan mana yang pernah kamu alami? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #kesalahanai"
+ },
+ {
+  "day": 18,
+  "kind": "salin",
+  "n": 3,
+  "title": "Checklist sebelum agent dilepas.",
+  "files": [
+   "18-s1.jpg",
+   "18-s2.jpg",
+   "18-s3.jpg",
+   "18-s4.jpg",
+   "18-s5.jpg"
+  ],
+  "caption": "SALIN-TEMPEL #3: Checklist sebelum agent dilepas.\n\nLima menit yang menghemat banyak masalah.\n\nYang dibahas:\n1. Pakai checklist tiap rilis.\n2. Jangan lewati poin.\n3. Perbarui dari insiden.\n\nMau template apa lagi? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #templateprompt"
+ },
+ {
+  "day": 19,
+  "kind": "banding",
+  "n": 4,
+  "title": "Prompt panjang vs terstruktur.",
+  "files": [
+   "19-s1.jpg",
+   "19-s2.jpg",
+   "19-s3.jpg",
+   "19-s4.jpg",
+   "19-s5.jpg"
+  ],
+  "caption": "PERBANDINGAN #4: Prompt panjang vs terstruktur.\n\nPanjang belum tentu jelas.\n\nYang dibahas:\n1. Rapi lebih penting dari panjang.\n2. Pisahkan bagian.\n3. Satu aturan per baris.\n\nKamu tim yang mana? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #perbandingan"
+ },
+ {
+  "day": 20,
+  "kind": "kasus",
+  "n": 4,
+  "title": "Agent pemeriksa draf tulisan.",
+  "files": [
+   "20-s1.jpg",
+   "20-s2.jpg",
+   "20-s3.jpg",
+   "20-s4.jpg",
+   "20-s5.jpg"
+  ],
+  "caption": "STUDI KASUS #4: Agent pemeriksa draf tulisan.\n\nSkenario: draf sering lolos dengan salah ketik dan klaim lemah.\n\nYang dibahas:\n1. Pilih tugas yang jelas.\n2. Tinjau hasilnya.\n3. Perbaiki bertahap.\n\nTugas apa yang ingin kamu serahkan ke agent? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\nCatatan: ini contoh ilustrasi, bukan hasil nyata.\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #studikasus"
+ },
+ {
+  "day": 21,
+  "kind": "opini",
+  "n": 4,
+  "title": "Prompt panjang itu sering mubazir.",
+  "files": [
+   "21-s1.jpg",
+   "21-s2.jpg",
+   "21-s3.jpg",
+   "21-s4.jpg",
+   "21-s5.jpg"
+  ],
+  "caption": "OPINI #4: Prompt panjang itu sering mubazir.\n\nLebih baik rapi daripada panjang.\n\nYang dibahas:\n1. Pangkas pengulangan.\n2. Pisahkan bagian.\n3. Panjang boleh asal rapi.\n\nKamu setuju atau tidak? Tulis alasanmu di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\nCatatan: ini opini pribadi, bukan aturan mutlak.\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #opini"
+ },
+ {
+  "day": 22,
+  "kind": "kesalahan",
+  "n": 4,
+  "title": "Instruksi campur aduk dalam satu paragraf.",
+  "files": [
+   "22-s1.jpg",
+   "22-s2.jpg",
+   "22-s3.jpg",
+   "22-s4.jpg",
+   "22-s5.jpg"
+  ],
+  "caption": "KESALAHAN #4: Instruksi campur aduk dalam satu paragraf.\n\nTujuan, aturan, dan format bertabrakan.\n\nYang dibahas:\n1. Pisahkan bagian.\n2. Satu aturan per baris.\n3. Mudah dilacak.\n\nKesalahan mana yang pernah kamu alami? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #kesalahanai"
+ },
+ {
+  "day": 23,
+  "kind": "salin",
+  "n": 4,
+  "title": "Prompt agent perangkum email.",
+  "files": [
+   "23-s1.jpg",
+   "23-s2.jpg",
+   "23-s3.jpg",
+   "23-s4.jpg",
+   "23-s5.jpg"
+  ],
+  "caption": "SALIN-TEMPEL #4: Prompt agent perangkum email.\n\nTemplate umum untuk ringkasan harian.\n\nYang dibahas:\n1. Samarkan data.\n2. Batasi panjang.\n3. Cek hasilnya.\n\nMau template apa lagi? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #templateprompt"
+ },
+ {
+  "day": 24,
+  "kind": "tutorial",
+  "n": 4,
+  "title": "Menguji agent dengan 10 kasus.",
+  "files": [
+   "24-s1.jpg",
+   "24-s2.jpg",
+   "24-s3.jpg",
+   "24-s4.jpg",
+   "24-s5.jpg"
+  ],
+  "caption": "TUTORIAL #4: Menguji agent dengan 10 kasus.\n\nDari tidak menguji sampai punya set uji.\n\nYang dibahas:\n1. Kumpulkan 10 kasus.\n2. Jalankan semuanya.\n3. Nilai dan perbaiki.\n\nSudah coba langkah ini? Ceritakan di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #tutorialai"
+ },
+ {
+  "day": 25,
+  "kind": "kasus",
+  "n": 5,
+  "title": "Agent perangkum email harian.",
+  "files": [
+   "25-s1.jpg",
+   "25-s2.jpg",
+   "25-s3.jpg",
+   "25-s4.jpg",
+   "25-s5.jpg"
+  ],
+  "caption": "STUDI KASUS #5: Agent perangkum email harian.\n\nSkenario: kotak masuk penuh tiap pagi.\n\nYang dibahas:\n1. Pilih tugas yang jelas.\n2. Tinjau hasilnya.\n3. Perbaiki bertahap.\n\nTugas apa yang ingin kamu serahkan ke agent? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\nCatatan: ini contoh ilustrasi, bukan hasil nyata.\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #studikasus"
+ },
+ {
+  "day": 26,
+  "kind": "opini",
+  "n": 5,
+  "title": "Pemula sebaiknya mulai dari tugas membosankan.",
+  "files": [
+   "26-s1.jpg",
+   "26-s2.jpg",
+   "26-s3.jpg",
+   "26-s4.jpg",
+   "26-s5.jpg"
+  ],
+  "caption": "OPINI #5: Pemula sebaiknya mulai dari tugas membosankan.\n\nYang berulang dan sepele.\n\nYang dibahas:\n1. Mulai dari yang membosankan.\n2. Pilih yang mudah dicek.\n3. Naik bertahap.\n\nKamu setuju atau tidak? Tulis alasanmu di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\nCatatan: ini opini pribadi, bukan aturan mutlak.\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #opini"
+ },
+ {
+  "day": 27,
+  "kind": "kesalahan",
+  "n": 5,
+  "title": "Tidak menguji dengan kasus nyata.",
+  "files": [
+   "27-s1.jpg",
+   "27-s2.jpg",
+   "27-s3.jpg",
+   "27-s4.jpg",
+   "27-s5.jpg"
+  ],
+  "caption": "KESALAHAN #5: Tidak menguji dengan kasus nyata.\n\nLolos satu contoh bukan berarti siap pakai.\n\nYang dibahas:\n1. Uji dengan banyak kasus.\n2. Sertakan kasus aneh.\n3. Catat yang gagal.\n\nKesalahan mana yang pernah kamu alami? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #kesalahanai"
+ },
+ {
+  "day": 28,
+  "kind": "salin",
+  "n": 5,
+  "title": "Aturan izin: boleh dan tidak boleh.",
+  "files": [
+   "28-s1.jpg",
+   "28-s2.jpg",
+   "28-s3.jpg",
+   "28-s4.jpg",
+   "28-s5.jpg"
+  ],
+  "caption": "SALIN-TEMPEL #5: Aturan izin: boleh dan tidak boleh.\n\nPagar sederhana untuk agent.\n\nYang dibahas:\n1. Tulis boleh dan tidak.\n2. Uji pelanggaran.\n3. Longgarkan perlahan.\n\nMau template apa lagi? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #templateprompt"
+ },
+ {
+  "day": 29,
+  "kind": "tutorial",
+  "n": 5,
+  "title": "Cara membatasi akses agent.",
+  "files": [
+   "29-s1.jpg",
+   "29-s2.jpg",
+   "29-s3.jpg",
+   "29-s4.jpg",
+   "29-s5.jpg"
+  ],
+  "caption": "TUTORIAL #5: Cara membatasi akses agent.\n\nPrinsip akses minimum, langkah demi langkah.\n\nYang dibahas:\n1. Daftar kebutuhan.\n2. Potong akses.\n3. Uji batasnya.\n\nSudah coba langkah ini? Ceritakan di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #tutorialai"
+ },
+ {
+  "day": 30,
+  "kind": "banding",
+  "n": 5,
+  "title": "Chatbot vs agent.",
+  "files": [
+   "30-s1.jpg",
+   "30-s2.jpg",
+   "30-s3.jpg",
+   "30-s4.jpg",
+   "30-s5.jpg"
+  ],
+  "caption": "PERBANDINGAN #5: Chatbot vs agent.\n\nDua hal yang sering dianggap sama.\n\nYang dibahas:\n1. Jawab: chatbot.\n2. Kerjakan: agent.\n3. Pilih sesuai tugas.\n\nKamu tim yang mana? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #perbandingan"
+ },
+ {
+  "day": 31,
+  "kind": "opini",
+  "n": 6,
+  "title": "Otomatisasi pertamamu harus gampang dicek.",
+  "files": [
+   "31-s1.jpg",
+   "31-s2.jpg",
+   "31-s3.jpg",
+   "31-s4.jpg",
+   "31-s5.jpg"
+  ],
+  "caption": "OPINI #6: Otomatisasi pertamamu harus gampang dicek.\n\nHasil yang sulit dinilai menipu.\n\nYang dibahas:\n1. Pilih yang bisa diverifikasi.\n2. Tulis kriteria.\n3. Bangun kepercayaan bertahap.\n\nKamu setuju atau tidak? Tulis alasanmu di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\nCatatan: ini opini pribadi, bukan aturan mutlak.\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #opini"
+ },
+ {
+  "day": 32,
+  "kind": "kesalahan",
+  "n": 6,
+  "title": "Percaya hasil agent tanpa memeriksa.",
+  "files": [
+   "32-s1.jpg",
+   "32-s2.jpg",
+   "32-s3.jpg",
+   "32-s4.jpg",
+   "32-s5.jpg"
+  ],
+  "caption": "KESALAHAN #6: Percaya hasil agent tanpa memeriksa.\n\nHasil rapi belum tentu benar.\n\nYang dibahas:\n1. Periksa hasil penting.\n2. Minta penanda ragu.\n3. Tinjau tugas berisiko.\n\nKesalahan mana yang pernah kamu alami? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #kesalahanai"
+ },
+ {
+  "day": 33,
+  "kind": "salin",
+  "n": 6,
+  "title": "Template laporan akhir agent.",
+  "files": [
+   "33-s1.jpg",
+   "33-s2.jpg",
+   "33-s3.jpg",
+   "33-s4.jpg",
+   "33-s5.jpg"
+  ],
+  "caption": "SALIN-TEMPEL #6: Template laporan akhir agent.\n\nBiar hasilnya mudah ditinjau.\n\nYang dibahas:\n1. Minta laporan tetap.\n2. Sebut yang belum selesai.\n3. Tinjau cepat.\n\nMau template apa lagi? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #templateprompt"
+ },
+ {
+  "day": 34,
+  "kind": "tutorial",
+  "n": 6,
+  "title": "Membuat agent pemeriksa.",
+  "files": [
+   "34-s1.jpg",
+   "34-s2.jpg",
+   "34-s3.jpg",
+   "34-s4.jpg",
+   "34-s5.jpg"
+  ],
+  "caption": "TUTORIAL #6: Membuat agent pemeriksa.\n\nTambahkan mata kedua ke alurmu.\n\nYang dibahas:\n1. Tulis kriteria.\n2. Pisahkan pemeriksa.\n3. Batasi putaran.\n\nSudah coba langkah ini? Ceritakan di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #tutorialai"
+ },
+ {
+  "day": 35,
+  "kind": "banding",
+  "n": 6,
+  "title": "Agent vs skrip biasa.",
+  "files": [
+   "35-s1.jpg",
+   "35-s2.jpg",
+   "35-s3.jpg",
+   "35-s4.jpg",
+   "35-s5.jpg"
+  ],
+  "caption": "PERBANDINGAN #6: Agent vs skrip biasa.\n\nTidak semua hal perlu model.\n\nYang dibahas:\n1. Pasti: skrip.\n2. Bahasa bebas: agent.\n3. Gabungkan keduanya.\n\nKamu tim yang mana? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #perbandingan"
+ },
+ {
+  "day": 36,
+  "kind": "kasus",
+  "n": 6,
+  "title": "Agent pencari referensi riset.",
+  "files": [
+   "36-s1.jpg",
+   "36-s2.jpg",
+   "36-s3.jpg",
+   "36-s4.jpg",
+   "36-s5.jpg"
+  ],
+  "caption": "STUDI KASUS #6: Agent pencari referensi riset.\n\nSkenario: mengumpulkan sumber untuk satu topik.\n\nYang dibahas:\n1. Pilih tugas yang jelas.\n2. Tinjau hasilnya.\n3. Perbaiki bertahap.\n\nTugas apa yang ingin kamu serahkan ke agent? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\nCatatan: ini contoh ilustrasi, bukan hasil nyata.\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #studikasus"
+ },
+ {
+  "day": 37,
+  "kind": "kesalahan",
+  "n": 7,
+  "title": "Memberi terlalu banyak alat sekaligus.",
+  "files": [
+   "37-s1.jpg",
+   "37-s2.jpg",
+   "37-s3.jpg",
+   "37-s4.jpg",
+   "37-s5.jpg"
+  ],
+  "caption": "KESALAHAN #7: Memberi terlalu banyak alat sekaligus.\n\nPilihan banyak membuat agent salah pilih.\n\nYang dibahas:\n1. Mulai dengan sedikit alat.\n2. Deskripsi yang jelas.\n3. Tambah bertahap.\n\nKesalahan mana yang pernah kamu alami? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #kesalahanai"
+ },
+ {
+  "day": 38,
+  "kind": "salin",
+  "n": 7,
+  "title": "Prompt agent pemeriksa hasil.",
+  "files": [
+   "38-s1.jpg",
+   "38-s2.jpg",
+   "38-s3.jpg",
+   "38-s4.jpg",
+   "38-s5.jpg"
+  ],
+  "caption": "SALIN-TEMPEL #7: Prompt agent pemeriksa hasil.\n\nMata kedua sebelum kamu menerima hasil.\n\nYang dibahas:\n1. Pisahkan penulis dan pemeriksa.\n2. Beri kriteria.\n3. Tinjau temuan.\n\nMau template apa lagi? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #templateprompt"
+ },
+ {
+  "day": 39,
+  "kind": "tutorial",
+  "n": 7,
+  "title": "Alur kerja tiga langkah sederhana.",
+  "files": [
+   "39-s1.jpg",
+   "39-s2.jpg",
+   "39-s3.jpg",
+   "39-s4.jpg",
+   "39-s5.jpg"
+  ],
+  "caption": "TUTORIAL #7: Alur kerja tiga langkah sederhana.\n\nMulai dari workflow sebelum agent penuh.\n\nYang dibahas:\n1. Ambil, olah, keluarkan.\n2. Satu tugas per langkah.\n3. Tinjau hasilnya.\n\nSudah coba langkah ini? Ceritakan di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #tutorialai"
+ },
+ {
+  "day": 40,
+  "kind": "banding",
+  "n": 7,
+  "title": "Memori percakapan vs catatan eksternal.",
+  "files": [
+   "40-s1.jpg",
+   "40-s2.jpg",
+   "40-s3.jpg",
+   "40-s4.jpg",
+   "40-s5.jpg"
+  ],
+  "caption": "PERBANDINGAN #7: Memori percakapan vs catatan eksternal.\n\nDua cara agent mengingat.\n\nYang dibahas:\n1. Tugas singkat: percakapan.\n2. Tugas panjang: catatan.\n3. Tinjau catatannya.\n\nKamu tim yang mana? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #perbandingan"
+ },
+ {
+  "day": 41,
+  "kind": "kasus",
+  "n": 7,
+  "title": "Agent penyusun jadwal posting.",
+  "files": [
+   "41-s1.jpg",
+   "41-s2.jpg",
+   "41-s3.jpg",
+   "41-s4.jpg",
+   "41-s5.jpg"
+  ],
+  "caption": "STUDI KASUS #7: Agent penyusun jadwal posting.\n\nSkenario: konten ada, jadwal berantakan.\n\nYang dibahas:\n1. Pilih tugas yang jelas.\n2. Tinjau hasilnya.\n3. Perbaiki bertahap.\n\nTugas apa yang ingin kamu serahkan ke agent? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\nCatatan: ini contoh ilustrasi, bukan hasil nyata.\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #studikasus"
+ },
+ {
+  "day": 42,
+  "kind": "opini",
+  "n": 7,
+  "title": "Agent bukan pengganti berpikir.",
+  "files": [
+   "42-s1.jpg",
+   "42-s2.jpg",
+   "42-s3.jpg",
+   "42-s4.jpg",
+   "42-s5.jpg"
+  ],
+  "caption": "OPINI #7: Agent bukan pengganti berpikir.\n\nIa memperluas apa yang kamu pikirkan.\n\nYang dibahas:\n1. Kamu menentukan tujuan.\n2. Agent membantu mengerjakan.\n3. Keputusan tetap di kamu.\n\nKamu setuju atau tidak? Tulis alasanmu di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\nCatatan: ini opini pribadi, bukan aturan mutlak.\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #opini"
+ },
+ {
+  "day": 43,
+  "kind": "salin",
+  "n": 8,
+  "title": "Template deskripsi alat untuk agent.",
+  "files": [
+   "43-s1.jpg",
+   "43-s2.jpg",
+   "43-s3.jpg",
+   "43-s4.jpg",
+   "43-s5.jpg"
+  ],
+  "caption": "SALIN-TEMPEL #8: Template deskripsi alat untuk agent.\n\nDeskripsi jelas, pemilihan alat lebih tepat.\n\nYang dibahas:\n1. Tulis fungsi.\n2. Tulis kapan dipakai.\n3. Beri contoh.\n\nMau template apa lagi? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #templateprompt"
+ },
+ {
+  "day": 44,
+  "kind": "tutorial",
+  "n": 8,
+  "title": "Mencatat log langkah agent.",
+  "files": [
+   "44-s1.jpg",
+   "44-s2.jpg",
+   "44-s3.jpg",
+   "44-s4.jpg",
+   "44-s5.jpg"
+  ],
+  "caption": "TUTORIAL #8: Mencatat log langkah agent.\n\nSupaya salah bisa dilacak.\n\nYang dibahas:\n1. Tentukan isi log.\n2. Minta pencatatan.\n3. Baca saat meleset.\n\nSudah coba langkah ini? Ceritakan di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #tutorialai"
+ },
+ {
+  "day": 45,
+  "kind": "banding",
+  "n": 8,
+  "title": "Tugas cocok dan tidak cocok untuk agent.",
+  "files": [
+   "45-s1.jpg",
+   "45-s2.jpg",
+   "45-s3.jpg",
+   "45-s4.jpg",
+   "45-s5.jpg"
+  ],
+  "caption": "PERBANDINGAN #8: Tugas cocok dan tidak cocok untuk agent.\n\nPanduan memilih tugas pertama.\n\nYang dibahas:\n1. Pilih aturan jelas.\n2. Pilih dampak kecil.\n3. Pilih yang mudah dicek.\n\nKamu tim yang mana? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #perbandingan"
+ },
+ {
+  "day": 46,
+  "kind": "kasus",
+  "n": 8,
+  "title": "Agent pemilah tiket bantuan.",
+  "files": [
+   "46-s1.jpg",
+   "46-s2.jpg",
+   "46-s3.jpg",
+   "46-s4.jpg",
+   "46-s5.jpg"
+  ],
+  "caption": "STUDI KASUS #8: Agent pemilah tiket bantuan.\n\nSkenario: tiket masuk tanpa prioritas.\n\nYang dibahas:\n1. Pilih tugas yang jelas.\n2. Tinjau hasilnya.\n3. Perbaiki bertahap.\n\nTugas apa yang ingin kamu serahkan ke agent? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\nCatatan: ini contoh ilustrasi, bukan hasil nyata.\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #studikasus"
+ },
+ {
+  "day": 47,
+  "kind": "opini",
+  "n": 8,
+  "title": "Lebih baik agent lambat tapi benar.",
+  "files": [
+   "47-s1.jpg",
+   "47-s2.jpg",
+   "47-s3.jpg",
+   "47-s4.jpg",
+   "47-s5.jpg"
+  ],
+  "caption": "OPINI #8: Lebih baik agent lambat tapi benar.\n\nKecepatan bukan tujuan utama.\n\nYang dibahas:\n1. Utamakan benar.\n2. Cepatkan setelah stabil.\n3. Sesuaikan dengan risiko.\n\nKamu setuju atau tidak? Tulis alasanmu di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\nCatatan: ini opini pribadi, bukan aturan mutlak.\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #opini"
+ },
+ {
+  "day": 48,
+  "kind": "kesalahan",
+  "n": 8,
+  "title": "Tidak mencatat log langkah agent.",
+  "files": [
+   "48-s1.jpg",
+   "48-s2.jpg",
+   "48-s3.jpg",
+   "48-s4.jpg",
+   "48-s5.jpg"
+  ],
+  "caption": "KESALAHAN #8: Tidak mencatat log langkah agent.\n\nTanpa jejak, kamu tidak bisa memperbaiki.\n\nYang dibahas:\n1. Catat tiap langkah.\n2. Beri waktu dan nomor.\n3. Baca saat meleset.\n\nKesalahan mana yang pernah kamu alami? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #kesalahanai"
+ },
+ {
+  "day": 49,
+  "kind": "tutorial",
+  "n": 9,
+  "title": "Memecah tugas besar jadi kecil.",
+  "files": [
+   "49-s1.jpg",
+   "49-s2.jpg",
+   "49-s3.jpg",
+   "49-s4.jpg",
+   "49-s5.jpg"
+  ],
+  "caption": "TUTORIAL #9: Memecah tugas besar jadi kecil.\n\nSupaya agent tidak kewalahan.\n\nYang dibahas:\n1. Tulis hasil akhir.\n2. Pecah jadi bagian.\n3. Jalankan bertahap.\n\nSudah coba langkah ini? Ceritakan di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #tutorialai"
+ },
+ {
+  "day": 50,
+  "kind": "banding",
+  "n": 9,
+  "title": "Uji manual vs uji otomatis.",
+  "files": [
+   "50-s1.jpg",
+   "50-s2.jpg",
+   "50-s3.jpg",
+   "50-s4.jpg",
+   "50-s5.jpg"
+  ],
+  "caption": "PERBANDINGAN #9: Uji manual vs uji otomatis.\n\nMulai dari yang bisa kamu kerjakan hari ini.\n\nYang dibahas:\n1. Mulai manual.\n2. Otomatiskan yang stabil.\n3. Gabungkan keduanya.\n\nKamu tim yang mana? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #perbandingan"
+ },
+ {
+  "day": 51,
+  "kind": "kasus",
+  "n": 9,
+  "title": "Agent perekap laporan mingguan.",
+  "files": [
+   "51-s1.jpg",
+   "51-s2.jpg",
+   "51-s3.jpg",
+   "51-s4.jpg",
+   "51-s5.jpg"
+  ],
+  "caption": "STUDI KASUS #9: Agent perekap laporan mingguan.\n\nSkenario: laporan ditulis ulang tiap minggu.\n\nYang dibahas:\n1. Pilih tugas yang jelas.\n2. Tinjau hasilnya.\n3. Perbaiki bertahap.\n\nTugas apa yang ingin kamu serahkan ke agent? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\nCatatan: ini contoh ilustrasi, bukan hasil nyata.\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #studikasus"
+ },
+ {
+  "day": 52,
+  "kind": "opini",
+  "n": 9,
+  "title": "Jangan percaya demo yang terlalu mulus.",
+  "files": [
+   "52-s1.jpg",
+   "52-s2.jpg",
+   "52-s3.jpg",
+   "52-s4.jpg",
+   "52-s5.jpg"
+  ],
+  "caption": "OPINI #9: Jangan percaya demo yang terlalu mulus.\n\nKasus nyata lebih berantakan.\n\nYang dibahas:\n1. Anggap demo sebagai inspirasi.\n2. Uji di kasus nyata.\n3. Cari tahu batasnya.\n\nKamu setuju atau tidak? Tulis alasanmu di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\nCatatan: ini opini pribadi, bukan aturan mutlak.\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #opini"
+ },
+ {
+  "day": 53,
+  "kind": "kesalahan",
+  "n": 9,
+  "title": "Tugas tanpa kriteria selesai.",
+  "files": [
+   "53-s1.jpg",
+   "53-s2.jpg",
+   "53-s3.jpg",
+   "53-s4.jpg",
+   "53-s5.jpg"
+  ],
+  "caption": "KESALAHAN #9: Tugas tanpa kriteria selesai.\n\nAgent tidak tahu kapan harus berhenti.\n\nYang dibahas:\n1. Tulis kriteria selesai.\n2. Tulis format hasil.\n3. Nilai berdasarkan kriteria.\n\nKesalahan mana yang pernah kamu alami? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #kesalahanai"
+ },
+ {
+  "day": 54,
+  "kind": "salin",
+  "n": 9,
+  "title": "Prompt agar agent bertanya saat ragu.",
+  "files": [
+   "54-s1.jpg",
+   "54-s2.jpg",
+   "54-s3.jpg",
+   "54-s4.jpg",
+   "54-s5.jpg"
+  ],
+  "caption": "SALIN-TEMPEL #9: Prompt agar agent bertanya saat ragu.\n\nLebih baik bertanya daripada menebak.\n\nYang dibahas:\n1. Izinkan bertanya.\n2. Batasi pertanyaan.\n3. Uji dengan permintaan samar.\n\nMau template apa lagi? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #templateprompt"
+ },
+ {
+  "day": 55,
+  "kind": "banding",
+  "n": 10,
+  "title": "Alat sedikit vs alat banyak.",
+  "files": [
+   "55-s1.jpg",
+   "55-s2.jpg",
+   "55-s3.jpg",
+   "55-s4.jpg",
+   "55-s5.jpg"
+  ],
+  "caption": "PERBANDINGAN #10: Alat sedikit vs alat banyak.\n\nPilihan memengaruhi akurasi pemilihan.\n\nYang dibahas:\n1. Mulai sedikit.\n2. Tambah bertahap.\n3. Jaga deskripsi tetap jelas.\n\nKamu tim yang mana? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #perbandingan"
+ },
+ {
+  "day": 56,
+  "kind": "kasus",
+  "n": 10,
+  "title": "Agent penyusun tugas dari chat.",
+  "files": [
+   "56-s1.jpg",
+   "56-s2.jpg",
+   "56-s3.jpg",
+   "56-s4.jpg",
+   "56-s5.jpg"
+  ],
+  "caption": "STUDI KASUS #10: Agent penyusun tugas dari chat.\n\nSkenario: tugas tercecer di percakapan grup.\n\nYang dibahas:\n1. Pilih tugas yang jelas.\n2. Tinjau hasilnya.\n3. Perbaiki bertahap.\n\nTugas apa yang ingin kamu serahkan ke agent? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\nCatatan: ini contoh ilustrasi, bukan hasil nyata.\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #studikasus"
+ },
+ {
+  "day": 57,
+  "kind": "opini",
+  "n": 10,
+  "title": "Satu tugas jelas lebih berharga dari agent serba bisa.",
+  "files": [
+   "57-s1.jpg",
+   "57-s2.jpg",
+   "57-s3.jpg",
+   "57-s4.jpg",
+   "57-s5.jpg"
+  ],
+  "caption": "OPINI #10: Satu tugas jelas lebih berharga dari agent serba bisa.\n\nFokus mengalahkan lengkap.\n\nYang dibahas:\n1. Fokus pada satu tugas.\n2. Pisahkan bila perlu.\n3. Uji tiap bagian.\n\nKamu setuju atau tidak? Tulis alasanmu di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\nCatatan: ini opini pribadi, bukan aturan mutlak.\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #opini"
+ },
+ {
+  "day": 58,
+  "kind": "kesalahan",
+  "n": 10,
+  "title": "Satu agent mengerjakan semuanya.",
+  "files": [
+   "58-s1.jpg",
+   "58-s2.jpg",
+   "58-s3.jpg",
+   "58-s4.jpg",
+   "58-s5.jpg"
+  ],
+  "caption": "KESALAHAN #10: Satu agent mengerjakan semuanya.\n\nPeran yang campur membuat hasil sulit dikontrol.\n\nYang dibahas:\n1. Satu peran satu tugas.\n2. Uji terpisah.\n3. Gabungkan bertahap.\n\nKesalahan mana yang pernah kamu alami? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #kesalahanai"
+ },
+ {
+  "day": 59,
+  "kind": "salin",
+  "n": 10,
+  "title": "Template catatan kerja agent.",
+  "files": [
+   "59-s1.jpg",
+   "59-s2.jpg",
+   "59-s3.jpg",
+   "59-s4.jpg",
+   "59-s5.jpg"
+  ],
+  "caption": "SALIN-TEMPEL #10: Template catatan kerja agent.\n\nBiar tugas panjang tidak tercecer.\n\nYang dibahas:\n1. Simpan catatan kerja.\n2. Perbarui tiap bagian.\n3. Mulai sesi dari catatan.\n\nMau template apa lagi? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #templateprompt"
+ },
+ {
+  "day": 60,
+  "kind": "tutorial",
+  "n": 10,
+  "title": "Memilih tugas pertama untuk diotomatisasi.",
+  "files": [
+   "60-s1.jpg",
+   "60-s2.jpg",
+   "60-s3.jpg",
+   "60-s4.jpg",
+   "60-s5.jpg"
+  ],
+  "caption": "TUTORIAL #10: Memilih tugas pertama untuk diotomatisasi.\n\nPilih yang aman dan terasa manfaatnya.\n\nYang dibahas:\n1. Daftar tugas.\n2. Saring dengan tiga syarat.\n3. Pilih satu.\n\nSudah coba langkah ini? Ceritakan di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #tutorialai"
+ },
+ {
+  "day": 61,
+  "kind": "kasus",
+  "n": 11,
+  "title": "Agent pengecek tautan rusak.",
+  "files": [
+   "61-s1.jpg",
+   "61-s2.jpg",
+   "61-s3.jpg",
+   "61-s4.jpg",
+   "61-s5.jpg"
+  ],
+  "caption": "STUDI KASUS #11: Agent pengecek tautan rusak.\n\nSkenario: situs punya banyak halaman lama.\n\nYang dibahas:\n1. Pilih tugas yang jelas.\n2. Tinjau hasilnya.\n3. Perbaiki bertahap.\n\nTugas apa yang ingin kamu serahkan ke agent? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\nCatatan: ini contoh ilustrasi, bukan hasil nyata.\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #studikasus"
+ },
+ {
+  "day": 62,
+  "kind": "opini",
+  "n": 11,
+  "title": "Belajar agent lewat proyek kecil.",
+  "files": [
+   "62-s1.jpg",
+   "62-s2.jpg",
+   "62-s3.jpg",
+   "62-s4.jpg",
+   "62-s5.jpg"
+  ],
+  "caption": "OPINI #11: Belajar agent lewat proyek kecil.\n\nBukan kursus panjang.\n\nYang dibahas:\n1. Mulai proyek kecil.\n2. Belajar dari masalah nyata.\n3. Gabungkan dengan teori.\n\nKamu setuju atau tidak? Tulis alasanmu di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\nCatatan: ini opini pribadi, bukan aturan mutlak.\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #opini"
+ },
+ {
+  "day": 63,
+  "kind": "kesalahan",
+  "n": 11,
+  "title": "Menaruh data sensitif di prompt sembarangan.",
+  "files": [
+   "63-s1.jpg",
+   "63-s2.jpg",
+   "63-s3.jpg",
+   "63-s4.jpg",
+   "63-s5.jpg"
+  ],
+  "caption": "KESALAHAN #11: Menaruh data sensitif di prompt sembarangan.\n\nRapi dan cepat tidak boleh mengorbankan privasi.\n\nYang dibahas:\n1. Samarkan data pribadi.\n2. Jangan tempel kunci.\n3. Baca kebijakan data.\n\nKesalahan mana yang pernah kamu alami? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #kesalahanai"
+ },
+ {
+  "day": 64,
+  "kind": "salin",
+  "n": 11,
+  "title": "Prompt 10 kasus uji untuk agent.",
+  "files": [
+   "64-s1.jpg",
+   "64-s2.jpg",
+   "64-s3.jpg",
+   "64-s4.jpg",
+   "64-s5.jpg"
+  ],
+  "caption": "SALIN-TEMPEL #11: Prompt 10 kasus uji untuk agent.\n\nMulai menguji tanpa ribet.\n\nYang dibahas:\n1. Buat 10 kasus uji.\n2. Sertakan kasus salah.\n3. Ulangi setelah perbaikan.\n\nMau template apa lagi? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #templateprompt"
+ },
+ {
+  "day": 65,
+  "kind": "tutorial",
+  "n": 11,
+  "title": "Mengevaluasi agent tiap minggu.",
+  "files": [
+   "65-s1.jpg",
+   "65-s2.jpg",
+   "65-s3.jpg",
+   "65-s4.jpg",
+   "65-s5.jpg"
+  ],
+  "caption": "TUTORIAL #11: Mengevaluasi agent tiap minggu.\n\nRutinitas 15 menit supaya tetap sehat.\n\nYang dibahas:\n1. Kumpulkan hasil.\n2. Cari pola.\n3. Perbaiki satu hal.\n\nSudah coba langkah ini? Ceritakan di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #tutorialai"
+ },
+ {
+  "day": 66,
+  "kind": "banding",
+  "n": 11,
+  "title": "Agent cepat vs agent hati-hati.",
+  "files": [
+   "66-s1.jpg",
+   "66-s2.jpg",
+   "66-s3.jpg",
+   "66-s4.jpg",
+   "66-s5.jpg"
+  ],
+  "caption": "PERBANDINGAN #11: Agent cepat vs agent hati-hati.\n\nDua gaya yang berbeda.\n\nYang dibahas:\n1. Sesuaikan dengan risiko.\n2. Cepat untuk draf.\n3. Hati-hati untuk aksi penting.\n\nKamu tim yang mana? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #otomatisasi #belajarai #aiindonesia #perbandingan"
+ }
+]
