@@ -78,12 +78,29 @@ h1.xl{font-size:100px;line-height:1.02;letter-spacing:-.05em}
 .tight{gap:16px !important}.tight h1{font-size:58px}.tight .card{padding:22px 30px}.tight .card p{font-size:31px}.tight .num{width:54px;height:54px;font-size:29px}.tight .prompt{padding:22px 32px}.tight .prompt p{font-size:26px;margin-top:8px}.tight .badge{width:92px;height:92px}.tight .tbl .r>div{padding:16px 22px;font-size:27px}.tight .kv .v{font-size:30px}
 .tighter h1{font-size:52px}.tighter .card p{font-size:29px}.tighter .card{padding:18px 28px}.tighter .prompt p{font-size:24px}
 `;
+const THEME = process.env.THEME || 'gelap';
+
+const LIGHT = `
+:root{--card:#f4f5f7;--line:#e3e5ea;--mut:#6f7684}
+body{color:#0e0f13}
+.slide{background:radial-gradient(760px 620px at 105% -5%,rgba(255,59,59,.15),transparent 62%),radial-gradient(640px 520px at -8% 108%,rgba(255,59,59,.09),transparent 62%),radial-gradient(rgba(14,15,19,.075) 1.6px,transparent 1.7px) 0 0/38px 38px,#ffffff}
+.badge{border:5px solid #0e0f13;box-shadow:0 10px 26px rgba(255,59,59,.35)}
+.label{color:#e02d2d}.chip{color:#e02d2d}.sub{color:#3b404b}.arrow,.caption{color:#6f7684}
+.card{background:#f4f5f7;border:2px solid #e3e5ea;border-left:9px solid var(--red)}
+.note{background:#fff0ef;border:2px solid rgba(255,59,59,.55);color:#8a1c1c}
+.prompt{background:#14161b;color:#f6f2ea;box-shadow:0 14px 34px rgba(0,0,0,.2)}.prompt .tag{color:#ff6b64}
+.tbl{background:#fff;border-color:#e3e5ea}.tbl .r{border-top-color:#e3e5ea}.tbl .r>div{color:#1b1e25}
+.tbl .r>div:last-child{background:#fff0ef;color:#0e0f13}.tbl .r.h>div{color:#fff}.tbl .r.h>div:last-child{background:#d92424}
+.kv{background:#f4f5f7;border-color:#e3e5ea}.kv.res{background:#fff0ef;border-color:var(--red)}.kv.res .k{color:#d92424}.kv .k{color:#6f7684}
+.deco{-webkit-text-stroke:3px rgba(255,59,59,.28)}
+.foot{color:#6f7684}.foot .fc{color:#0e0f13}
+`;
 const counters = { tips: 0, trik: 0, fakta: 0 }, byKind = { tips: [], trik: [], fakta: [] };
 posts.forEach(p => { p.n = ++counters[p.kind]; byKind[p.kind].push(p); });
 const order = []; for (let i = 0; i < 10; i++) ['tips', 'trik', 'fakta'].forEach(k => order.push(byKind[k][i]));
 const sel = ALL ? order : [order[0]];
-const html = `<!doctype html><html lang="id"><head><meta charset="utf-8"><style>${css}</style></head><body>${sel.map((p, i) => slides(p, i + 1)).join('\n')}</body></html>`;
-const dir = path.join(__dirname, 'v2'); fs.mkdirSync(path.join(dir, 'slides'), { recursive: true }); fs.writeFileSync(path.join(dir, 'series.html'), html);
+const html = `<!doctype html><html lang="id"><head><meta charset="utf-8"><style>${css}${THEME === 'putih' ? LIGHT : ''}</style></head><body>${sel.map((p, i) => slides(p, i + 1)).join('\n')}</body></html>`;
+const dir = path.join(__dirname, process.env.OUT || 'v2'); fs.mkdirSync(path.join(dir, 'slides'), { recursive: true }); fs.writeFileSync(path.join(dir, 'series.html'), html);
 (async () => {
   const b = await chromium.launch(); const pg = await b.newPage({ viewport: { width: 1080, height: 1350 } });
   await pg.goto('file://' + path.join(dir, 'series.html')); await pg.evaluate(() => document.fonts.ready);
