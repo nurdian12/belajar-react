@@ -1,0 +1,422 @@
+[
+ {
+  "day": 1,
+  "kind": "tips",
+  "n": 1,
+  "title": "Mulai dari workflow, bukan agent.",
+  "files": [
+   "01-s1.jpg",
+   "01-s2.jpg",
+   "01-s3.jpg",
+   "01-s4.jpg",
+   "01-s5.jpg"
+  ],
+  "caption": "TIPS #1: Mulai dari workflow, bukan agent.\n\nBanyak tugas cukup pakai alur tetap.\n\nYang dibahas:\n1. Mulai dari alur tetap.\n2. Naik ke agent kalau memang perlu.\n3. Ukur: apakah hasilnya jadi lebih baik?\n\nTips mana yang paling kamu butuhkan sekarang? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #claude #otomatisasi #belajarai #aiindonesia #tipsai"
+ },
+ {
+  "day": 2,
+  "kind": "trik",
+  "n": 1,
+  "title": "Minta rencana dulu, baru eksekusi.",
+  "files": [
+   "02-s1.jpg",
+   "02-s2.jpg",
+   "02-s3.jpg",
+   "02-s4.jpg",
+   "02-s5.jpg"
+  ],
+  "caption": "TRIK #1: Minta rencana dulu, baru eksekusi.\n\nRencana yang salah lebih murah diperbaiki.\n\nYang dibahas:\n1. Minta rencana tertulis.\n2. Periksa dengan 3 pertanyaan.\n3. Baru bilang \"lanjut\".\n\nTrik ini sudah pernah kamu coba? Ceritakan di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #claude #otomatisasi #belajarai #aiindonesia #triksai"
+ },
+ {
+  "day": 3,
+  "kind": "fakta",
+  "n": 1,
+  "title": "Termostat adalah agent paling sederhana.",
+  "files": [
+   "03-s1.jpg",
+   "03-s2.jpg",
+   "03-s3.jpg",
+   "03-s4.jpg",
+   "03-s5.jpg"
+  ],
+  "caption": "FAKTA UNIK #1: Termostat adalah agent paling sederhana.\n\nKonsep agent sudah ada jauh sebelum chatbot.\n\nYang dibahas:\n1. Persepsi.\n2. Keputusan.\n3. Aksi.\n\nFakta mana yang paling mengejutkan buatmu? Komen ya. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\nSumber: Russell & Norvig; Wooldridge.\n\n#aiagent #agentai #claude #otomatisasi #belajarai #aiindonesia #faktaunik"
+ },
+ {
+  "day": 4,
+  "kind": "tips",
+  "n": 2,
+  "title": "Tulis instruksi seperti brief ke karyawan baru.",
+  "files": [
+   "04-s1.jpg",
+   "04-s2.jpg",
+   "04-s3.jpg",
+   "04-s4.jpg",
+   "04-s5.jpg"
+  ],
+  "caption": "TIPS #2: Tulis instruksi seperti brief ke karyawan baru.\n\nAgent tidak bisa menebak konteks di kepalamu.\n\nYang dibahas:\n1. Tujuan ditulis tegas.\n2. Konteks dan batasan lengkap.\n3. Format keluaran ditentukan.\n\nTips mana yang paling kamu butuhkan sekarang? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #claude #otomatisasi #belajarai #aiindonesia #tipsai"
+ },
+ {
+  "day": 5,
+  "kind": "trik",
+  "n": 2,
+  "title": "Minta agent menjelaskan alasan tiap aksi.",
+  "files": [
+   "05-s1.jpg",
+   "05-s2.jpg",
+   "05-s3.jpg",
+   "05-s4.jpg",
+   "05-s5.jpg"
+  ],
+  "caption": "TRIK #2: Minta agent menjelaskan alasan tiap aksi.\n\nAuditnya jadi jauh lebih mudah.\n\nYang dibahas:\n1. Alasan sebelum aksi.\n2. Hasil setelah aksi.\n3. Baca ulang saat ada masalah.\n\nTrik ini sudah pernah kamu coba? Ceritakan di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #claude #otomatisasi #belajarai #aiindonesia #triksai"
+ },
+ {
+  "day": 6,
+  "kind": "fakta",
+  "n": 2,
+  "title": "ELIZA (1966) hanya menyusun ulang kalimatmu.",
+  "files": [
+   "06-s1.jpg",
+   "06-s2.jpg",
+   "06-s3.jpg",
+   "06-s4.jpg",
+   "06-s5.jpg"
+  ],
+  "caption": "FAKTA UNIK #2: ELIZA (1966) hanya menyusun ulang kalimatmu.\n\nTapi banyak orang merasa dipahami.\n\nYang dibahas:\n1. Jangan menilai dari gaya bahasa.\n2. Tulis kriteria hasil benar.\n3. Uji dengan kasus nyata.\n\nFakta mana yang paling mengejutkan buatmu? Komen ya. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\nSumber: Weizenbaum, 1966.\n\n#aiagent #agentai #claude #otomatisasi #belajarai #aiindonesia #faktaunik"
+ },
+ {
+  "day": 7,
+  "kind": "tips",
+  "n": 3,
+  "title": "Satu contoh lebih kuat dari satu paragraf aturan.",
+  "files": [
+   "07-s1.jpg",
+   "07-s2.jpg",
+   "07-s3.jpg",
+   "07-s4.jpg",
+   "07-s5.jpg"
+  ],
+  "caption": "TIPS #3: Satu contoh lebih kuat dari satu paragraf aturan.\n\nTunjukkan hasil yang kamu mau.\n\nYang dibahas:\n1. Pilih contoh terbaikmu.\n2. Pertahankan polanya.\n3. Uji dengan input baru.\n\nTips mana yang paling kamu butuhkan sekarang? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #claude #otomatisasi #belajarai #aiindonesia #tipsai"
+ },
+ {
+  "day": 8,
+  "kind": "trik",
+  "n": 3,
+  "title": "Minta hasil dalam format tetap.",
+  "files": [
+   "08-s1.jpg",
+   "08-s2.jpg",
+   "08-s3.jpg",
+   "08-s4.jpg",
+   "08-s5.jpg"
+  ],
+  "caption": "TRIK #3: Minta hasil dalam format tetap.\n\nFormat tetap = gampang dicek dan diproses.\n\nYang dibahas:\n1. Tetapkan kolom dan nilai.\n2. Validasi sebelum dipakai.\n3. Catat yang gagal.\n\nTrik ini sudah pernah kamu coba? Ceritakan di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #claude #otomatisasi #belajarai #aiindonesia #triksai"
+ },
+ {
+  "day": 9,
+  "kind": "fakta",
+  "n": 3,
+  "title": "Pola ReAct: berpikir, lalu bertindak, bergantian.",
+  "files": [
+   "09-s1.jpg",
+   "09-s2.jpg",
+   "09-s3.jpg",
+   "09-s4.jpg",
+   "09-s5.jpg"
+  ],
+  "caption": "FAKTA UNIK #3: Pola ReAct: berpikir, lalu bertindak, bergantian.\n\nDasar dari banyak agent modern.\n\nYang dibahas:\n1. Beri ruang untuk menalar.\n2. Kembalikan hasil alat.\n3. Pasang batas putaran.\n\nFakta mana yang paling mengejutkan buatmu? Komen ya. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\nSumber: Yao dkk., 2022.\n\n#aiagent #agentai #claude #otomatisasi #belajarai #aiindonesia #faktaunik"
+ },
+ {
+  "day": 10,
+  "kind": "tips",
+  "n": 4,
+  "title": "Batasi langkah dan biaya sejak awal.",
+  "files": [
+   "10-s1.jpg",
+   "10-s2.jpg",
+   "10-s3.jpg",
+   "10-s4.jpg",
+   "10-s5.jpg"
+  ],
+  "caption": "TIPS #4: Batasi langkah dan biaya sejak awal.\n\nAgent bisa berputar-putar tanpa henti.\n\nYang dibahas:\n1. Tetapkan langkah maksimum.\n2. Tetapkan batas biaya.\n3. Wajibkan laporan saat mentok.\n\nTips mana yang paling kamu butuhkan sekarang? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #claude #otomatisasi #belajarai #aiindonesia #tipsai"
+ },
+ {
+  "day": 11,
+  "kind": "trik",
+  "n": 4,
+  "title": "Pakai mode simulasi sebelum aksi nyata.",
+  "files": [
+   "11-s1.jpg",
+   "11-s2.jpg",
+   "11-s3.jpg",
+   "11-s4.jpg",
+   "11-s5.jpg"
+  ],
+  "caption": "TRIK #4: Pakai mode simulasi sebelum aksi nyata.\n\nLihat apa yang AKAN terjadi, baru jalankan.\n\nYang dibahas:\n1. Aksi berisiko: simulasi dulu.\n2. Periksa rencananya.\n3. Baru beri izin jalan.\n\nTrik ini sudah pernah kamu coba? Ceritakan di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #claude #otomatisasi #belajarai #aiindonesia #triksai"
+ },
+ {
+  "day": 12,
+  "kind": "fakta",
+  "n": 4,
+  "title": "Teks biasa bisa membajak agent: prompt injection.",
+  "files": [
+   "12-s1.jpg",
+   "12-s2.jpg",
+   "12-s3.jpg",
+   "12-s4.jpg",
+   "12-s5.jpg"
+  ],
+  "caption": "FAKTA UNIK #4: Teks biasa bisa membajak agent: prompt injection.\n\nIstilahnya muncul sejak 2022.\n\nYang dibahas:\n1. Anggap konten luar sebagai data.\n2. Beri akses minimum.\n3. Minta OK untuk aksi berisiko.\n\nFakta mana yang paling mengejutkan buatmu? Komen ya. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\nSumber: Simon Willison, 2022.\n\n#aiagent #agentai #claude #otomatisasi #belajarai #aiindonesia #faktaunik"
+ },
+ {
+  "day": 13,
+  "kind": "tips",
+  "n": 5,
+  "title": "Sediakan jalan keluar: tanya manusia.",
+  "files": [
+   "13-s1.jpg",
+   "13-s2.jpg",
+   "13-s3.jpg",
+   "13-s4.jpg",
+   "13-s5.jpg"
+  ],
+  "caption": "TIPS #5: Sediakan jalan keluar: tanya manusia.\n\nAgent yang ragu harus bertanya, bukan menebak.\n\nYang dibahas:\n1. Tentukan pemicu bertanya.\n2. Minta pertanyaan spesifik.\n3. Jangan biarkan agent menebak.\n\nTips mana yang paling kamu butuhkan sekarang? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #claude #otomatisasi #belajarai #aiindonesia #tipsai"
+ },
+ {
+  "day": 14,
+  "kind": "trik",
+  "n": 5,
+  "title": "Pecah tugas panjang jadi checkpoint.",
+  "files": [
+   "14-s1.jpg",
+   "14-s2.jpg",
+   "14-s3.jpg",
+   "14-s4.jpg",
+   "14-s5.jpg"
+  ],
+  "caption": "TRIK #5: Pecah tugas panjang jadi checkpoint.\n\nKesalahan kecil ketahuan sebelum jadi besar.\n\nYang dibahas:\n1. Bagi tugas jadi tahap.\n2. Cek hasil tiap tahap.\n3. Lanjut hanya kalau benar.\n\nTrik ini sudah pernah kamu coba? Ceritakan di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #claude #otomatisasi #belajarai #aiindonesia #triksai"
+ },
+ {
+  "day": 15,
+  "kind": "fakta",
+  "n": 5,
+  "title": "MCP: seperti colokan USB-C untuk alat AI.",
+  "files": [
+   "15-s1.jpg",
+   "15-s2.jpg",
+   "15-s3.jpg",
+   "15-s4.jpg",
+   "15-s5.jpg"
+  ],
+  "caption": "FAKTA UNIK #5: MCP: seperti colokan USB-C untuk alat AI.\n\nSatu standar untuk menghubungkan alat dan data.\n\nYang dibahas:\n1. Sambungan jadi seragam.\n2. Alat bisa dipakai ulang.\n3. Akses tetap harus dibatasi.\n\nFakta mana yang paling mengejutkan buatmu? Komen ya. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\nSumber: Anthropic, 2024.\n\n#aiagent #agentai #claude #otomatisasi #belajarai #aiindonesia #faktaunik"
+ },
+ {
+  "day": 16,
+  "kind": "tips",
+  "n": 6,
+  "title": "Uji dengan 10 kasus nyata sebelum dilepas.",
+  "files": [
+   "16-s1.jpg",
+   "16-s2.jpg",
+   "16-s3.jpg",
+   "16-s4.jpg",
+   "16-s5.jpg"
+  ],
+  "caption": "TIPS #6: Uji dengan 10 kasus nyata sebelum dilepas.\n\nJangan percaya hanya dari satu demo yang bagus.\n\nYang dibahas:\n1. Kumpulkan 10 kasus nyata.\n2. Tulis jawaban yang benar.\n3. Ukur dan perbaiki.\n\nTips mana yang paling kamu butuhkan sekarang? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #claude #otomatisasi #belajarai #aiindonesia #tipsai"
+ },
+ {
+  "day": 17,
+  "kind": "trik",
+  "n": 6,
+  "title": "Beri agent catatan kerja agar tidak lupa.",
+  "files": [
+   "17-s1.jpg",
+   "17-s2.jpg",
+   "17-s3.jpg",
+   "17-s4.jpg",
+   "17-s5.jpg"
+  ],
+  "caption": "TRIK #6: Beri agent catatan kerja agar tidak lupa.\n\nSesi baru tidak otomatis ingat sesi lama.\n\nYang dibahas:\n1. Tulis tujuan dan progres.\n2. Baca di awal sesi.\n3. Perbarui di akhir sesi.\n\nTrik ini sudah pernah kamu coba? Ceritakan di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #claude #otomatisasi #belajarai #aiindonesia #triksai"
+ },
+ {
+  "day": 18,
+  "kind": "fakta",
+  "n": 6,
+  "title": "25 agent AI hidup di kota simulasi.",
+  "files": [
+   "18-s1.jpg",
+   "18-s2.jpg",
+   "18-s3.jpg",
+   "18-s4.jpg",
+   "18-s5.jpg"
+  ],
+  "caption": "FAKTA UNIK #6: 25 agent AI hidup di kota simulasi.\n\nRiset Stanford dan Google, 2023.\n\nYang dibahas:\n1. Catat pengalaman.\n2. Refleksikan secara berkala.\n3. Gunakan untuk rencana berikutnya.\n\nFakta mana yang paling mengejutkan buatmu? Komen ya. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\nSumber: Park dkk., 2023.\n\n#aiagent #agentai #claude #otomatisasi #belajarai #aiindonesia #faktaunik"
+ },
+ {
+  "day": 19,
+  "kind": "tips",
+  "n": 7,
+  "title": "Catat log tiap langkah agent.",
+  "files": [
+   "19-s1.jpg",
+   "19-s2.jpg",
+   "19-s3.jpg",
+   "19-s4.jpg",
+   "19-s5.jpg"
+  ],
+  "caption": "TIPS #7: Catat log tiap langkah agent.\n\nTanpa log, kamu menebak kenapa agent salah.\n\nYang dibahas:\n1. Catat input dan alat.\n2. Catat keputusan dan alasan.\n3. Simpan agar bisa dicari.\n\nTips mana yang paling kamu butuhkan sekarang? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #claude #otomatisasi #belajarai #aiindonesia #tipsai"
+ },
+ {
+  "day": 20,
+  "kind": "trik",
+  "n": 7,
+  "title": "Pakai agent kedua sebagai pemeriksa.",
+  "files": [
+   "20-s1.jpg",
+   "20-s2.jpg",
+   "20-s3.jpg",
+   "20-s4.jpg",
+   "20-s5.jpg"
+  ],
+  "caption": "TRIK #7: Pakai agent kedua sebagai pemeriksa.\n\nPembuat cenderung membenarkan hasilnya sendiri.\n\nYang dibahas:\n1. Pisahkan pembuat dan pemeriksa.\n2. Beri syarat yang terukur.\n3. Aksi berisiko tetap ke manusia.\n\nTrik ini sudah pernah kamu coba? Ceritakan di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #claude #otomatisasi #belajarai #aiindonesia #triksai"
+ },
+ {
+  "day": 21,
+  "kind": "fakta",
+  "n": 7,
+  "title": "Voyager: agent Minecraft yang menulis skill-nya sendiri.",
+  "files": [
+   "21-s1.jpg",
+   "21-s2.jpg",
+   "21-s3.jpg",
+   "21-s4.jpg",
+   "21-s5.jpg"
+  ],
+  "caption": "FAKTA UNIK #7: Voyager: agent Minecraft yang menulis skill-nya sendiri.\n\nMenyimpan solusi yang berhasil.\n\nYang dibahas:\n1. Catat solusi yang terbukti.\n2. Beri nama yang jelas.\n3. Pakai ulang di tugas baru.\n\nFakta mana yang paling mengejutkan buatmu? Komen ya. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\nSumber: Wang dkk., 2023.\n\n#aiagent #agentai #claude #otomatisasi #belajarai #aiindonesia #faktaunik"
+ },
+ {
+  "day": 22,
+  "kind": "tips",
+  "n": 8,
+  "title": "Satu agent, satu peran.",
+  "files": [
+   "22-s1.jpg",
+   "22-s2.jpg",
+   "22-s3.jpg",
+   "22-s4.jpg",
+   "22-s5.jpg"
+  ],
+  "caption": "TIPS #8: Satu agent, satu peran.\n\nAgent serba bisa biasanya serba setengah.\n\nYang dibahas:\n1. Satu agent, satu tugas.\n2. Sambung lewat hasil yang jelas.\n3. Uji tiap peran terpisah.\n\nTips mana yang paling kamu butuhkan sekarang? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #claude #otomatisasi #belajarai #aiindonesia #tipsai"
+ },
+ {
+  "day": 23,
+  "kind": "trik",
+  "n": 8,
+  "title": "Tulis daftar larangan yang jelas.",
+  "files": [
+   "23-s1.jpg",
+   "23-s2.jpg",
+   "23-s3.jpg",
+   "23-s4.jpg",
+   "23-s5.jpg"
+  ],
+  "caption": "TRIK #8: Tulis daftar larangan yang jelas.\n\nLarangan samar tidak bisa dipatuhi.\n\nYang dibahas:\n1. Tulis larangan spesifik.\n2. Beri nomor agar mudah dirujuk.\n3. Tentukan prioritas aturan.\n\nTrik ini sudah pernah kamu coba? Ceritakan di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #claude #otomatisasi #belajarai #aiindonesia #triksai"
+ },
+ {
+  "day": 24,
+  "kind": "fakta",
+  "n": 8,
+  "title": "Info di tengah konteks panjang lebih sering terlewat.",
+  "files": [
+   "24-s1.jpg",
+   "24-s2.jpg",
+   "24-s3.jpg",
+   "24-s4.jpg",
+   "24-s5.jpg"
+  ],
+  "caption": "FAKTA UNIK #8: Info di tengah konteks panjang lebih sering terlewat.\n\nTemuan studi \"Lost in the Middle\".\n\nYang dibahas:\n1. Aturan utama di awal.\n2. Pengingat di akhir.\n3. Data panjang diringkas.\n\nFakta mana yang paling mengejutkan buatmu? Komen ya. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\nSumber: Liu dkk., 2023.\n\n#aiagent #agentai #claude #otomatisasi #belajarai #aiindonesia #faktaunik"
+ },
+ {
+  "day": 25,
+  "kind": "tips",
+  "n": 9,
+  "title": "Beri akses minimum saja.",
+  "files": [
+   "25-s1.jpg",
+   "25-s2.jpg",
+   "25-s3.jpg",
+   "25-s4.jpg",
+   "25-s5.jpg"
+  ],
+  "caption": "TIPS #9: Beri akses minimum saja.\n\nDampak kesalahan = besarnya akses.\n\nYang dibahas:\n1. Mulai dari baca saja.\n2. Pisahkan akun agent.\n3. Audit akses berkala.\n\nTips mana yang paling kamu butuhkan sekarang? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #claude #otomatisasi #belajarai #aiindonesia #tipsai"
+ },
+ {
+  "day": 26,
+  "kind": "trik",
+  "n": 9,
+  "title": "Tulis deskripsi alat yang jelas.",
+  "files": [
+   "26-s1.jpg",
+   "26-s2.jpg",
+   "26-s3.jpg",
+   "26-s4.jpg",
+   "26-s5.jpg"
+  ],
+  "caption": "TRIK #9: Tulis deskripsi alat yang jelas.\n\nAgent memilih alat dari deskripsinya.\n\nYang dibahas:\n1. Sebut fungsi dengan tegas.\n2. Sebut input dan output.\n3. Sebut yang dilarang.\n\nTrik ini sudah pernah kamu coba? Ceritakan di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #claude #otomatisasi #belajarai #aiindonesia #triksai"
+ },
+ {
+  "day": 27,
+  "kind": "fakta",
+  "n": 9,
+  "title": "Agent diuji dengan masalah GitHub nyata.",
+  "files": [
+   "27-s1.jpg",
+   "27-s2.jpg",
+   "27-s3.jpg",
+   "27-s4.jpg",
+   "27-s5.jpg"
+  ],
+  "caption": "FAKTA UNIK #9: Agent diuji dengan masalah GitHub nyata.\n\nNamanya SWE-bench, 2023.\n\nYang dibahas:\n1. Ambil kasus dari pekerjaanmu.\n2. Definisikan \"selesai\".\n3. Ukur dan perbaiki.\n\nFakta mana yang paling mengejutkan buatmu? Komen ya. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\nSumber: Jimenez dkk., 2023.\n\n#aiagent #agentai #claude #otomatisasi #belajarai #aiindonesia #faktaunik"
+ },
+ {
+  "day": 28,
+  "kind": "tips",
+  "n": 10,
+  "title": "Pilih tugas yang hasilnya bisa dicek.",
+  "files": [
+   "28-s1.jpg",
+   "28-s2.jpg",
+   "28-s3.jpg",
+   "28-s4.jpg",
+   "28-s5.jpg"
+  ],
+  "caption": "TIPS #10: Pilih tugas yang hasilnya bisa dicek.\n\nKalau tidak bisa dicek, tidak bisa dipercaya.\n\nYang dibahas:\n1. Pilih hasil yang terukur.\n2. Pilih kesalahan yang murah.\n3. Pilih tugas yang berulang.\n\nTips mana yang paling kamu butuhkan sekarang? Tulis di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #claude #otomatisasi #belajarai #aiindonesia #tipsai"
+ },
+ {
+  "day": 29,
+  "kind": "trik",
+  "n": 10,
+  "title": "Ringkas hasil alat sebelum diberikan lagi.",
+  "files": [
+   "29-s1.jpg",
+   "29-s2.jpg",
+   "29-s3.jpg",
+   "29-s4.jpg",
+   "29-s5.jpg"
+  ],
+  "caption": "TRIK #10: Ringkas hasil alat sebelum diberikan lagi.\n\nKonteks panjang membuat agent lambat dan mahal.\n\nYang dibahas:\n1. Ringkas tiap hasil alat.\n2. Simpan data mentah di luar.\n3. Jaga yang penting tetap terlihat.\n\nTrik ini sudah pernah kamu coba? Ceritakan di komentar. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\n#aiagent #agentai #claude #otomatisasi #belajarai #aiindonesia #triksai"
+ },
+ {
+  "day": 30,
+  "kind": "fakta",
+  "n": 10,
+  "title": "Model tidak menjalankan alat. Kodemu yang menjalankan.",
+  "files": [
+   "30-s1.jpg",
+   "30-s2.jpg",
+   "30-s3.jpg",
+   "30-s4.jpg",
+   "30-s5.jpg"
+  ],
+  "caption": "FAKTA UNIK #10: Model tidak menjalankan alat. Kodemu yang menjalankan.\n\nInilah dasar function calling.\n\nYang dibahas:\n1. Model hanya meminta.\n2. Kodemu yang memutuskan.\n3. Pasang pagar di titik itu.\n\nFakta mana yang paling mengejutkan buatmu? Komen ya. 👇\nSimpan postingan ini buat dipraktikkan, dan geser sampai slide terakhir. 👉\n\nSumber: Dokumentasi tool use.\n\n#aiagent #agentai #claude #otomatisasi #belajarai #aiindonesia #faktaunik"
+ }
+]
