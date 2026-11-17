@@ -73,10 +73,19 @@ def upload(path, mimetype):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--date', required=True, help='tanggal tayang (WIB), mis. 2026-11-05')
-    ap.add_argument('--username', default='kenalipolanya'); ap.add_argument('--account-id', default='6aeb121dfc43f81b7855b2ff', help='ID akun Repliz; kosongkan untuk mencari lewat username'); ap.add_argument('--dir', default='out3')
+    ap.add_argument('--username', default='kenalipolanya'); ap.add_argument('--account-id', default='69dcc12a84ebdfba15dfdcb1', help='ID akun Repliz (bawaan: Instagram @alamnurdiann). TikTok @kenalipolanya.id = 6aeb121dfc43f81b7855b2ff'); ap.add_argument('--dir', default='out3')
     ap.add_argument('--only', default='1,2,3,4,5,6'); ap.add_argument('--go', action='store_true')
     a = ap.parse_args()
-    caps = captions(); acc = {'_id': a.account_id} if a.account_id else find_account(a.username)
+    caps = captions()
+    if a.account_id:
+        code, info = call('GET', '/public/account/' + a.account_id)
+        if code != 200 or not isinstance(info, dict):
+            print(f'GAGAL cek akun {a.account_id}: HTTP {code} {info}'); sys.exit(1)
+        print(f"Akun: {info.get('type')} @{info.get('username')} ({info.get('name')}) | terhubung: {info.get('isConnected')}")
+        if not info.get('isConnected'): print('Akun belum terhubung di Repliz. Sambungkan dulu.'); sys.exit(1)
+        acc = {'_id': a.account_id}
+    else:
+        acc = find_account(a.username)
     if not acc: sys.exit(1)
     plan = []
     for n in [int(x) for x in a.only.split(',')]:
