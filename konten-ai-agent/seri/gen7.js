@@ -1,7 +1,7 @@
 // Tampilan v2: tema gelap + stabilo merah, @handle di tengah bawah.  node gen2.js        -> hanya postingan hari ke-1
 //                                                                    ALL=1 node gen2.js  -> semua 30 (ke v2/slides, v2/manifest.json)
 const { chromium } = require('playwright'); const path = require('path'); const fs = require('fs');
-const POSTS = require('./b4.js');
+const POSTS = require(process.env.POSTS || './b4.js');
 const HANDLE = '@alamnurdiann', ALL = !!process.env.ALL;
 const KIND = { kesalahan: ['KESALAHAN', '#kesalahanai'], salin: ['SALIN-TEMPEL', '#templateprompt'], tutorial: ['TUTORIAL', '#tutorialai'], banding: ['PERBANDINGAN', '#perbandingan'], kasus: ['STUDI KASUS', '#studikasus'], opini: ['OPINI', '#opini'] };
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -47,6 +47,7 @@ body{font-family:'Inter','DejaVu Sans',sans-serif;font-feature-settings:'cv08' 1
 .badge svg{width:56px;height:56px}
 .label{font-size:30px;letter-spacing:.2em;font-weight:800;color:#ff7b74;text-transform:uppercase}
 h1{font-size:76px;line-height:1.06;font-weight:800;letter-spacing:-.04em}
+h1.xl .hl{white-space:normal;line-height:1.14}
 h1.xl{font-size:100px;line-height:1.02;letter-spacing:-.05em}
 .hl{color:#fff;background:linear-gradient(transparent 6%,var(--red) 6%,var(--red) 94%,transparent 94%);padding:0 14px;margin:0 -4px;border-radius:10px;white-space:nowrap;box-decoration-break:clone;-webkit-box-decoration-break:clone}
 .card{background:var(--card);border:2px solid var(--line);border-left:9px solid var(--red);border-radius:30px;padding:36px 38px;display:flex;gap:26px;align-items:center}
