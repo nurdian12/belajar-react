@@ -1,0 +1,138 @@
+<!doctype html><html lang="id"><head><meta charset="utf-8"><title>Carousel AI Agent - kerangka TAP</title>
+<style>
+:root{--ink:#0f1115;--lime:#d8f55c;--card:#f5f6f8;--mut:#6b7280;--line:#e5e7eb}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-feature-settings:'cv08' 1;background:#cfd3d9;font-family:'Inter','DejaVu Sans',sans-serif;color:var(--ink)}
+.slide{width:1080px;height:1350px;background:#fff;position:relative;overflow:hidden;margin:0 0 30px 0}
+.head{position:absolute;top:100px;left:96px;display:flex;gap:26px;align-items:center}
+.avatar{width:92px;height:92px;border-radius:50%;background:var(--lime);border:4px solid var(--ink);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:34px;letter-spacing:-.02em}
+.name{font-size:40px;font-weight:700;letter-spacing:-.02em}.handle{font-size:30px;color:#8a8f98;font-weight:500;margin-top:2px}
+.content{position:absolute;top:250px;left:96px;right:96px;bottom:150px;display:flex;flex-direction:column;gap:22px}
+.stephead{display:flex;align-items:center;gap:30px;margin-bottom:6px}
+.badge{width:112px;height:112px;border-radius:50%;background:var(--lime);border:5px solid var(--ink);display:flex;align-items:center;justify-content:center;font-size:66px;font-weight:800;flex:none}
+.badge svg{width:62px;height:62px}
+.label{font-size:31px;letter-spacing:.2em;font-weight:700;color:var(--mut);text-transform:uppercase}
+.kicker{font-size:31px;letter-spacing:.2em;font-weight:700;color:var(--mut);text-transform:uppercase;margin-bottom:2px}
+h1{font-size:68px;line-height:1.07;font-weight:800;letter-spacing:-.04em}
+h1.xl{font-size:92px;line-height:1.02;letter-spacing:-.045em}
+.hl{background:var(--lime);padding:0 14px;border-radius:12px;margin:0 -4px;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.card{background:var(--card);border-radius:34px;padding:30px 36px;display:flex;gap:28px;align-items:center}
+.card.top{align-items:flex-start}
+.num{width:64px;height:64px;border-radius:50%;background:var(--ink);color:var(--lime);font-weight:800;font-size:34px;display:flex;align-items:center;justify-content:center;flex:none}
+.card p{font-size:36px;line-height:1.22;font-weight:700;letter-spacing:-.02em}
+.card .sm{font-size:25px;letter-spacing:.16em;color:var(--mut);font-weight:700;margin-bottom:6px;text-transform:uppercase;display:block}
+.prompt{background:#111318;color:#fff;border-radius:34px;padding:32px 38px}
+.prompt .tag{color:var(--lime);font-weight:800;letter-spacing:.16em;font-size:25px}
+.prompt p{font-size:33px;line-height:1.3;margin-top:12px;font-weight:500}
+.note{background:#fff6cf;color:#6b5200;border-radius:30px;padding:28px 36px;font-size:33px;line-height:1.3;font-weight:600}
+.pills{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.pill{background:var(--ink);color:var(--lime);border-radius:999px;padding:16px 30px;font-weight:800;font-size:33px;letter-spacing:-.01em}
+.arrow{color:#8a8f98;font-size:38px;font-weight:600}
+.sub{font-size:40px;line-height:1.25;font-weight:600;color:#2a2e36;letter-spacing:-.02em}
+.caption{font-size:28px;color:#8a8f98;font-weight:500;margin-top:-6px}
+.foot{position:absolute;bottom:64px;left:96px;right:96px;display:flex;justify-content:space-between;font-size:28px;letter-spacing:.16em;color:#a0a4ab;font-weight:600}
+.tbl{border:3px solid var(--line);border-radius:34px;overflow:hidden}
+.tbl .r{display:grid;grid-template-columns:.7fr 1.35fr 1.65fr;border-top:3px solid var(--line)}
+.tbl .r.h{background:var(--ink);border-top:0;color:var(--lime);font-weight:800;letter-spacing:.14em;font-size:25px}
+.tbl .r>div{padding:24px 26px;font-size:32px;line-height:1.22;font-weight:500;display:flex;align-items:center}
+.tbl .r.h>div{padding:22px 26px}
+.tbl .r>div:last-child{background:#f0fadc;font-weight:800}.tbl .r.h>div:last-child{background:var(--ink)}
+.kv{background:var(--card);border-radius:34px;padding:28px 34px;display:grid;grid-template-columns:200px 1fr;gap:20px;align-items:center}
+.kv .k{font-size:25px;letter-spacing:.16em;color:var(--mut);font-weight:700}
+.kv .v{font-size:34px;line-height:1.25;font-weight:600;letter-spacing:-.01em}
+.kv.res{background:#f0fadc;border:4px solid var(--ink)}.kv.res .k{color:#18803a}
+.sq{width:72px;height:72px;border-radius:18px;background:var(--ink);color:var(--lime);font-weight:800;font-size:44px;display:flex;align-items:center;justify-content:center;flex:none}
+.card b{font-weight:800}
+.coverrow{display:flex;gap:34px;margin-top:10px}
+.coverrow div{display:flex;flex-direction:column;align-items:center;gap:14px}
+.coverrow .b2{width:150px;height:150px;border-radius:50%;background:var(--lime);border:6px solid var(--ink);display:flex;align-items:center;justify-content:center;font-size:92px;font-weight:800}
+.coverrow span{font-size:28px;letter-spacing:.2em;font-weight:700;color:var(--mut)}
+.tight{gap:16px !important}.tight h1{font-size:58px}.tight .card{padding:22px 32px}.tight .card p{font-size:32px}.tight .card .sm{font-size:22px;margin-bottom:2px}.tight .num{width:56px;height:56px;font-size:30px}.tight .prompt{padding:24px 34px}.tight .prompt p{font-size:29px;margin-top:8px}.tight .kv{padding:20px 30px;grid-template-columns:170px 1fr}.tight .kv .v{font-size:30px}.tight .badge{width:96px;height:96px;font-size:56px}.tight .badge svg{width:52px;height:52px}.tight .label{font-size:28px}.tight .stephead{margin-bottom:0}
+.tighter h1{font-size:54px}.tighter .card p{font-size:30px}.tighter .card{padding:18px 30px}.tighter .prompt{padding:20px 32px}.content>*{flex:none}.hl{white-space:nowrap}.tight .tbl .r>div{padding:18px 22px;font-size:29px}.tight .tbl .r.h>div{padding:18px 22px;font-size:23px}.btn{display:inline-flex;background:var(--lime);border:5px solid var(--ink);border-radius:999px;padding:24px 44px;font-weight:800;font-size:38px;letter-spacing:-.01em;align-self:flex-start}
+</style></head><body>
+<!-- 1 COVER -->
+<div class="slide"><div class="head"><div class="avatar">AN</div><div><div class="name">Alam Nurdian</div><div class="handle">@alamnurdiann</div></div></div>
+<div class="content" style="top:330px;gap:40px"><div class="kicker">Panduan pemula · AI agent</div>
+<h1 class="xl">Bikin AI agent pertamamu dalam <span class="hl">3 langkah.</span></h1>
+<div class="sub">Tanpa coding rumit. Pakai kerangka TAP.</div>
+<div class="coverrow"><div><div class="b2">T</div><span>TUGAS</span></div><div><div class="b2">A</div><span>ALAT</span></div><div><div class="b2">P</div><span>PAGAR</span></div></div></div>
+<div class="foot"><span>1 / 10</span><span>GESER →</span></div></div>
+<!-- 2 MASALAH -->
+<div class="slide"><div class="head"><div class="avatar">AN</div><div><div class="name">Alam Nurdian</div><div class="handle">@alamnurdiann</div></div></div>
+<div class="content"><div class="kicker">Masalahnya</div><h1>Kenapa kebanyakan AI agent gagal?</h1>
+<div class="card"><div class="num">1</div><p>Tugasnya terlalu luas, misalnya “urus semua bisnisku”.</p></div>
+<div class="card"><div class="num">2</div><p>Alatnya kebanyakan sejak hari pertama.</p></div>
+<div class="card"><div class="num">3</div><p>Tanpa batas dan tanpa pengecekan sebelum bertindak.</p></div>
+<div class="sub" style="margin-top:8px">Agent yang bagus itu <span class="hl">sempit</span>, terbatas, dan bisa dicek.</div></div>
+<div class="foot"><span>2 / 10</span><span>GESER →</span></div></div>
+<!-- 3 DASAR -->
+<div class="slide"><div class="head"><div class="avatar">AN</div><div><div class="name">Alam Nurdian</div><div class="handle">@alamnurdiann</div></div></div>
+<div class="content"><div class="kicker">Dasar dulu</div><h1>Chatbot menjawab. Agent bertindak.</h1>
+<div class="pills"><span class="pill">PIKIR</span><span class="arrow">→</span><span class="pill">ALAT</span><span class="arrow">→</span><span class="pill">CEK</span><span class="arrow">→</span><span class="pill">ULANG</span></div>
+<div class="card" style="padding:36px 40px"><p style="font-weight:600">AI agent = <b>model AI</b> + <b>alat</b> yang boleh dipakai + pengulangan sampai tugas selesai.</p></div>
+<div class="note">Sederhananya: kamu kasih tujuan, agent yang mengerjakan langkah-langkahnya.</div></div>
+<div class="foot"><span>3 / 10</span><span>GESER →</span></div></div>
+<!-- 4 T -->
+<div class="slide"><div class="head"><div class="avatar">AN</div><div><div class="name">Alam Nurdian</div><div class="handle">@alamnurdiann</div></div></div>
+<div class="content tight"><div class="stephead"><div class="badge">T</div><div class="label">Langkah 1 · Tugas</div></div>
+<h1>Pilih satu tugas kecil yang berulang.</h1>
+<div class="card"><div class="num">1</div><p>Pilih pekerjaan yang kamu lakukan tiap hari atau tiap minggu.</p></div>
+<div class="card"><div class="num">2</div><p>Tulis hasil akhirnya dalam satu kalimat.</p></div>
+<div class="card"><div class="num">3</div><p>Butuh lebih dari satu kalimat? Tugasnya masih terlalu besar.</p></div>
+<div class="prompt"><div class="tag">PROMPT</div><p>Aku sering [pekerjaan]. Pecah jadi langkah, tentukan input dan hasil akhirnya, lalu tandai langkah yang aman diotomatisasi.</p></div></div>
+<div class="foot"><span>4 / 10</span><span>GESER →</span></div></div>
+<!-- 5 HASIL T -->
+<div class="slide"><div class="head"><div class="avatar">AN</div><div><div class="name">Alam Nurdian</div><div class="handle">@alamnurdiann</div></div></div>
+<div class="content tight"><div class="stephead"><div class="badge">T</div><div class="label">Hasil langkah 1</div></div>
+<h1>Sempitkan sampai jelas ukurannya.</h1>
+<div class="tbl"><div class="r h"><div>KASUS</div><div>TERLALU LUAS</div><div>TUGAS KECIL</div></div>
+<div class="r"><div>#1</div><div>Urus bisnisku</div><div>Rangkum email pelanggan tiap pagi</div></div>
+<div class="r"><div>#2</div><div>Bantu marketing</div><div>Bikin 5 ide caption dari satu artikel</div></div>
+<div class="r"><div>#3</div><div>Kelola keuangan</div><div>Catat struk masuk ke spreadsheet</div></div></div>
+<div class="caption">Contoh ilustrasi.</div>
+<div class="sub" style="font-weight:700">Jangan mulai dari agent serba bisa. Mulai dari <span class="hl">satu</span> pekerjaan.</div></div>
+<div class="foot"><span>5 / 10</span><span>GESER →</span></div></div>
+<!-- 6 A -->
+<div class="slide"><div class="head"><div class="avatar">AN</div><div><div class="name">Alam Nurdian</div><div class="handle">@alamnurdiann</div></div></div>
+<div class="content"><div class="stephead"><div class="badge">A</div><div class="label">Langkah 2 · Alat</div></div>
+<h1>Beri alat seperlunya, bukan sebanyaknya.</h1>
+<div class="pills"><span class="pill">BACA</span><span class="arrow">→</span><span class="pill">OLAH</span><span class="arrow">→</span><span class="pill">TULIS</span><span class="arrow">→</span><span class="pill">LAPOR</span></div>
+<div class="prompt"><div class="tag">PROMPT</div><p>Untuk tugas [tugas kecilku], alat minimal apa yang dibutuhkan? Urutkan dari yang paling aman, dan jelaskan akses yang diperlukan tiap alat.</p></div>
+<div class="note">Mulai dari 1–2 alat. Tambah alat baru hanya setelah agent berjalan stabil.</div></div>
+<div class="foot"><span>6 / 10</span><span>GESER →</span></div></div>
+<!-- 7 P -->
+<div class="slide"><div class="head"><div class="avatar">AN</div><div><div class="name">Alam Nurdian</div><div class="handle">@alamnurdiann</div></div></div>
+<div class="content tight tighter"><div class="stephead"><div class="badge">P</div><div class="label">Langkah 3 · Pagar</div></div>
+<h1>Pasang pagar sebelum agent jalan sendiri.</h1>
+<div class="card top"><div class="num">1</div><div><span class="sm">Batas</span><p>Akses minimum. Hanya baca, kecuali memang perlu menulis.</p></div></div>
+<div class="card top"><div class="num">2</div><div><span class="sm">Persetujuan</span><p>Aksi berisiko (kirim, hapus, bayar) menunggu OK manusia.</p></div></div>
+<div class="card top"><div class="num">3</div><div><span class="sm">Catatan</span><p>Simpan log: apa yang dilakukan agent dan kenapa.</p></div></div>
+<div class="prompt" style="padding:26px 38px"><div class="tag">PROMPT</div><p style="font-size:31px">Daftarkan aksi agent ini dari yang aman sampai berisiko. Tandai mana yang wajib persetujuan manusia.</p></div></div>
+<div class="foot"><span>7 / 10</span><span>GESER →</span></div></div>
+<!-- 8 CONTOH -->
+<div class="slide"><div class="head"><div class="avatar">AN</div><div><div class="name">Alam Nurdian</div><div class="handle">@alamnurdiann</div></div></div>
+<div class="content tight"><div class="stephead"><div class="badge"><svg viewBox="0 0 24 24" fill="none" stroke="#0f1115" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg></div><div class="label">Contoh lengkap</div></div>
+<h1>Agent rekap email, dari nol sampai jalan.</h1>
+<div class="kv"><div class="k">TUGAS</div><div class="v">Rangkum email pelanggan tiap pagi jam 7.</div></div>
+<div class="kv"><div class="k">ALAT</div><div class="v">Baca kotak masuk (hanya baca) + kirim ringkasan ke Telegram.</div></div>
+<div class="kv"><div class="k">PAGAR</div><div class="v">Tidak boleh membalas atau menghapus. Draft balasan menunggu OK-mu.</div></div>
+<div class="kv res"><div class="k">HASIL</div><div class="v">Tiap pagi: ringkasan satu layar + draft balasan yang tinggal kamu setujui.</div></div>
+<div class="caption">Contoh ilustrasi.</div></div>
+<div class="foot"><span>8 / 10</span><span>GESER →</span></div></div>
+<!-- 9 RINGKAS -->
+<div class="slide"><div class="head"><div class="avatar">AN</div><div><div class="name">Alam Nurdian</div><div class="handle">@alamnurdiann</div></div></div>
+<div class="content"><div class="kicker">Ringkasnya</div><h1>Tiga langkah, satu kebiasaan.</h1>
+<div class="card"><div class="sq">T</div><p><b>Tugas.</b> Pilih satu pekerjaan kecil yang jelas hasilnya.</p></div>
+<div class="card"><div class="sq">A</div><p><b>Alat.</b> Beri akses seperlunya, tambah pelan-pelan.</p></div>
+<div class="card"><div class="sq">P</div><p><b>Pagar.</b> Batasi aksi berisiko dan catat semuanya.</p></div>
+<div class="note">Kebiasaannya: uji dengan contoh nyata dulu sebelum agent dilepas sendirian.</div></div>
+<div class="foot"><span>9 / 10</span><span>GESER →</span></div></div>
+<!-- 10 CTA -->
+<div class="slide"><div class="head"><div class="avatar">AN</div><div><div class="name">Alam Nurdian</div><div class="handle">@alamnurdiann</div></div></div>
+<div class="content"><div class="stephead"><div class="badge"><svg viewBox="0 0 24 24" fill="none" stroke="#0f1115" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg></div><div class="label">Mulai sekarang</div></div>
+<h1>Satu agent kecil lebih baik dari rencana besar.</h1>
+<div class="prompt"><div class="tag">PROMPT</div><p>Tugas pertama yang mau aku otomatisasi: [tulis di sini]. Pandu aku bikin agent-nya dengan kerangka Tugas, Alat, Pagar.</p></div>
+<div class="sub" style="font-weight:700">Tulis tugas pertama agent-mu di komentar.</div>
+<div class="btn">SIMPAN POSTINGAN INI</div></div>
+<div class="foot"><span>10 / 10</span><span>SELESAI ✓</span></div></div>
+</body></html>

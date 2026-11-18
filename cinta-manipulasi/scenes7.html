@@ -1,0 +1,264 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>cinta manipulasi</title>
+<style>html,body{margin:0;background:#000}canvas{display:block}</style></head>
+<body><canvas id="c" width="1080" height="1920"></canvas>
+<script>
+const W = 1080, H = 1920;
+const c = document.getElementById('c'), g = c.getContext('2d');
+const FONT = '"JetBrains Mono","DejaVu Sans Mono",monospace';
+const WATERMARK = '@kenalipolanya.id';
+const RED = '#ff5a52', AMBER = '#ffc457', GREY = '#9fb0d0';
+
+/* ---------- util ---------- */
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const lerp = (a, b, t) => a + (b - a) * t;
+const seg = (t, a, b) => clamp((t - a) / (b - a));
+const eo = x => 1 - Math.pow(1 - x, 3);
+const eio = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+const rad = d => d * Math.PI / 180;
+const rnd = i => { const x = Math.sin(i * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
+
+function text(s, x, y, o = {}) {
+  const { size = 30, color = '#fff', align = 'center', bold = true, ls = 3, alpha = 1 } = o;
+  g.save(); g.globalAlpha *= alpha;
+  g.font = `${bold ? '700 ' : '400 '}${size}px ${FONT}`;
+  g.letterSpacing = ls + 'px';
+  g.fillStyle = color; g.textAlign = align; g.textBaseline = 'middle';
+  g.fillText(s, x, y); g.restore();
+}
+// parts: [[str,color?],...] centered on x
+function rich(parts, x, y, o = {}) {
+  const { size = 30, ls = 3, alpha = 1, align = 'center' } = o;
+  g.save(); g.font = `700 ${size}px ${FONT}`; g.letterSpacing = ls + 'px';
+  const ws = parts.map(p => g.measureText(p[0]).width);
+  const tot = ws.reduce((a, b) => a + b, 0);
+  g.restore();
+  let cx = align === 'center' ? x - tot / 2 : x;
+  parts.forEach((p, i) => { text(p[0], cx, y, { ...o, align: 'left', color: p[1] || o.color || '#fff', alpha }); cx += ws[i]; });
+}
+function rrect(x, y, w, h, r) {
+  g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r);
+  g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath();
+}
+function line(x1, y1, x2, y2, col, lw, alpha = 1) {
+  g.save(); g.globalAlpha *= alpha; g.strokeStyle = col; g.lineWidth = lw; g.lineCap = 'round';
+  g.beginPath(); g.moveTo(x1, y1); g.lineTo(x2, y2); g.stroke(); g.restore();
+}
+function glow(x, y, r, col, a = 1) {
+  const gr = g.createRadialGradient(x, y, 0, x, y, r);
+  gr.addColorStop(0, col); gr.addColorStop(1, 'rgba(0,0,0,0)');
+  g.save(); g.globalAlpha *= a; g.fillStyle = gr; g.beginPath(); g.arc(x, y, r, 0, 7); g.fill(); g.restore();
+}
+
+/* ---------- stick figure ---------- */
+function fig(x, y, o = {}) {
+  const s = o.s ?? 1, col = o.color || '#f4f4f4', d = o.dir || 1, lw = (o.lw || 7) * s;
+  const legs = (o.legs || [0, 0]).map((a, i) => a + (i ? -5 : 5)), arms = (o.arms || [8, -8]).map((a, i) => a + (i ? -14 : 14)), lean = o.lean || 0, tilt = o.tilt || 0;
+  const LL = 58 * s, TL = 62 * s, AL = 46 * s, HR = 19 * s;
+  const maxL = Math.max(Math.abs(legs[0]), Math.abs(legs[1]));
+  const hip = { x, y: y - LL * Math.cos(rad(maxL)) };
+  const neck = { x: hip.x + d * TL * Math.sin(rad(lean)), y: hip.y - TL * Math.cos(rad(lean)) };
+  const hd = HR + 3 * s;
+  const head = { x: neck.x + d * hd * Math.sin(rad(lean + tilt)), y: neck.y - hd * Math.cos(rad(lean + tilt)) };
+  const sh = { x: neck.x - d * 8 * s * Math.sin(rad(lean)), y: neck.y + 8 * s * Math.cos(rad(lean)) };
+  const feet = legs.map(a => ({ x: hip.x + d * LL * Math.sin(rad(a)), y: hip.y + LL * Math.cos(rad(a)) }));
+  const hands = arms.map(a => ({ x: sh.x + d * AL * Math.sin(rad(a)), y: sh.y + AL * Math.cos(rad(a)) }));
+  g.save(); g.globalAlpha *= (o.alpha ?? 1);
+  g.strokeStyle = col; g.fillStyle = col; g.lineWidth = lw; g.lineCap = 'round';
+  g.beginPath(); g.moveTo(hip.x, hip.y); g.lineTo(neck.x, neck.y); g.stroke();
+  feet.forEach(f => { g.beginPath(); g.moveTo(hip.x, hip.y); g.lineTo(f.x, f.y); g.stroke(); });
+  hands.forEach(h => { g.beginPath(); g.moveTo(sh.x, sh.y); g.lineTo(h.x, h.y); g.stroke(); });
+  g.beginPath(); g.arc(head.x, head.y, HR, 0, 7); g.fill();
+  g.restore();
+  return { hip, neck, head, sh, feet, hands, top: head.y - HR };
+}
+const walk = (ph, amp = 28) => ({ legs: [amp * Math.sin(ph), -amp * Math.sin(ph)], arms: [-amp * 1.1 * Math.sin(ph), amp * 1.1 * Math.sin(ph)] });
+
+/* ---------- props ---------- */
+function bubble(x, y, str, o = {}) {
+  const { size = 22, a = 1, color = '#fff', bg = 'rgba(15,22,40,.92)', border = 'rgba(160,180,220,.6)', tail = 'down', dashed = false, tx = 0 } = o;
+  if (a <= 0) return;
+  g.save(); g.globalAlpha *= a;
+  g.font = `700 ${size}px ${FONT}`; g.letterSpacing = '1px';
+  const w = g.measureText(str).width + 36, h = size + 26;
+  const s = .85 + .15 * eo(a);
+  g.translate(x, y); g.scale(s, s);
+  g.fillStyle = bg; g.strokeStyle = border; g.lineWidth = 2; if (dashed) g.setLineDash([8, 6]);
+  rrect(-w / 2, -h / 2, w, h, 14); g.fill(); g.stroke(); g.setLineDash([]);
+  if (tail) {
+    const ty = tail === 'down' ? h / 2 : -h / 2, sg = tail === 'down' ? 1 : -1;
+    const T = Math.max(-w / 2 + 24, Math.min(w / 2 - 24, tx));
+    g.beginPath(); g.moveTo(T - 10, ty - sg * 1); g.lineTo(T, ty + sg * 16); g.lineTo(T + 10, ty - sg * 1); g.closePath(); g.fillStyle = bg; g.fill();
+    g.beginPath(); g.moveTo(T - 10, ty); g.lineTo(T, ty + sg * 16); g.lineTo(T + 10, ty); g.stroke();
+  }
+  g.fillStyle = color; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(str, 0, 1);
+  g.restore();
+}
+function floor(y, w = 924) {
+  const gr = g.createLinearGradient(0, y, 0, y + 120); gr.addColorStop(0, '#4a4f60'); gr.addColorStop(1, '#2a2e3b');
+  g.fillStyle = gr; g.fillRect(0, y, w, 200); line(0, y, w, y, 'rgba(255,240,210,.55)', 2);
+}
+function lantern(x, y, a = 1, r = 120) {
+  glow(x, y, r, 'rgba(255,200,110,.75)', a);
+  g.save(); g.globalAlpha *= a; g.fillStyle = '#ffd88a'; rrect(x - 7, y - 9, 14, 18, 3); g.fill(); g.restore();
+}
+function door(x, y, w, h, lit, a = 1) {
+  g.save(); g.globalAlpha *= a;
+  if (lit > 0) glow(x + w / 2, y + h / 2, h * 1.1, 'rgba(255,196,87,.8)', lit);
+  g.fillStyle = lit > .5 ? '#ffe7a8' : '#3b2c20'; g.strokeStyle = lit > .5 ? '#fff3c8' : '#c9a36b'; g.lineWidth = 3;
+  rrect(x, y, w, h, 6); g.fill(); g.stroke(); g.restore();
+}
+function gift(x, y, s = 1, col = '#e8697d') {
+  g.save(); g.translate(x, y); g.scale(s, s);
+  g.fillStyle = col; g.fillRect(-22, -36, 44, 36); g.fillStyle = '#ffe0a8'; g.fillRect(-4, -36, 8, 36); g.fillRect(-22, -22, 44, 7);
+  g.fillStyle = '#ffe0a8'; g.beginPath(); g.arc(-8, -41, 7, 0, 7); g.arc(8, -41, 7, 0, 7); g.fill(); g.restore();
+}
+function heart(x, y, s = 30, a = 1, col = '#ff7a90') { text('♥', x, y, { size: s, color: col, alpha: a, bold: false, ls: 0 }); }
+function clock(x, y, r, tt, a = 1) {
+  g.save(); g.globalAlpha *= a; g.strokeStyle = '#cfd8ee'; g.lineWidth = 5; g.beginPath(); g.arc(x, y, r, 0, 7); g.stroke();
+  line(x, y, x + r * .6 * Math.sin(tt * 9), y - r * .6 * Math.cos(tt * 9), '#fff', 5);
+  line(x, y, x + r * .38 * Math.sin(tt * .8), y - r * .38 * Math.cos(tt * .8), '#fff', 5); g.restore();
+}
+
+/* ---------- layout helpers ---------- */
+function bg() { g.fillStyle = '#03040b'; g.fillRect(0, 0, W, H); }
+function title(s, t, y = 250) { text(s, W / 2, y, { size: 32, ls: 5, alpha: eo(seg(t, 0, .6)) }); }
+const win = (t, a, b, f = .3) => seg(t, a, a + f) * (1 - seg(t, b - f, b));
+function watermark() { text(WATERMARK, W / 2, 1850, { size: 17, ls: 8, color: '#4b566f' }); }
+function panel(x, y, w, h, label, sub, drawFn) {
+  g.save(); g.translate(x, y);
+  const gr = g.createLinearGradient(0, 0, 0, h); gr.addColorStop(0, '#0d1528'); gr.addColorStop(1, '#070c19');
+  g.fillStyle = gr; g.fillRect(0, 0, w, h);
+  g.save(); g.beginPath(); g.rect(0, 0, w, h); g.clip();
+  [w * .30, w * .74].forEach(cx => {
+    const lg = g.createLinearGradient(0, 0, 0, h * .9); lg.addColorStop(0, 'rgba(150,170,220,.20)'); lg.addColorStop(1, 'rgba(150,170,220,0)');
+    g.fillStyle = lg; g.beginPath(); g.moveTo(cx - 20, 0); g.lineTo(cx + 20, 0); g.lineTo(cx + 150, h); g.lineTo(cx - 150, h); g.closePath(); g.fill();
+  });
+  drawFn(); g.restore();
+  g.strokeStyle = 'rgba(130,150,190,.38)'; g.lineWidth = 2; g.strokeRect(0, 0, w, h); g.restore();
+  text(label, x + 26, y + 36, { size: 26, align: 'left', ls: 2 });
+  if (sub) text(sub[0], x + 26, y + 72, { size: 18, align: 'left', ls: 2, color: sub[1] || GREY });
+}
+const P1 = [78, 400, 924, 620], P2 = [78, 1080, 924, 620];
+
+const endStart = 16;
+function endCard(t, punch, sub, o = {}) {
+  const { py = 880, size = 66, subY = 1450, subSize = 28, lh = 1.28, subLh = 1.5 } = o;
+  const d = eo(seg(t, endStart, endStart + .9));
+  if (d <= 0) return;
+  g.fillStyle = `rgba(3,4,11,${.86 * d})`; g.fillRect(0, 0, W, H);
+  const a = eo(seg(t, endStart + .7, endStart + 1.6));
+  const y0 = py - (punch.length - 1) * size * lh / 2;
+  punch.forEach((ln, i) => rich(ln, W / 2, y0 + i * size * lh + (1 - a) * 20, { size, ls: 3, alpha: a, color: '#fff' }));
+  const b = eo(seg(t, endStart + 2.2, endStart + 3.2));
+  const sy0 = subY - (sub.length - 1) * subSize * subLh / 2;
+  sub.forEach((ln, i) => rich(ln, W / 2, sy0 + i * subSize * subLh, { size: subSize, ls: 2, alpha: b * .9, color: '#c5cde0' }));
+  watermark();
+}
+
+/* =========================================================
+   V7  MENCINTAI VS DICINTAI  (A vs B)
+   ========================================================= */
+function watermark() {
+  g.save(); g.fillStyle = 'rgba(0,0,0,.4)'; rrect(W / 2 - 196, 1512, 392, 48, 24); g.fill(); g.restore();
+  text(WATERMARK, W / 2, 1537, { size: 22, ls: 4, color: '#cfd8ee' });
+}
+const PA = [78, 330, 924, 560], PB = [78, 930, 924, 560], FLR = 470, T_STOP = 9.4;
+const SENDS = [[.9, 'UDAH MAKAN?'], [1.9, 'HATI-HATI YA'], [2.9, 'SEMANGAT KERJANYA'], [3.9, 'KANGEN KAMU'], [4.9, 'KAMU KENAPA?'], [5.9, 'AKU SALAH APA?'], [6.9, 'KABARIN YA...']];
+const REPLY = ['OKE', 'HM', 'NANTI YA', 'OKE', 'HM', 'WKWK', '...'];
+const PINK = '#e8a0a0';
+
+function envelopeP(x, y, sc = 1, a = 1, col = AMBER) {
+  if (a <= 0) return; g.save(); g.globalAlpha *= a; g.translate(x, y); g.scale(sc, sc); glow(0, 0, 60, 'rgba(255,196,87,.5)', .8);
+  g.fillStyle = col; g.strokeStyle = '#6b4a10'; g.lineWidth = 3; rrect(-26, -18, 52, 36, 5); g.fill(); g.stroke();
+  g.beginPath(); g.moveTo(-26, -16); g.lineTo(0, 6); g.lineTo(26, -16); g.stroke(); g.restore();
+}
+function phoneP(x, y, o = {}) {
+  const { rot = 0, sc = 1, lit = false, a = 1 } = o; if (a <= 0) return;
+  g.save(); g.globalAlpha *= a; g.translate(x, y); g.rotate(rad(rot)); g.scale(sc, sc);
+  if (lit) glow(0, 0, 90, 'rgba(150,200,255,.55)', 1);
+  g.fillStyle = '#0c0d10'; rrect(-22, -38, 44, 76, 8); g.fill(); g.fillStyle = lit ? '#9fd3ff' : '#1a2233'; rrect(-18, -33, 36, 62, 4); g.fill(); g.restore();
+}
+function batteryP(x, y, pct, a = 1) {
+  if (a <= 0) return; const col = pct > 50 ? '#58c47f' : pct > 20 ? AMBER : RED;
+  g.save(); g.globalAlpha *= a; g.strokeStyle = '#cfd8ee'; g.lineWidth = 4; rrect(x - 60, y - 26, 120, 52, 8); g.stroke(); g.fillStyle = '#cfd8ee'; g.fillRect(x + 62, y - 10, 8, 20);
+  g.fillStyle = col; rrect(x - 54, y - 20, Math.max(0, 108 * pct / 100), 40, 5); if (pct > 0) g.fill(); g.restore();
+  text('ENERGI', x, y - 46, { size: 16, ls: 3, color: GREY, alpha: a }); text(Math.round(pct) + '%', x, y + 1, { size: 22, color: pct > 50 ? '#0b2315' : '#fff', alpha: a });
+}
+function tableP(x, y, w) { g.fillStyle = '#4a4f60'; g.fillRect(x - w / 2, y, w, 10); g.fillRect(x - w / 2 + 8, y + 10, 7, FLR - y - 10); g.fillRect(x + w / 2 - 15, y + 10, 7, FLR - y - 10); }
+
+function v7(t) {
+  bg(); title('MENCINTAI VS DICINTAI.', t);
+  const batt = 100 * (1 - clamp((t - .8) / (T_STOP - .8)));
+  const count = Math.round(47 * eo(seg(t, .8, 9.0)));
+  const topSub = t < 7.4 ? ['MENGHUBUNGI DULUAN', GREY] : t < T_STOP ? ['MULAI LELAH', AMBER] : ['BERHENTI', RED];
+  const botSub = t < T_STOP ? ['MENUNGGU DIHUBUNGI', GREY] : t < 12.6 ? ['KOK SEPI?', AMBER] : ['BARU SADAR', RED];
+  const ax = 250, bxx = 640;
+  // ---------- top panel : A ----------
+  panel(...PA, 'DIA YANG MENCINTAI', topSub, () => {
+    floor(FLR);
+    const tired = seg(t, 7.0, T_STOP), sat = t >= T_STOP;
+    const bob = Math.sin(t * 9) * 2;
+    const A = sat ? fig(ax, FLR, { s: 1.15, lean: 14, tilt: 28, legs: [76, 82], arms: [58, 50] })
+      : fig(ax, FLR, { s: 1.15, lean: 16 * tired, tilt: 20 * tired, arms: [lerp(78, 20, tired) + bob, -10] });
+    if (!sat) phoneP(A.hands[0].x + 8, A.hands[0].y - 14, { sc: .8, lit: t > .6, a: 1 });
+    else phoneP(ax + 110, FLR - 14, { rot: 82, sc: .8, lit: seg(t, 15.2, 15.4) * (1 - seg(t, 15.8, 16)) > 0 });
+    // messages
+    SENDS.forEach(([ts, s]) => bubble(ax + 50, 215, s, { a: win(t, ts, ts + .95, .12), size: 21, tx: -10 }));
+    bubble(ax + 40, 215, 'AKU CAPEK.', { a: win(t, 9.8, 12.6, .3), size: 22, tx: -10 });
+    bubble(ax + 40, 215, 'AKU BERHENTI.', { a: win(t, 12.8, 16, .3), size: 22, tx: -10 });
+    batteryP(600, 130, batt);
+    text('CHAT DULUAN', 790, 78, { size: 16, ls: 3, color: GREY });
+    text(String(count), 790, 140, { size: 66, color: t >= T_STOP ? RED : AMBER });
+    if (t > 8.0 && t < T_STOP) text('!', 600, 190 + Math.sin(t * 14) * 3, { size: 30, color: RED, alpha: .9 });
+  });
+  if (t > T_STOP) { g.fillStyle = `rgba(3,4,11,${.5 * seg(t, T_STOP, T_STOP + .8)})`; g.fillRect(PA[0] + 2, PA[1] + 2, PA[2] - 4, PA[3] - 4); }
+  // ---------- bottom panel : B ----------
+  panel(...PB, 'DIA YANG DICINTAI', botSub, () => {
+    floor(FLR);
+    tableP(380, 360, 190);
+    const pings = SENDS.map(([ts]) => ts + .6);
+    const ping = pings.some(p => t > p && t < p + .5);
+    const post = t >= T_STOP;
+    phoneP(380, 330, { rot: 82, sc: .75, lit: !post ? ping : (t > 10.4 && t < 12.2) });
+    pings.forEach(p => { const q = seg(t, p, p + .5); if (q > 0 && q < 1) { g.save(); g.strokeStyle = `rgba(150,200,255,${1 - q})`; g.lineWidth = 3; g.beginPath(); g.arc(380, 330, 20 + 60 * q, 0, 7); g.stroke(); g.restore(); } });
+    const B = !post ? fig(bxx, FLR, { s: 1.15, color: PINK, dir: -1, lean: -9, tilt: -8, arms: [34, -34] })
+      : fig(bxx, FLR, { s: 1.15, color: PINK, dir: -1, lean: seg(t, 12.4, 13) * 6, tilt: t > 12.4 ? 14 : 0, arms: [t > 10.4 && t < 12.4 ? 70 : 12, -10] });
+    SENDS.forEach(([ts], i) => bubble(bxx - 20, 215, REPLY[i], { a: win(t, ts + 1.1, ts + 1.95, .1), size: 21, tx: 10 }));
+    bubble(bxx - 20, 215, 'KOK SEPI?', { a: win(t, 9.8, 11.5, .25), size: 22, tx: 10 });
+    bubble(bxx - 20, 215, 'DIA KE MANA?', { a: win(t, 11.6, 13.2, .25), size: 22, tx: 10 });
+    bubble(bxx + 70, 215, 'SELAMA INI DIA YANG MENJAGA.', { a: win(t, 14.4, 16, .3), size: 19, tx: -70 });
+    if (post && t < 13) clock(250, 150, 40, t, seg(t, 9.6, 10) * (1 - seg(t, 12.4, 12.8)));
+    // chart
+    const ch = seg(t, 12.6, 13.0) * (1 - 0);
+    if (ch > 0) {
+      g.save(); g.globalAlpha = ch; g.fillStyle = 'rgba(8,13,26,.92)'; g.strokeStyle = 'rgba(160,180,220,.5)'; g.lineWidth = 2; rrect(40, 96, 440, 184, 14); g.fill(); g.stroke(); g.restore();
+      text('SIAPA YANG MENGHUBUNGI DULUAN?', 260, 120, { size: 16, ls: 1, alpha: ch });
+      const bw = 290 * eo(seg(t, 13.0, 14.4));
+      text('DIA', 78, 180, { size: 20, align: 'left', color: '#fff', alpha: ch }); g.fillStyle = AMBER; rrect(130, 163, Math.max(2, bw), 34, 6); g.fill(); text(Math.round(47 * eo(seg(t, 13.0, 14.4))) + 'x', 130 + bw + 12, 180, { size: 22, align: 'left', color: AMBER, alpha: ch });
+      text('KAMU', 70, 240, { size: 20, align: 'left', color: PINK, alpha: ch }); g.save(); g.globalAlpha = ch; g.strokeStyle = RED; g.lineWidth = 2; g.setLineDash([6, 5]); rrect(130, 223, 290, 34, 6); g.stroke(); g.restore(); text('0x', 436, 240, { size: 22, align: 'left', color: RED, alpha: seg(t, 13.6, 14.0) });
+    }
+  });
+  if (t > T_STOP && t < 12.6) { g.fillStyle = `rgba(3,4,11,${.0})`; }
+  // ---------- envelopes between panels ----------
+  SENDS.forEach(([ts], i) => {
+    const p = seg(t, ts, ts + .6); if (p > 0 && p < 1) { const x = lerp(PA[0] + ax + 120, PB[0] + 380, eo(p)), y = lerp(PA[1] + FLR - 150, PB[1] + 300, eo(p)); envelopeP(x, y, 1 - .15 * p, 1); }
+  });
+  const up = seg(t, 15.0, 15.7); if (up > 0 && up < 1) envelopeP(lerp(PB[0] + 380, PA[0] + ax + 110, eo(up)), lerp(PB[1] + 300, PA[1] + FLR - 60, eo(up)), 1, 1, '#e8a0a0');
+  // end card
+  endCard(t, [[['HUBUNGAN TIDAK BISA']], [['DIPERTAHANKAN']], [['OLEH '], ['SATU ORANG.', RED]]],
+    [[['Cinta itu dijaga berdua.']], [['Kirim ke seseorang yang lagi']], [['capek mengusahakan.']]], { size: 62, py: 800, subY: 1330, subSize: 28 });
+}
+const CUES7 = (() => {
+  const c = [[.2, 'whoosh', .4]];
+  SENDS.forEach(([ts], i) => { c.push([ts, 'whoosh', .35], [ts + .55, 'notif', .7], [ts + 1.1, 'pop', .5]); });
+  c.push([7.6, 'sad', .35], [8.2, 'buzz', .4], [T_STOP, 'record', .9], [T_STOP + .1, 'thud', .6]);
+  [10.0, 10.55, 11.1, 11.65, 12.2].forEach(x => c.push([x, 'tick', .55]));
+  c.push([12.6, 'riser', .6]); for (let i = 0; i < 9; i++) c.push([13.0 + i * .15, 'tick', .3]);
+  c.push([14.4, 'sad', .7], [15.0, 'whoosh', .5], [15.7, 'buzz', .3], [16.0, 'ding', .8], [16.6, 'sparkle', .3]);
+  return c.sort((a, b) => a[0] - b[0]);
+})();
+window.CUES = { 1: CUES7 }; window.DUR = 20;
+window.render = (id, t) => { g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = 1; v7(t); };
+document.fonts.load('700 30px "JetBrains Mono"').then(() => { window.ready = true; });
+</script></body></html>

@@ -1,0 +1,127 @@
+{
+ "1": {
+  "id": "6afc97efc167f6fac5dbf102",
+  "scheduleAt": "2026-11-18T00:00:00.000Z",
+  "raw": null
+ },
+ "2": {
+  "id": "6afc9805c167f6fac5dbf587",
+  "scheduleAt": "2026-11-18T05:00:00.000Z",
+  "raw": null
+ },
+ "3": {
+  "id": "6afc981404b95980d341cbcc",
+  "scheduleAt": "2026-11-18T09:00:00.000Z",
+  "raw": null
+ },
+ "4": {
+  "id": "6afc982304b95980d341ced5",
+  "scheduleAt": "2026-11-18T12:00:00.000Z",
+  "raw": null
+ },
+ "5": {
+  "id": "6afc983204b95980d341d124",
+  "scheduleAt": "2026-11-18T14:00:00.000Z",
+  "raw": null
+ },
+ "6": {
+  "id": "6afc9840c167f6fac5dc0102",
+  "scheduleAt": "2026-11-19T00:00:00.000Z",
+  "raw": null
+ },
+ "7": {
+  "id": "6afc984f54fc51ccf51abf62",
+  "scheduleAt": "2026-11-19T05:00:00.000Z",
+  "raw": null
+ },
+ "8": {
+  "id": "6afc985f04b95980d341d926",
+  "scheduleAt": "2026-11-19T09:00:00.000Z",
+  "raw": null
+ },
+ "9": {
+  "id": "6afc987104b95980d341dca8",
+  "scheduleAt": "2026-11-19T12:00:00.000Z",
+  "raw": null
+ },
+ "10": {
+  "id": "6afc988154fc51ccf51acb59",
+  "scheduleAt": "2026-11-19T14:00:00.000Z",
+  "raw": null
+ },
+ "11": {
+  "id": "6afc988f54fc51ccf51acfce",
+  "scheduleAt": "2026-11-20T00:00:00.000Z",
+  "raw": null
+ },
+ "12": {
+  "id": "6afc98a0c167f6fac5dc171e",
+  "scheduleAt": "2026-11-20T05:00:00.000Z",
+  "raw": null
+ },
+ "13": {
+  "id": "6afc98af04b95980d341ed0a",
+  "scheduleAt": "2026-11-20T09:00:00.000Z",
+  "raw": null
+ },
+ "14": {
+  "id": "6afc98be54fc51ccf51ad9d3",
+  "scheduleAt": "2026-11-20T12:00:00.000Z",
+  "raw": null
+ },
+ "15": {
+  "id": "6afc98cd54fc51ccf51adcaa",
+  "scheduleAt": "2026-11-20T14:00:00.000Z",
+  "raw": null
+ },
+ "16": {
+  "id": "6afc98dbc167f6fac5dc24e5",
+  "scheduleAt": "2026-11-21T00:00:00.000Z",
+  "raw": null
+ },
+ "17": {
+  "id": "6afc98ea54fc51ccf51ae42d",
+  "scheduleAt": "2026-11-21T05:00:00.000Z",
+  "raw": null
+ },
+ "18": {
+  "id": "6afc98fb04b95980d341fe30",
+  "scheduleAt": "2026-11-21T09:00:00.000Z",
+  "raw": null
+ },
+ "19": {
+  "id": "6afc990a04b95980d34200ed",
+  "scheduleAt": "2026-11-21T12:00:00.000Z",
+  "raw": null
+ },
+ "20": {
+  "id": "6afc991904b95980d3420329",
+  "scheduleAt": "2026-11-21T14:00:00.000Z",
+  "raw": null
+ },
+ "21": {
+  "id": "6afc9928c167f6fac5dc333b",
+  "scheduleAt": "2026-11-22T00:00:00.000Z",
+  "raw": null
+ },
+ "22": {
+  "id": "6afc9939c167f6fac5dc3701",
+  "scheduleAt": "2026-11-22T05:00:00.000Z",
+  "raw": null
+ },
+ "23": {
+  "id": "6afc994854fc51ccf51af5ed",
+  "scheduleAt": "2026-11-22T09:00:00.000Z",
+  "raw": null
+ },
+ "24": {
+  "id": "6afc9957c167f6fac5dc3c62",
+  "scheduleAt": "2026-11-22T12:00:00.000Z",
+  "raw": null
+ },
+ "25": {
+  "id": "6afc996704b95980d34212f8",
+  "scheduleAt": "2026-11-22T14:00:00.000Z",
+  "raw": null
+ }
+}

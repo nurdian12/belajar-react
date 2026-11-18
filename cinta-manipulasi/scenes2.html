@@ -1,0 +1,459 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>cinta manipulasi v2</title>
+<style>html,body{margin:0;background:#000}canvas{display:block}</style></head>
+<body><canvas id="c" width="1080" height="1920"></canvas>
+<script>
+const W = 1080, H = 1920;
+const c = document.getElementById('c'), g = c.getContext('2d');
+const SANS = '"Inter","DejaVu Sans",sans-serif';
+const WATERMARK = 'KENALI POLANYA';
+const AMBER = '#f5b63c', RED = '#ff6b5e', BLUE = '#53bdeb';
+const REVEAL = 8.3;
+
+/* ---------- util ---------- */
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const lerp = (a, b, t) => a + (b - a) * t;
+const seg = (t, a, b) => clamp((t - a) / (b - a));
+const eo = x => 1 - Math.pow(1 - x, 3);
+const eio = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+const rad = d => d * Math.PI / 180;
+const rnd = i => { const x = Math.sin(i * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
+const win = (t, a, b, f = .35) => seg(t, a, a + f) * (1 - seg(t, b - f, b));
+
+function font(size, w = 800) { return `${w} ${size}px ${SANS}`; }
+function text(s, x, y, o = {}) {
+  const { size = 30, color = '#fff', align = 'center', w = 800, ls = 0, alpha = 1 } = o;
+  if (alpha <= 0) return;
+  g.save(); g.globalAlpha *= alpha; g.font = font(size, w); g.letterSpacing = ls + 'px';
+  g.fillStyle = color; g.textAlign = align; g.textBaseline = 'middle'; g.fillText(s, x, y); g.restore();
+}
+function measure(s, size, w = 800, ls = 0) { g.save(); g.font = font(size, w); g.letterSpacing = ls + 'px'; const m = g.measureText(s).width; g.restore(); return m; }
+function rich(parts, x, y, o = {}) {
+  const { size = 30, w = 800, ls = 0, alpha = 1 } = o;
+  const ws = parts.map(p => measure(p[0], size, w, ls)); const tot = ws.reduce((a, b) => a + b, 0);
+  let cx = x - tot / 2;
+  parts.forEach((p, i) => { text(p[0], cx, y, { size, w, ls, alpha, align: 'left', color: p[1] || '#fff' }); cx += ws[i]; });
+}
+function fitSize(parts, maxW, size) { const s = parts.map(p => p[0]).join(''); while (measure(s, size) > maxW && size > 20) size -= 1; return size; }
+function rrect(x, y, w, h, r) {
+  g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r);
+  g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath();
+}
+function line(x1, y1, x2, y2, col, lw, alpha = 1) {
+  if (alpha <= 0) return;
+  g.save(); g.globalAlpha *= alpha; g.strokeStyle = col; g.lineWidth = lw; g.lineCap = 'round';
+  g.beginPath(); g.moveTo(x1, y1); g.lineTo(x2, y2); g.stroke(); g.restore();
+}
+function glow(x, y, r, col, a = 1) {
+  if (a <= 0) return;
+  const gr = g.createRadialGradient(x, y, 0, x, y, r); gr.addColorStop(0, col); gr.addColorStop(1, 'rgba(0,0,0,0)');
+  g.save(); g.globalAlpha *= a; g.fillStyle = gr; g.beginPath(); g.arc(x, y, r, 0, 7); g.fill(); g.restore();
+}
+
+/* ---------- figure ---------- */
+function fig(x, y, o = {}) {
+  const s = o.s ?? 1, col = o.color || '#f2f2f2', d = o.dir || 1, lw = 8 * s;
+  const legs = (o.legs || [0, 0]).map((a, i) => a + (i ? -6 : 6));
+  const arms = (o.arms || [0, 0]).map((a, i) => a + (i ? -16 : 16));
+  const lean = o.lean || 0, tilt = o.tilt || 0;
+  const LL = 58 * s, TL = 60 * s, AL = 46 * s, HR = 20 * s;
+  const maxL = Math.max(Math.abs(legs[0]), Math.abs(legs[1]));
+  const hip = { x, y: y - LL * Math.cos(rad(maxL)) };
+  const neck = { x: hip.x + d * TL * Math.sin(rad(lean)), y: hip.y - TL * Math.cos(rad(lean)) };
+  const hd = HR + 3 * s;
+  const head = { x: neck.x + d * hd * Math.sin(rad(lean + tilt)), y: neck.y - hd * Math.cos(rad(lean + tilt)) };
+  const sh = { x: neck.x - d * 8 * s * Math.sin(rad(lean)), y: neck.y + 8 * s * Math.cos(rad(lean)) };
+  const feet = legs.map(a => ({ x: hip.x + d * LL * Math.sin(rad(a)), y: hip.y + LL * Math.cos(rad(a)) }));
+  const hands = arms.map(a => ({ x: sh.x + d * AL * Math.sin(rad(a)), y: sh.y + AL * Math.cos(rad(a)) }));
+  g.save(); g.globalAlpha *= (o.alpha ?? 1); g.lineCap = 'round';
+  // dark outline then fill colour (satulangkah look)
+  [[lw + 5 * s, 'rgba(10,10,14,.9)'], [lw, col]].forEach(([w, cc]) => {
+    g.strokeStyle = cc; g.lineWidth = w;
+    g.beginPath(); g.moveTo(hip.x, hip.y); g.lineTo(neck.x, neck.y); g.stroke();
+    feet.forEach(f => { g.beginPath(); g.moveTo(hip.x, hip.y); g.lineTo(f.x, f.y); g.stroke(); });
+    hands.forEach(h => { g.beginPath(); g.moveTo(sh.x, sh.y); g.lineTo(h.x, h.y); g.stroke(); });
+  });
+  g.fillStyle = 'rgba(10,10,14,.9)'; g.beginPath(); g.arc(head.x, head.y, HR + 2.5 * s, 0, 7); g.fill();
+  g.fillStyle = col; g.beginPath(); g.arc(head.x, head.y, HR, 0, 7); g.fill();
+  g.restore();
+  return { hip, neck, head, sh, feet, hands };
+}
+const walk = (ph, amp = 26) => ({ legs: [amp * Math.sin(ph), -amp * Math.sin(ph)], arms: [-amp * Math.sin(ph), amp * Math.sin(ph)] });
+const GREY = '#a9adb6', DARKF = '#7d828c';
+
+/* ---------- props ---------- */
+function tag(x, y, s, o = {}) {
+  const { a = 1, size = 17, dark = false, color, rot = 0, border } = o;
+  if (a <= 0) return;
+  g.save(); g.globalAlpha *= a; g.translate(x, y); g.rotate(rad(rot));
+  const w = measure(s, size) + 22, h = size + 14;
+  g.fillStyle = dark ? '#16181d' : '#f1f1ef'; rrect(-w / 2, -h / 2, w, h, 4); g.fill();
+  if (border || dark) { g.strokeStyle = border || 'rgba(255,255,255,.35)'; g.lineWidth = 2; g.stroke(); }
+  g.fillStyle = color || (dark ? '#fff' : '#15161a'); g.font = font(size); g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(s, 0, 1);
+  g.restore();
+}
+function bubble(x, y, s, o = {}) {
+  const { a = 1, size = 18, tx = 0, think = false, color = '#15161a' } = o;
+  if (a <= 0) return;
+  g.save(); g.globalAlpha *= a; const k = .85 + .15 * eo(a); g.translate(x, y); g.scale(k, k);
+  const w = measure(s, size) + 30, h = size + 22;
+  g.fillStyle = '#f4f4f2'; g.strokeStyle = 'rgba(10,10,14,.9)'; g.lineWidth = 3;
+  rrect(-w / 2, -h / 2, w, h, h / 2); g.fill(); g.stroke();
+  const T = clamp(tx, -w / 2 + 22, w / 2 - 22);
+  if (think) { [[T, h / 2 + 12, 6], [T - 6, h / 2 + 26, 4]].forEach(([cx, cy, r]) => { g.beginPath(); g.arc(cx, cy, r, 0, 7); g.fill(); g.stroke(); }); }
+  else { g.beginPath(); g.moveTo(T - 9, h / 2 - 2); g.lineTo(T, h / 2 + 14); g.lineTo(T + 9, h / 2 - 2); g.closePath(); g.fill(); g.stroke(); g.fillRect(T - 8, h / 2 - 5, 16, 5); }
+  g.fillStyle = color; g.font = font(size); g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(s, 0, 1);
+  g.restore();
+}
+function lamp(x, on, a = 1, len = 70) {
+  line(x, 0, x, len, '#111', 3, a);
+  g.save(); g.globalAlpha *= a; g.fillStyle = '#1d1d1f'; g.beginPath(); g.moveTo(x - 26, len + 26); g.lineTo(x - 12, len); g.lineTo(x + 12, len); g.lineTo(x + 26, len + 26); g.closePath(); g.fill(); g.restore();
+  if (on > 0) {
+    g.save(); g.globalAlpha *= on * a;
+    const lg = g.createLinearGradient(0, len + 26, 0, 420); lg.addColorStop(0, 'rgba(255,205,120,.45)'); lg.addColorStop(1, 'rgba(255,205,120,0)');
+    g.fillStyle = lg; g.beginPath(); g.moveTo(x - 24, len + 26); g.lineTo(x + 24, len + 26); g.lineTo(x + 190, 420); g.lineTo(x - 190, 420); g.closePath(); g.fill(); g.restore();
+    glow(x, len + 30, 50, 'rgba(255,225,160,.95)', on * a);
+  }
+}
+function table(x, y, w, col = '#2a2420') {
+  g.fillStyle = col; g.fillRect(x - w / 2, y, w, 12); g.fillRect(x - w / 2 + 10, y + 12, 8, 400 - y - 12); g.fillRect(x + w / 2 - 18, y + 12, 8, 400 - y - 12);
+}
+function cup(x, y) { g.fillStyle = '#f1f1ef'; rrect(x - 11, y - 24, 22, 24, 4); g.fill(); g.strokeStyle = '#f1f1ef'; g.lineWidth = 3; g.beginPath(); g.arc(x + 13, y - 13, 6, -1.4, 1.4); g.stroke(); }
+function windowFrame(x, y, w, h, warm, sun = 0) {
+  g.save(); const gr = g.createLinearGradient(0, y, 0, y + h);
+  if (warm) { gr.addColorStop(0, '#f7c46c'); gr.addColorStop(1, '#e48a4a'); } else { gr.addColorStop(0, '#1c2433'); gr.addColorStop(1, '#2a3446'); }
+  g.fillStyle = gr; g.fillRect(x, y, w, h);
+  if (sun > 0) glow(x + w / 2, y + h * .8, w * .5, 'rgba(255,250,220,.9)', sun);
+  g.strokeStyle = '#111'; g.lineWidth = 6; g.strokeRect(x, y, w, h); line(x + w / 2, y, x + w / 2, y + h, '#111', 5); line(x, y + h / 2, x + w, y + h / 2, '#111', 5);
+  g.restore();
+}
+function door(x, y, w, h, lit) {
+  if (lit > 0) glow(x + w / 2, y + h / 2, h, 'rgba(255,196,87,.7)', lit);
+  g.fillStyle = lit > .5 ? '#ffe2a0' : '#2e2620'; g.strokeStyle = '#111'; g.lineWidth = 5; g.fillRect(x, y, w, h); g.strokeRect(x, y, w, h);
+}
+function gift(x, y, col) {
+  g.fillStyle = col; g.fillRect(x - 20, y - 32, 40, 32); g.fillStyle = '#f1f1ef'; g.fillRect(x - 3, y - 32, 6, 32); g.fillRect(x - 20, y - 20, 40, 6);
+}
+function heart(x, y, s = 30, a = 1, col = '#ff7a8a') { text('♥', x, y, { size: s, color: col, alpha: a, w: 400 }); }
+function phoneIcon(x, y, a = 1, lit = true) {
+  g.save(); g.globalAlpha *= a; g.fillStyle = '#0c0d10'; rrect(x - 12, y - 20, 24, 40, 4); g.fill(); if (lit) { g.fillStyle = '#9fd3ff'; g.fillRect(x - 9, y - 16, 18, 30); } g.restore();
+}
+function scissors(x, y, open, a = 1) {
+  g.save(); g.globalAlpha *= a; g.translate(x, y); g.strokeStyle = AMBER; g.lineWidth = 5; g.lineCap = 'round';
+  const o = rad(4 + open * 24);
+  [-1, 1].forEach(sg => { g.save(); g.rotate(sg * o); g.beginPath(); g.moveTo(0, 0); g.lineTo(0, -46); g.stroke(); g.beginPath(); g.moveTo(0, 0); g.lineTo(-sg * 8, 32); g.stroke(); g.beginPath(); g.arc(-sg * 11, 43, 10, 0, 7); g.stroke(); g.restore(); });
+  g.restore();
+}
+function chainLink(x, y, w, h, a = 1, col = '#cfd2d8') { if (a <= 0) return; g.save(); g.globalAlpha *= a; g.strokeStyle = col; g.lineWidth = 5; rrect(x - w / 2, y - h / 2, w, h, Math.min(w, h) / 2); g.stroke(); g.restore(); }
+
+/* ---------- layout ---------- */
+const PX = 50, PW = 980, PH = 470, PY = [600, 1110], FLOOR = 400;
+function bg() {
+  const gr = g.createRadialGradient(W / 2, 900, 100, W / 2, 900, 1200); gr.addColorStop(0, '#30333a'); gr.addColorStop(1, '#16181c');
+  g.fillStyle = gr; g.fillRect(0, 0, W, H);
+}
+function header(t, pill, hook1, hook2) {
+  const a = eo(seg(t, 0, .5));
+  const pw = measure(pill, 20, 800, 3) + 40;
+  g.save(); g.globalAlpha = a; g.fillStyle = 'rgba(0,0,0,.4)'; rrect(W / 2 - pw / 2, 312, pw, 40, 20); g.fill(); g.restore();
+  text(pill, W / 2, 333, { size: 20, ls: 3, color: '#d9dbe0', alpha: a });
+  const s1 = fitSize(hook1, 960, 46), s2 = fitSize(hook2, 960, 46), sz = Math.min(s1, s2);
+  rich(hook1, W / 2, 432, { size: sz, alpha: a });
+  const b = eo(seg(t, REVEAL, REVEAL + .7));
+  rich(hook2, W / 2, 500 + (1 - b) * 14, { size: sz, alpha: b });
+}
+function room(warm, light) {
+  const gr = g.createLinearGradient(0, 0, 0, PH);
+  if (warm) { gr.addColorStop(0, '#4b3a26'); gr.addColorStop(1, '#2a1f14'); } else { gr.addColorStop(0, '#3a3e47'); gr.addColorStop(1, '#262a31'); }
+  g.fillStyle = gr; g.fillRect(0, 0, PW, PH);
+  for (let i = 1; i < 9; i++) line(i * 110, 0, i * 110, FLOOR, warm ? 'rgba(0,0,0,.08)' : 'rgba(0,0,0,.12)', 2);
+  g.fillStyle = warm ? '#3a2b1b' : '#2b2f36'; g.fillRect(0, FLOOR, PW, PH - FLOOR);
+  line(0, FLOOR, PW, FLOOR, warm ? 'rgba(255,214,150,.45)' : 'rgba(220,225,235,.25)', 3);
+}
+function panel(i, label, drawFn, o = {}) {
+  const y = PY[i];
+  g.save(); g.translate(PX, y);
+  g.save(); g.beginPath(); g.rect(0, 0, PW, PH); g.clip();
+  drawFn();
+  if (o.dark > 0) { g.fillStyle = `rgba(8,9,12,${o.dark})`; g.fillRect(0, 0, PW, PH); }
+  g.restore();
+  g.strokeStyle = '#0b0c0f'; g.lineWidth = 8; g.strokeRect(0, 0, PW, PH);
+  g.strokeStyle = 'rgba(255,255,255,.08)'; g.lineWidth = 2; g.strokeRect(5, 5, PW - 10, PH - 10);
+  g.restore();
+  const la = 1 - (o.dark || 0) * .7;
+  g.save(); g.globalAlpha = la; g.fillStyle = 'rgba(0,0,0,.45)'; const lw = measure(label, 17, 800, 2) + 22; rrect(PX + 16, y + 16, lw, 32, 4); g.fill(); g.restore();
+  text(label, PX + 27, y + 33, { size: 17, ls: 2, align: 'left', color: '#e3e5ea', alpha: la });
+}
+function lightOn(t) { // flicker then on
+  const p = seg(t, REVEAL, REVEAL + .9); if (p <= 0) return 0;
+  const fl = (t < REVEAL + .45) ? (Math.sin(t * 60) > 0 ? 1 : .25) : 1;
+  return eo(p) * fl;
+}
+function frame(t, d) {
+  bg(); header(t, d.pill(t), d.hook1, d.hook2);
+  const topDim = .3 * seg(t, REVEAL + 1, REVEAL + 2);
+  panel(0, d.topLabel, () => d.top(t), { dark: topDim });
+  const L = lightOn(t);
+  panel(1, d.botLabel, () => d.bot(t, L), { dark: .82 * (1 - L) });
+  text(WATERMARK, W / 2, 1640, { size: 15, ls: 7, color: 'rgba(220,224,232,.35)' });
+}
+
+/* =========================================================
+   V1  LOVE BOMBING  (A vs B)
+   ========================================================= */
+const V1 = {
+  pill: () => 'MINGGU 2',
+  hook1: [['Baru 2 minggu, udah bilang soulmate.']],
+  hook2: [['Yang pelan-pelan '], ['justru yang serius.', AMBER]],
+  topLabel: 'DIA YANG BURU-BURU', botLabel: 'DIA YANG PELAN-PELAN',
+  top(t) {
+    room(false); lamp(330, .35);
+    const cols = ['#e8697d', '#6aa5e8', '#9b7be8', '#e8b04f'];
+    for (let k = 0; k < 9; k++) {
+      const tk = .8 + k * .78, p = seg(t, tk, tk + .7); if (p <= 0) continue;
+      const tx = 400 + (k % 3) * 44, ty = FLOOR - Math.floor(k / 3) * 32;
+      const x = lerp(560, tx, eo(p)), y = lerp(250, ty, p) - Math.sin(Math.PI * p) * 110;
+      gift(x, y, cols[k % 4]);
+    }
+    fig(300, FLOOR, { arms: [8, -8] });
+    const sw = (Math.sin(t * 8) + 1) / 2;
+    fig(600, FLOOR, { dir: -1, color: GREY, arms: [30 + 70 * sw, -8] });
+    bubble(600, 120, 'KAMU SOULMATE AKU', { a: win(t, 1, 3.4), tx: 0 });
+    bubble(600, 120, 'JANGAN NONGKRONG YA', { a: win(t, 3.6, 5.9) });
+    bubble(600, 120, 'AKU CUMA PUNYA KAMU', { a: win(t, 6.1, 20) });
+    tag(300, 150, '47 PESAN BARU', { a: seg(t, 1.8, 2.2), dark: true, color: RED });
+    phoneIcon(330, 200, seg(t, 1.8, 2.2));
+    // friends walk away
+    [790, 860, 930].forEach((fx, i) => {
+      const tl = 4 + i * .9, k = Math.max(0, t - tl), al = 1 - seg(k, 0, 1.6);
+      fig(fx + k * 90, FLOOR, { s: .9, color: DARKF, alpha: al, ...(k > 0 ? walk(t * 7, 20) : {}) });
+    });
+    tag(860, 160, 'NONGKRONG?', { a: 1 - seg(t, 4, 5) });
+  },
+  bot(t, L) {
+    room(true, L); windowFrame(780, 90, 150, 150, true);
+    lamp(490, L);
+    table(490, 300, 240); cup(445, 300); cup(535, 300);
+    tag(490, 335, 'KOPI SUSU 2', { a: L });
+    const tt = t - REVEAL;
+    fig(330, FLOOR, { arms: [tt > 4 && tt < 6 ? 150 + 20 * Math.sin(t * 9) : 10, -8] });
+    fig(650, FLOOR, { dir: -1, color: GREY, arms: [12, -8] });
+    bubble(650, 115, 'KABARIN KALAU NYAMAN YA', { a: seg(t, REVEAL + 1.2, REVEAL + 1.6) });
+    bubble(330, 115, 'PELAN-PELAN AJA', { a: seg(t, REVEAL + 2.8, REVEAL + 3.2) });
+    [820, 900].forEach((fx, i) => fig(fx, FLOOR, { s: .9, color: DARKF, arms: [tt > 4 && tt < 6 ? 150 : 10, -8] }));
+    tag(860, 280, 'TEMANMU TETAP ADA', { a: seg(t, REVEAL + 4, REVEAL + 4.4) });
+    if (tt > 5.5) heart(490, 160 - seg(t, REVEAL + 5.5, 20) * 40, 34, seg(t, REVEAL + 5.5, REVEAL + 6));
+  }
+};
+
+/* =========================================================
+   V2  GASLIGHTING  (pembalikan)
+   ========================================================= */
+const V2 = {
+  pill: () => 'BULAN 8',
+  hook1: [['Nanya baik-baik, malah dibilang lebay.']],
+  hook2: [['Sekarang kamu '], ['percaya dirimu lagi.', AMBER]],
+  topLabel: 'DI MATA DIA', botLabel: 'YANG KAMU SADARI',
+  top(t) {
+    room(false); lamp(490, .3, 1, 40);
+    const flip = eio(seg(t, 4.3, 6.3)), th = rad(lerp(12, -12, flip));
+    g.fillStyle = '#4a4f5a'; g.beginPath(); g.moveTo(490, 330); g.lineTo(450, FLOOR); g.lineTo(530, FLOOR); g.closePath(); g.fill();
+    g.save(); g.translate(490, 330); g.rotate(th);
+    g.fillStyle = '#b08d5c'; rrect(-290, -8, 580, 16, 6); g.fill();
+    fig(-235, -8, { s: .95, tilt: -16 * flip, lean: 8 * flip, arms: [10, -8] });
+    fig(235, -8, { s: .95, dir: -1, color: GREY, arms: [20 + 130 * flip, -10] });
+    const mv = eio(seg(t, 3.6, 5.4)), bx = lerp(170, -170, mv), by = -8 - 22 - Math.sin(Math.PI * mv) * 130;
+    g.fillStyle = '#a3302a'; g.strokeStyle = '#111'; g.lineWidth = 3; rrect(bx - 54, by - 20, 108, 40, 4); g.fill(); g.stroke();
+    text(mv < .55 ? 'BUKTI' : 'SALAHMU', bx, by + 1, { size: 17, ls: 1 });
+    g.restore();
+    bubble(250, 110, 'CHAT SAMA SIAPA?', { a: win(t, .8, 3.4) });
+    bubble(720, 95, 'KAMU OVERTHINKING!', { a: win(t, 3.3, 6.6) });
+    bubble(250, 150, 'APA AKU YANG SALAH?', { a: win(t, 6.6, 20), think: true });
+  },
+  bot(t, L) {
+    room(true, L); lamp(380, L);
+    const notes = [['AKU LIHAT SENDIRI', 820, 105, -3], ['BUKAN LEBAY', 870, 170, 4], ['PERASAANKU VALID', 815, 235, 2]];
+    notes.forEach(([s, x, y, r], i) => tag(x, y, s, { a: seg(t, REVEAL + 1 + i * 1.1, REVEAL + 1.4 + i * 1.1), rot: r, size: 18 }));
+    const st = seg(t, REVEAL + .6, REVEAL + 1.6);
+    fig(380, FLOOR, { s: lerp(.85, 1.05, st), arms: [60, -10] });
+    g.fillStyle = AMBER; g.fillRect(410, 255, 26, 34); tag(423, 230, 'CATATAN', { a: L, size: 13 });
+    fig(560, FLOOR, { s: .95, dir: -1, color: GREY, arms: [40, -8], alpha: seg(t, REVEAL + 4.2, REVEAL + 4.8) });
+    bubble(540, 110, 'AKU PERCAYA KAMU', { a: seg(t, REVEAL + 4.6, REVEAL + 5) });
+  }
+};
+
+/* =========================================================
+   V3  99x MINTA MAAF  (hitungan)
+   ========================================================= */
+const MSGS = ['maaf ya', 'maaf aku salah lagi', 'iya maaf, aku lebay', 'maaf udah nanya', 'maaf...', 'maaf ya sayang', 'maaf, jangan marah', 'aku minta maaf'];
+const count3 = t => t < .8 ? 1 : t < REVEAL ? Math.min(99, 1 + Math.floor(eio(seg(t, .8, 7.6)) * 98)) : 100;
+const V3 = {
+  pill: t => `MAAF KE-${count3(t)}`,
+  hook1: [['Udah 99 kali minta maaf.']],
+  hook2: [['Yang ke-100 '], ['buat dirimu sendiri.', AMBER]],
+  topLabel: 'DI CHAT', botLabel: 'MULAI HARI INI',
+  top(t) {
+    room(false); lamp(200, .3);
+    const shrink = seg(t, .8, 7.6);
+    fig(210, FLOOR, { s: lerp(1.05, .8, shrink), tilt: 18, lean: 6, arms: [70, 50] });
+    // phone
+    const px = 560, py = 40, pw = 300, ph = 390;
+    g.fillStyle = '#0c0d10'; rrect(px, py, pw, ph, 26); g.fill();
+    g.fillStyle = '#0f1a17'; rrect(px + 10, py + 10, pw - 20, ph - 20, 18); g.fill();
+    g.fillStyle = '#1e2b27'; g.fillRect(px + 10, py + 30, pw - 20, 44);
+    text('Dia ♥', px + 30, py + 52, { size: 18, align: 'left' });
+    text('terakhir dilihat 1 mnt lalu', px + 30, py + 68, { size: 11, align: 'left', w: 500, color: '#a9c2bb' });
+    g.save(); g.beginPath(); g.rect(px + 10, py + 80, pw - 20, ph - 92); g.clip();
+    const n = Math.floor(seg(t, .8, 7.6) * 22) + 1, off = Math.max(0, n - 6) * 46;
+    for (let i = 0; i < n; i++) {
+      const m = MSGS[i % MSGS.length], y = py + 110 + i * 46 - off;
+      const w = measure(m, 15, 600) + 50;
+      g.fillStyle = '#1f6f53'; rrect(px + pw - 22 - w, y - 16, w, 32, 10); g.fill();
+      text(m, px + pw - 22 - w + 12, y, { size: 15, w: 600, align: 'left' });
+      text('✓✓', px + pw - 32, y + 4, { size: 11, color: BLUE, align: 'right', w: 700 });
+    }
+    g.restore();
+    tag(px + pw / 2, py + ph + 18, 'DIBACA. TIDAK DIBALAS.', { a: seg(t, 3, 3.4), dark: true, color: RED, size: 15 });
+  },
+  bot(t, L) {
+    room(true, L); windowFrame(720, 70, 200, 200, true, L * seg(t, REVEAL + 1, REVEAL + 4));
+    table(260, 300, 180); phoneIcon(230, 290, 1, false); tag(260, 335, 'HP: MODE FOKUS', { a: L, size: 14 });
+    // mirror
+    g.fillStyle = '#9fb5c4'; rrect(430, 90, 110, 170, 50); g.fill(); g.strokeStyle = '#111'; g.lineWidth = 6; g.stroke();
+    tag(485, 72, 'KE-100: BUAT AKU', { a: seg(t, REVEAL + 1.5, REVEAL + 2), size: 15, color: '#8a5a00' });
+    const w = seg(t, REVEAL + 3.5, REVEAL + 6.5);
+    const x = lerp(400, 690, eo(w));
+    fig(x, FLOOR, { s: lerp(.9, 1.1, seg(t, REVEAL + .5, REVEAL + 2)), ...(w > 0 && w < 1 ? walk(t * 7) : { arms: [10, -8] }) });
+    bubble(x, 120, 'AKU JUGA BERHARGA', { a: seg(t, REVEAL + 6.6, REVEAL + 7) });
+  }
+};
+
+/* =========================================================
+   V4  TALI BONEKA  (ide jadi benda)
+   ========================================================= */
+const V4 = {
+  pill: () => 'TAHUN 1',
+  hook1: [['"Kalau kamu sayang..." itu tali.']],
+  hook2: [['Dan '], ['guntingnya di tanganmu.', AMBER]],
+  topLabel: 'DIATUR', botLabel: 'DILEPAS',
+  top(t) {
+    room(false);
+    const bx = 490 + 25 * Math.sin(t * 1.4), by = 70;
+    line(bx - 200, by, bx + 200, by, '#9b7a4a', 12); line(bx, by, bx, 0, '#9b7a4a', 10);
+    const al = [seg(t, .8, 1.3), seg(t, 2.8, 3.3), seg(t, 4.8, 5.3)];
+    const sw = Math.sin(t * 2.4), sw2 = Math.sin(t * 3.1 + 1);
+    const f = fig(490, FLOOR, { s: 1.15, arms: [lerp(10, 150 + 15 * sw, al[0]), lerp(-10, -150 - 15 * sw2, al[1])], tilt: 16 * al[2] * sw, legs: [10 * al[2] * sw2, -10 * al[2] * sw2] });
+    const att = [[bx + 170, by, f.hands[0]], [bx - 170, by, f.hands[1]], [bx, by, { x: f.head.x, y: f.head.y - 22 }]];
+    att.forEach(([ax, ay, j], i) => line(ax, ay, j.x, j.y, 'rgba(235,238,245,.85)', 2.5, al[i]));
+    tag(760, 170, 'KALAU KAMU SAYANG...', { a: al[0], size: 16 });
+    tag(220, 170, 'JANGAN PAKAI ITU', { a: al[1], size: 16 });
+    tag(490, 128, 'HAPUS NOMOR DIA', { a: al[2], size: 16 });
+    // scissors snip at end of top panel
+    const sc = win(t, 6.4, 8.4);
+    if (sc > 0) scissors(lerp(860, 600, eo(seg(t, 6.4, 7.6))), 230, Math.abs(Math.sin(t * 14)), sc);
+  },
+  bot(t, L) {
+    room(true, L); lamp(380, L);
+    // cut strings on floor
+    [[180, 385, 8], [240, 392, -6], [140, 395, 14]].forEach(([x, y, r]) => { g.save(); g.translate(x, y); g.rotate(rad(r)); line(-50, 0, 50, 0, 'rgba(235,238,245,.7)', 2.5); g.restore(); });
+    tag(190, 360, 'TALI', { a: L, size: 13 });
+    const st = Math.sin(t * 10);
+    const f = fig(380, FLOOR, { arms: [70, 75 + 10 * st] });
+    // guitar
+    g.save(); g.translate(f.hip.x + 10, f.hip.y - 22); g.rotate(rad(-25)); g.fillStyle = '#c17a35'; g.strokeStyle = '#111'; g.lineWidth = 3;
+    g.beginPath(); g.ellipse(0, 0, 30, 22, 0, 0, 7); g.fill(); g.stroke(); g.fillStyle = '#5a3a1a'; g.fillRect(25, -4, 70, 8); g.restore();
+    tag(380, 120, 'MAIN GITAR LAGI', { a: seg(t, REVEAL + 1, REVEAL + 1.4) });
+    tag(380, 165, 'PAKAI BAJU FAVORIT', { a: seg(t, REVEAL + 2.2, REVEAL + 2.6) });
+    [650, 730, 810].forEach((x, i) => fig(x, FLOOR, { s: .9, dir: -1, color: GREY, arms: [t > REVEAL + 3.5 ? 120 + 30 * Math.sin(t * 9 + i) : 10, -8], alpha: seg(t, REVEAL + 3, REVEAL + 3.6) }));
+    bubble(730, 120, 'AKHIRNYA KAMU BALIK!', { a: seg(t, REVEAL + 4, REVEAL + 4.4) });
+    for (let i = 0; i < 3; i++) text('♪', 450 + i * 40, 200 - ((t * 40 + i * 30) % 90), { size: 26, color: AMBER, alpha: L * (1 - ((t * 40 + i * 30) % 90) / 90) });
+  }
+};
+
+/* =========================================================
+   V5  RANTAI  (rantai)
+   ========================================================= */
+const CYC = ['DIPUJI', 'DISALAHKAN', 'DIDIAMKAN', 'MINTA MAAF', 'BALIKAN'];
+const V5 = {
+  pill: t => t < REVEAL ? `BALIKAN KE-${1 + Math.min(4, Math.floor(seg(t, 1, 7.6) * 5))}` : 'HARI INI',
+  hook1: [['Putus, balikan, putus, balikan.']],
+  hook2: [['Kali ini '], ['rantainya yang putus.', AMBER]],
+  topLabel: 'SIKLUSNYA', botLabel: 'KELUAR',
+  top(t) {
+    room(false);
+    const xs = [110, 300, 490, 680, 870];
+    CYC.forEach((s, i) => {
+      const a = seg(t, .8 + i * 1.1, 1.2 + i * 1.1);
+      const hl = t > 6.6 && Math.floor((t - 6.6) * 4) % 5 === i;
+      tag(xs[i], 100, s, { a, size: 17, dark: hl, color: hl ? AMBER : undefined });
+      if (i < 4) text('→', (xs[i] + xs[i + 1]) / 2, 100, { size: 22, alpha: seg(t, 1.6 + i * 1.1, 2 + i * 1.1), color: '#d9dbe0' });
+    });
+    const la = seg(t, 6.2, 6.8);
+    if (la > 0) { g.save(); g.globalAlpha = la; g.strokeStyle = RED; g.lineWidth = 4; g.setLineDash([10, 8]); g.beginPath(); g.moveTo(870, 125); g.bezierCurveTo(870, 190, 110, 190, 110, 125); g.stroke(); g.setLineDash([]); g.restore(); text('ULANG LAGI', 490, 205, { size: 16, color: RED, alpha: la, ls: 2 }); }
+    // ball & chain + hero straining
+    const n = Math.min(5, Math.floor(seg(t, .8, 6.4) * 5) + 1), strain = n / 5;
+    g.fillStyle = '#4a4f5a'; g.strokeStyle = '#111'; g.lineWidth = 3; g.beginPath(); g.arc(300, FLOOR - 26, 26, 0, 7); g.fill(); g.stroke();
+    for (let i = 0; i < n; i++) chainLink(340 + i * 38, FLOOR - 22, i % 2 ? 20 : 36, i % 2 ? 30 : 18);
+    const f = fig(590, FLOOR, { lean: 18 * strain, legs: [-14 * strain, 12], arms: [60 * strain, -20] });
+    line(340 + (n - 1) * 38 + 16, FLOOR - 22, f.feet[0].x, f.feet[0].y - 6, '#cfd2d8', 4);
+  },
+  bot(t, L) {
+    room(true, L);
+    // evening street: house/warung
+    g.fillStyle = '#2b2018'; g.fillRect(650, 140, 300, 260); g.fillStyle = '#5a2e22'; g.beginPath(); g.moveTo(630, 140); g.lineTo(800, 60); g.lineTo(970, 140); g.closePath(); g.fill();
+    g.fillStyle = '#ffd98a'; g.fillRect(690, 200, 220, 90); glow(800, 245, 200, 'rgba(255,200,110,.5)', L);
+    tag(800, 175, 'WARUNG', { a: L, size: 15 }); lamp(560, L, 1, 50);
+    // broken chain left
+    [[90, 392], [125, 396], [170, 390]].forEach(([x, y], i) => chainLink(x, y, i % 2 ? 20 : 34, i % 2 ? 30 : 18, L));
+    tag(130, 350, 'RANTAI', { a: L, size: 13 });
+    const w = seg(t, REVEAL + .8, REVEAL + 5.5), x = lerp(200, 560, eo(w));
+    fig(x, FLOOR, { ...(w > 0 && w < 1 ? walk(t * 7) : { arms: [w >= 1 ? 140 : 10, -8] }) });
+    [720, 800, 880].forEach((fx, i) => fig(fx, FLOOR, { s: .9, dir: -1, color: GREY, arms: [t > REVEAL + 4 ? 130 + 25 * Math.sin(t * 8 + i) : 12, -8] }));
+    bubble(820, 95, 'SINI, MAIN!', { a: seg(t, REVEAL + 3, REVEAL + 3.4) });
+  }
+};
+
+/* =========================================================
+   V6  SHARE LOC vs KABARIN  (A vs B)
+   ========================================================= */
+const V6 = {
+  pill: () => 'JAM 22.47',
+  hook1: [['"Share loc sekarang" bukan perhatian.']],
+  hook2: [['Perhatian itu '], ['"kabarin kalau sampai."', AMBER]],
+  topLabel: 'YANG MENGONTROL', botLabel: 'YANG PEDULI',
+  top(t) {
+    room(false); lamp(200, .3);
+    const Lh = lerp(560, 150, eo(seg(t, 1, 7.5)));
+    const want = 220 + 560 * eo(seg(t, .6, 6)), got = Math.min(want, 220 + Lh), strained = want > 220 + Lh - 2;
+    const p = fig(170, FLOOR, { color: GREY, arms: [70 + 20 * Math.sin(t * 6), 60] });
+    phoneIcon(p.hands[1].x + 4, p.hands[1].y - 10);
+    const h = fig(got, FLOOR, { lean: strained ? 20 : 0, ...walk(t * (strained ? 11 : 7), strained ? 14 : 26) });
+    const a = p.hands[0], b = h.hip, sag = Math.max(0, (220 + Lh - got) * .3);
+    g.save(); g.strokeStyle = strained ? RED : '#d8c08a'; g.lineWidth = 5; g.beginPath(); g.moveTo(a.x, a.y); g.quadraticCurveTo((a.x + b.x) / 2, (a.y + b.y) / 2 + sag, b.x, b.y); g.stroke(); g.restore();
+    tag(700, 90, '17 PANGGILAN TAK TERJAWAB', { a: seg(t, 1.6, 2), dark: true, color: RED, size: 16 });
+    tag(700, 140, 'SHARE LOC SEKARANG', { a: seg(t, 3.2, 3.6), size: 16 });
+    tag(700, 190, 'KOK ONLINE TAPI GAK BALES?', { a: seg(t, 4.8, 5.2), size: 16 });
+  },
+  bot(t, L) {
+    room(true, L);
+    // house
+    g.fillStyle = '#2b2018'; g.fillRect(720, 170, 220, 230); g.fillStyle = '#5a2e22'; g.beginPath(); g.moveTo(700, 170); g.lineTo(830, 80); g.lineTo(960, 170); g.closePath(); g.fill();
+    door(800, 270, 60, 130, L);
+    const w = seg(t, REVEAL + .5, REVEAL + 5.5), x = lerp(150, 760, eo(w));
+    fig(x, FLOOR, { ...(w < 1 ? walk(t * 7) : { arms: [10, -8] }), alpha: 1 - seg(t, REVEAL + 5.4, REVEAL + 6) * .0 });
+    if (w < 1) { glow(x + 40, 300, 80, 'rgba(255,200,110,.7)', L); }
+    // phone popups
+    const pa = seg(t, REVEAL + 5.8, REVEAL + 6.2), pb = seg(t, REVEAL + 7, REVEAL + 7.4);
+    if (pa > 0) {
+      g.save(); g.globalAlpha = pa; g.fillStyle = '#f1f1ef'; g.strokeStyle = '#111'; g.lineWidth = 3; rrect(120, 70, 440, 110, 14); g.fill(); g.stroke(); g.restore();
+      text('Dia ♥', 145, 98, { size: 16, align: 'left', color: '#1f6f53', alpha: pa });
+      text('Udah sampai? Istirahat ya ♥', 145, 128, { size: 20, align: 'left', color: '#15161a', alpha: pa });
+      text('Kamu: Udah, makasih ya :)', 145, 160, { size: 17, align: 'left', w: 600, color: '#555', alpha: pb });
+    }
+  }
+};
+
+const SCENES = { 1: V1, 2: V2, 3: V3, 4: V4, 5: V5, 6: V6 };
+window.render = (id, t) => { g.setTransform(1, 0, 0, 1, 0, 0); g.globalAlpha = 1; frame(t, SCENES[id]); };
+Promise.all([document.fonts.load('800 30px "Inter"'), document.fonts.load('600 30px "Inter"'), document.fonts.load('500 30px "Inter"')]).then(() => { window.ready = true; });
+</script></body></html>

@@ -1,0 +1,58 @@
+// 8 postingan "Revisi Prompt" (H1). Sudah siap tayang: tanpa placeholder tersisa, kecuali [kurung] yang memang bagian dari template prompt.
+const C = (h, items, note) => ({ t: 'cards', h, items, note });
+const T = (h, cols, rows, foot) => ({ t: 'table', h, cols, rows, foot });
+const P = (h, items, prompt) => ({ t: 'prompt', h, items, prompt });
+const PP = (h, prompts) => ({ t: 'prompts2', h, prompts });
+const KV = (h, rows, foot) => ({ t: 'kv', h, rows, foot });
+const IL = 'Contoh ilustrasi.';
+const tags = '#aiagent #claude #prompting #promptengineering #belajarai #aiindonesia';
+module.exports = [
+{ kind: 'revisi', title: 'Prompt pertamamu **jelek**? Normal.', sub: 'Yang membedakan hasilnya adalah cara kamu merevisinya.',
+  s: [C('Prompt pertama itu tebakan', ['Prompt pertama = hipotesis. Kamu belum tahu bagian mana yang disalahpahami.', 'Hasilnya = data. Dari situ kamu tahu apa yang perlu diubah.', 'Revisi = perbaikan, bukan tanda kamu gagal.']),
+      C('3 tanda prompt perlu direvisi', ['Hasilnya benar, tapi terlalu umum.', 'Isinya benar, tapi formatnya salah.', 'Model mengisi sendiri hal yang tidak kamu sebut.']),
+      C('Revisi satu hal, bukan semuanya', ['Jangan tulis ulang dari nol.', 'Tunjuk bagian yang salah.', 'Ubah satu hal, lalu lihat hasilnya.'], 'Revisi kecil lebih mudah dilacak daripada tulis ulang total.')],
+  close: { h: 'Revisi itu bagian dari prosesnya.', items: ['Anggap prompt pertama sebagai draf.', 'Baca hasilnya sebagai petunjuk.', 'Revisi satu hal sekali jalan.'] },
+  caption: 'Aku hampir selalu merevisi prompt pertamaku, dan itu normal. 😅\n\nPrompt pertama itu tebakan, hasilnya adalah petunjuk. Geser untuk tiga tanda prompt perlu direvisi, dan cara merevisinya tanpa mulai dari nol.\n\nPrompt apa yang paling sering kamu revisi? Tulis di komentar. 👇\n\n' + tags + ' #tipsai' },
+{ kind: 'revisi', title: '**5 kalimat revisi** saat hasil AI meleset.', sub: 'Tinggal salin, ganti bagian [kurung].',
+  s: [PP('Hasil terlalu umum atau nadanya salah', ['Hasil tadi terlalu umum. Beri contoh spesifik dari [bidangku] dan hapus kalimat pembuka yang basa-basi.', 'Pertahankan struktur dan isinya. Ubah hanya nada bahasanya jadi [santai / profesional].']),
+      PP('Ada yang terlewat atau terlalu panjang', ['Kamu melewatkan satu syarat: [syarat]. Perbaiki hanya bagian yang terdampak, jangan tulis ulang semuanya.', 'Ringkas jadi [N] kalimat. Jangan hilangkan angka dan nama.']),
+      P('Instruksimu sendiri belum jelas', ['Biarkan model menyebut pemahamannya dulu.', 'Simpan kalimat favorit di catatan HP.'], 'Sebelum menjawab ulang, sebutkan apa yang kamu pahami dari instruksiku, lalu tanyakan kalau ada yang ambigu.')],
+  close: { h: 'Revisi tepat, hasil cepat.', items: ['Sebut apa yang salah.', 'Sebut apa yang dipertahankan.', 'Minta perubahan yang spesifik.'] },
+  caption: 'Lima kalimat yang kupakai saat hasil AI meleset. Tinggal salin dan ganti bagian dalam kurung. 📋\n\nSimpan postingan ini, dan bagikan kalimat revisimu sendiri di komentar. 👇\n\n' + tags + ' #templateprompt' },
+{ kind: 'revisi', title: 'Revisi prompt: **ubah satu hal**, catat, ulangi.', sub: 'Cara merevisi tanpa bingung mana yang berhasil.',
+  s: [C('Langkah 1: tentukan apa yang salah', ['Isi: faktanya atau maksudnya meleset.', 'Format: bentuk keluaran tidak sesuai.', 'Nada: gaya bahasanya tidak pas.'], 'Satu revisi, satu jenis masalah.'),
+      C('Langkah 2: ubah satu variabel', ['Tambah konteks, atau', 'Tambah contoh, atau', 'Tentukan format.'], 'Kalau semuanya diubah sekaligus, kamu tidak tahu mana yang berhasil.'),
+      T('Langkah 3: catat versinya', ['VERSI', 'YANG DIUBAH', 'HASIL'], [['V1', 'Prompt awal', 'Terlalu umum'], ['V2', 'Tambah konteks', 'Lebih spesifik'], ['V3', 'Tambah contoh', 'Cocok']], IL)],
+  close: { h: 'Satu ubahan, satu pelajaran.', items: ['Tentukan masalahnya.', 'Ubah satu hal.', 'Catat hasilnya.'] },
+  caption: 'Merevisi prompt tanpa bingung: ubah satu hal, catat, ulangi. 🔁\n\nDengan begini kamu tahu persis perubahan mana yang bikin hasilnya membaik. Biasanya kamu mengubah apa dulu: konteks, contoh, atau format? 👇\n\n' + tags + ' #tutorialai' },
+{ kind: 'revisi', title: 'Revisi **acak** vs revisi terarah.', sub: 'Dua cara merevisi, hasilnya jauh beda.',
+  s: [T('Mana yang lebih boros?', ['ASPEK', 'ACAK', 'TERARAH'], [['Cara', 'Tulis ulang semuanya', 'Tunjuk bagian yang salah'], ['Jumlah revisi', 'Banyak dan melelahkan', 'Lebih sedikit'], ['Belajar', 'Tidak tahu apa yang berhasil', 'Tahu perubahan yang berhasil']], IL),
+      C('Contoh kalimat', ['Acak: "Coba lagi yang lebih bagus."', 'Terarah: "Bagian pembukanya terlalu panjang. Ubah jadi satu kalimat."', 'Terarah: "Isinya sudah pas. Ubah hanya penutupnya jadi ajakan."']),
+      C('Aturan sederhana', ['Sebut apa yang salah.', 'Sebut apa yang dipertahankan.', 'Minta perubahan yang spesifik.'])],
+  close: { h: 'Arahkan, jangan asal ulang.', items: ['Hindari "coba lagi".', 'Tunjuk bagian yang salah.', 'Minta satu perubahan.'] },
+  caption: '"Coba lagi yang lebih bagus" itu revisi paling boros. 😅\n\nRevisi terarah menyebut apa yang salah, apa yang dipertahankan, dan apa yang diubah. Kamu tim mana? 👇\n\n' + tags + ' #tipsai' },
+{ kind: 'revisi', title: '**4 kesalahan** saat merevisi prompt.', sub: 'Aku pernah melakukan semuanya.',
+  s: [C('Kesalahan 1 dan 2', ['Mengulang kata yang sama lebih keras ("PENTING!!!"). Lebih baik jelaskan alasannya.', 'Menumpuk aturan baru tanpa menghapus yang lama, sehingga aturan saling bentrok.']),
+      C('Kesalahan 3 dan 4', ['Tidak bilang apa yang salah dari hasil sebelumnya.', 'Tidak memberi contoh hasil yang kamu anggap benar.']),
+      P('Perbaikannya', ['Jelaskan alasannya, jangan berteriak.', 'Beri contoh hasil yang benar.'], 'Hasil sebelumnya salah di bagian [X]. Hapus aturan [Y] karena bertentangan dengan [Z]. Ini contoh hasil yang benar: [contoh]. Perbaiki dengan pola yang sama.')],
+  close: { h: 'Revisi bersih, hasil bersih.', items: ['Jelaskan, jangan berteriak.', 'Hapus aturan yang bentrok.', 'Beri contoh yang benar.'] },
+  caption: 'Empat kesalahan yang dulu sering kulakukan saat merevisi prompt. 🙈\n\nYang nomor 2 paling sering: aturan baru ditumpuk, aturan lama lupa dihapus. Kamu yang mana? Komen angkanya. 👇\n\n' + tags + ' #kesalahanprompt' },
+{ kind: 'revisi', title: 'Dari V1 ke V4: satu prompt, **empat revisi**.', sub: 'Contoh bagaimana satu prompt berkembang.',
+  s: [KV('V1: prompt awal', [['PROMPT', 'Buatkan caption Instagram tentang jasa website.'], ['HASIL', 'Umum, bisa untuk siapa saja.'], ['MASALAH', 'Tidak ada konteks.']], IL),
+      KV('V2 dan V3', [['V2 + KONTEKS', 'Target pemilik UMKM, nada santai, masalahnya usaha mereka sulit ditemukan pelanggan.'], ['V3 + CONTOH', 'Ini contoh caption yang kusuka: [contoh]. Pakai pola yang sama.']], IL),
+      KV('V4: tentukan format', [['V4 + FORMAT', 'Hook 1 kalimat, 3 poin, ajakan di akhir, maksimal 120 kata.'], ['HASIL', 'Pas dan tinggal dipakai.']], IL + ' Hasil nyata bisa berbeda.')],
+  close: { h: 'Empat revisi, satu pola.', items: ['Tambah konteks.', 'Tambah contoh.', 'Tentukan format.'] },
+  caption: 'Satu prompt, empat revisi. Dari hasil yang umum sampai yang tinggal pakai. ✨\n\nPolanya: tambah konteks, tambah contoh, tentukan format. (Contoh ilustrasi.)\n\nPrompt-mu pernah sampai V berapa? Komen angkanya. 👇\n\n' + tags + ' #studikasus' },
+{ kind: 'revisi', title: 'Prompt bagus bukan yang **panjang.**', sub: 'Tapi yang mudah direvisi.',
+  s: [C('Pendapatku', ['Prompt panjang yang aturannya bercampur sulit dilacak saat hasilnya meleset.', 'Prompt pendek yang terstruktur lebih mudah diperbaiki.'], 'Ini opini dari pengalaman, bukan aturan mutlak.'),
+      C('Ciri prompt yang mudah direvisi', ['Bagiannya terpisah: tujuan, konteks, format, contoh.', 'Satu aturan per baris, bisa diberi nomor.', 'Ada bagian yang bisa dihapus tanpa merusak yang lain.']),
+      P('Contoh struktur', ['Pisahkan bagian-bagiannya.', 'Satu aturan per baris.'], 'TUJUAN: ...\nKONTEKS: ...\nFORMAT: ...\nCONTOH: ...\nATURAN:\n1) ...\n2) ...')],
+  close: { h: 'Rapi dulu, panjang belakangan.', items: ['Pisahkan bagian prompt.', 'Satu aturan per baris.', 'Revisi bagian yang bermasalah saja.'] },
+  caption: 'Opiniku: prompt bagus itu bukan yang panjang, tapi yang mudah direvisi. 🧩\n\nKalau bagian-bagiannya terpisah, kamu tahu persis bagian mana yang perlu diperbaiki. Setuju atau tidak? Tim panjang atau pendek? 👇\n\n' + tags + ' #opini' },
+{ kind: 'revisi', title: 'Template **jurnal revisi** prompt.', sub: 'Simpan ini, biar revisimu tidak berulang.',
+  s: [C('Kenapa perlu jurnal', ['Kamu tidak mengulang kesalahan yang sama.', 'Kamu tahu perubahan mana yang berhasil.', 'Versi terbaik bisa dipakai lagi sebagai template.']),
+      P('Template (salin-tempel)', ['Salin ke Notes atau spreadsheet.', 'Isi tiap versi.'], 'TUJUAN: [hasil yang kuinginkan]\nV1: [prompt awal] -> MASALAH: [apa yang salah]\nV2: [yang kuubah] -> HASIL: [lebih baik / sama / lebih buruk]\nVERSI TERBAIK: [tempel di sini]'),
+      C('Cara memakainya', ['Tulis perubahannya dalam satu baris.', 'Simpan di Notes atau spreadsheet.', 'Jadikan versi terbaik sebagai template berikutnya.'])],
+  close: { h: 'Yang dicatat, yang dipelajari.', items: ['Catat tiap versi.', 'Catat apa yang diubah.', 'Simpan versi terbaik.'] },
+  caption: 'Template jurnal revisi prompt yang bikin revisimu terarah. 📓\n\nSimpan postingan ini, dan kirim ke temanmu yang sering ngeprompt. 👇\n\n' + tags + ' #templateprompt' },
+];

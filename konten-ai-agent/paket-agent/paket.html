@@ -1,0 +1,60 @@
+<!doctype html><html lang="id"><head><meta charset="utf-8"><style>
+@page{size:A4;margin:0}*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter','DejaVu Sans',sans-serif;font-feature-settings:'cv08' 1;color:#0e0f13;font-size:11.5pt}
+.cover{height:297mm;padding:30mm 22mm;background:radial-gradient(500px 420px at 100% 0,rgba(255,59,59,.18),transparent 62%),#fff;position:relative;page-break-after:always;border-left:10px solid #ff3b3b}
+.chip{display:inline-block;border:2px solid #ff3b3b;color:#e02d2d;border-radius:99px;padding:6px 16px;font-weight:800;letter-spacing:.16em;font-size:9pt}
+.cover h1{font-size:54pt;line-height:1;letter-spacing:-.04em;margin:18mm 0 8mm;font-weight:800}
+.hl{background:#ff3b3b;color:#fff;padding:0 10px;border-radius:8px}
+.cover p{font-size:15pt;color:#3b404b;max-width:150mm;line-height:1.35}
+.cover .meta{position:absolute;left:22mm;bottom:22mm;font-weight:800;font-size:13pt}
+.cover .cat{margin-top:16mm;font-size:10.5pt;color:#6f7684;line-height:1.7;columns:2;max-width:150mm}
+.page{padding:16mm 20mm 14mm;min-height:297mm;page-break-after:always;position:relative}
+.blk{border:1.5px solid #e3e5ea;border-left:7px solid #ff3b3b;border-radius:14px;background:#f8f9fb;padding:11px 16px;margin-bottom:11px;break-inside:avoid}
+.no{display:inline-block;background:#ff3b3b;color:#fff;font-weight:800;border-radius:8px;padding:2px 9px;font-size:10pt;margin-right:8px}
+h2{display:inline;font-size:14pt;letter-spacing:-.02em}.use{color:#5a6070;font-size:10pt;margin:5px 0 7px}
+pre{white-space:pre-wrap;font-family:'JetBrains Mono','DejaVu Sans Mono',monospace;font-size:9.5pt;line-height:1.5;background:#14161b;color:#f6f2ea;padding:10px 13px;border-radius:10px}
+.ck{list-style:none;margin-top:8px}.ck li{display:flex;gap:10px;align-items:flex-start;padding:5px 0;font-size:11pt}.ck span{width:15px;height:15px;border:2px solid #14161b;border-radius:4px;flex:none;margin-top:2px}
+.foot{position:absolute;left:20mm;right:20mm;bottom:8mm;font-size:9pt;color:#6f7684;display:flex;justify-content:space-between}
+.warn{font-size:10pt;color:#6f7684;margin-top:6mm;line-height:1.5}
+</style></head><body>
+<div class="cover"><span class="chip">PAKET AGENT · GRATIS</span><h1>Template &amp; Checklist <span class="hl">AI Agent</span></h1><p>12 template dan checklist praktis untuk membuat agent yang jelas, dibatasi, dan bisa diperiksa. Salin, isi bagian [kurung], lalu sesuaikan dengan tugasmu.</p>
+<div class="cat">01 Brief tugas<br>02 Instruksi agent riset<br>03 Aturan izin<br>04 Laporan akhir<br>05 Catatan kerja<br>06 Agent pemeriksa<br>07 Deskripsi alat<br>08 Agent bertanya saat ragu<br>09 10 kasus uji<br>10 Checklist sebelum dilepas<br>11 Kapan layak dibangun<br>12 Menilai tool baru</div>
+<div class="meta">@alamnurdiann</div></div>
+<div class="page"><section class="blk"><div class="no">01</div><h2>Brief tugas untuk agent</h2><p class="use">Anggap agent sebagai karyawan baru. Isi semua bagian, lalu simpan versi yang berhasil.</p><pre>TUGAS: [apa yang harus dikerjakan]
+LATAR BELAKANG: [konteks singkat]
+HASIL YANG DIHARAPKAN: [bentuk dan panjang]
+YANG BOLEH DILAKUKAN: [daftar]
+YANG TIDAK BOLEH: [daftar]
+KALAU RAGU: tanya aku dulu.</pre></section><section class="blk"><div class="no">02</div><h2>Instruksi sistem: agent riset</h2><p class="use">Untuk agent yang merangkum bahan yang kamu berikan.</p><pre>PERAN: asisten riset untuk [audiens].
+TUJUAN: kumpulkan informasi tentang [topik].
+ATURAN:
+1) Tulis hanya yang ada di sumber yang kuberikan.
+2) Kalau tidak ada datanya, tulis "tidak ada di data".
+3) Tandai bagian yang kamu tebak.
+FORMAT HASIL:
+- Ringkasan 3 poin
+- Hal yang belum jelas
+- Pertanyaan lanjutan untukku</pre></section><section class="blk"><div class="no">03</div><h2>Aturan izin</h2><p class="use">Pagar sederhana. Mulai ketat, longgarkan setelah terbukti aman.</p><pre>BOLEH: membaca file di folder [A], menulis draf di folder [B].
+TIDAK BOLEH: menghapus file, mengirim pesan ke orang lain, mengubah pengaturan.
+BUTUH IZIN DULU: apa pun di luar daftar BOLEH.
+Sebelum aksi berisiko, tampilkan rencanamu dan tunggu aku menulis "SETUJU".</pre></section><section class="blk"><div class="no">04</div><h2>Laporan akhir agent</h2><p class="use">Tempel di akhir instruksi supaya hasilnya mudah ditinjau.</p><pre>Setelah selesai, buat laporan:
+1) YANG DIKERJAKAN
+2) YANG BELUM SELESAI dan alasannya
+3) KEPUTUSAN YANG KUBUTUHKAN
+Maksimal 150 kata.</pre></section><section class="blk"><div class="no">05</div><h2>Catatan kerja</h2><p class="use">Untuk tugas panjang. Minta agent memperbaruinya tiap selesai satu bagian.</p><pre>CATATAN KERJA
+TUJUAN: ...
+SUDAH SELESAI: ...
+SEDANG DIKERJAKAN: ...
+KEPUTUSAN PENTING: ...
+LANGKAH BERIKUTNYA: ...</pre></section><section class="blk"><div class="no">06</div><h2>Agent pemeriksa</h2><p class="use">Mata kedua sebelum kamu menerima hasil. Temuan tetap kamu tinjau sendiri.</p><pre>Periksa hasil berikut dengan kriteria: [kriteria].
+Daftar semua masalah beserta kutipan bagian yang bermasalah.
+Kalau tidak ada masalah, tulis "tidak ditemukan masalah".
+Jangan menulis ulang.</pre></section><section class="blk"><div class="no">07</div><h2>Deskripsi alat</h2><p class="use">Satu blok per alat. Deskripsi jelas membantu agent memilih alat yang tepat.</p><pre>NAMA: [cari_dokumen]
+FUNGSI: [satu kalimat]
+PAKAI KETIKA: [kondisi]
+JANGAN PAKAI KETIKA: [kondisi]
+MASUKAN: [parameter]
+CONTOH: [satu contoh]</pre></section><section class="blk"><div class="no">08</div><h2>Agent bertanya saat ragu</h2><p class="use">Satu pertanyaan di awal menghemat beberapa revisi.</p><pre>Kalau informasi penting belum jelas atau ada lebih dari satu tafsiran, tanyakan satu pertanyaan singkat sebelum bertindak.
+Jangan bertanya untuk hal yang bisa kamu simpulkan sendiri.</pre></section><section class="blk"><div class="no">09</div><h2>10 kasus uji</h2><p class="use">Minta model membuat kasus uji, lalu periksa sebelum dipakai.</p><pre>Buat 10 kasus uji untuk agent yang tugasnya [tugas]: 4 biasa, 3 kasus tepi (kosong, panjang, aneh), 3 permintaan yang sengaja salah atau melanggar aturan.
+Untuk tiap kasus tulis hasil yang diharapkan.</pre></section><section class="blk"><div class="no">10</div><h2>Checklist sebelum agent dilepas</h2><ul class="ck"><li><span></span>Tujuan dan kriteria selesai jelas</li><li><span></span>Akses dibatasi seperlunya</li><li><span></span>Ada batas langkah dan biaya</li><li><span></span>Sudah diuji dengan 10 kasus</li><li><span></span>Ada log dan cara berhenti</li><li><span></span>Ada orang yang meninjau hasil</li></ul></section><section class="blk"><div class="no">11</div><h2>Kapan agent layak dibangun? (4 pertanyaan)</h2><ul class="ck"><li><span></span>FREKUENSI: seberapa sering tugas ini dikerjakan?</li><li><span></span>RISIKO: kalau salah, apa dampaknya?</li><li><span></span>BIAYA: waktu membangun dan memantau sudah dihitung?</li><li><span></span>BISA DICEK: apakah hasilnya mudah dinilai?</li></ul><p class="use">Kalau dua atau lebih jawabannya tidak meyakinkan, pertimbangkan workflow atau kerjakan manual dulu.</p></section><section class="blk"><div class="no">12</div><h2>Menilai tool agent baru (5 pertanyaan)</h2><ul class="ck"><li><span></span>AKSES: apa saja yang bisa dibaca dan diubah?</li><li><span></span>LOG: apakah tiap langkah bisa dilihat?</li><li><span></span>BATAS: bisa membatasi langkah, biaya, dan izin?</li><li><span></span>BIAYA: tarifnya jelas dan bisa dibatasi?</li><li><span></span>KELUAR: data bisa diekspor dan akses bisa dicabut?</li></ul><p class="use">Coba di akun uji dengan data palsu sebelum memakai akun asli.</p></section><p class="warn">Template ini bersifat umum dan perlu kamu uji di tugasmu sendiri. Hasil bisa berbeda tergantung alat dan model yang dipakai. Jangan menempelkan data pribadi atau kunci akses ke prompt.</p><div class="foot"><span>@alamnurdiann</span><span>Paket AGENT</span></div></div>
+</body></html>
