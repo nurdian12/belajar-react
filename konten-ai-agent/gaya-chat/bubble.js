@@ -21,7 +21,7 @@ const css = `*{margin:0;padding:0;box-sizing:border-box}body{background:#ccc;fon
 .in{align-self:flex-start;background:#fff;border:2px solid #e6e7eb;border-bottom-left-radius:10px}
 .out{align-self:flex-end;background:#1d6fe8;color:#fff;border-bottom-right-radius:10px}
 .tag{display:block;font-size:24px;letter-spacing:.2em;font-weight:800;margin-bottom:12px}
-.bad{color:#1d6fe8}.bad .tag{color:#1d6fe8}.good .tag{color:#dbe8ff}
+.bad{color:#111}.bad .tag{color:#111}.good .tag{color:#dbe8ff}
 .sys{align-self:center;background:#e9eaee;color:#4b5060;border-radius:40px;padding:14px 32px;font-size:30px;font-weight:600}
 .ft{position:absolute;left:70px;right:70px;bottom:60px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;font-size:26px;color:#1d6fe8;font-weight:600}.ft b{color:#111;font-size:30px;display:flex;gap:12px;align-items:center}.ft i{width:11px;height:11px;border-radius:50%;background:#1d6fe8;display:inline-block}.ft span:last-child{text-align:right}
 .plain{background:#fff}.plain .txt{position:absolute;left:128px;right:110px;top:300px}.plain .txt p{font-size:64px;line-height:1.3;margin-bottom:48px;font-weight:450}
