@@ -99,6 +99,7 @@ body{color:#0e0f13}
 .deco{-webkit-text-stroke:3px rgba(255,59,59,.28)}
 .foot{color:#6f7684}.foot .fc{color:#0e0f13}
 `;
+const HK = process.env.NOHOOK ? {} : require('./hooks.js'); POSTS.forEach(p => { if (HK[p.id]) { p.title = HK[p.id].title; if (HK[p.id].sub) p.sub = HK[p.id].sub; } });
 const order = POSTS;
 const sel = ALL ? order : order.slice(0, 5);
 const html = `<!doctype html><html lang="id"><head><meta charset="utf-8"><style>${css}${LIGHT}</style></head><body>${sel.map((p, i) => slides(p, i + 1)).join('\n')}</body></html>`;

@@ -1,0 +1,682 @@
+[
+ {
+  "day": 1,
+  "kind": "atm",
+  "n": 31,
+  "title": "Kok bisa sih prompt, instruksi sistem, dan konteks sering tertukar?",
+  "files": [
+   "01-s1.jpg",
+   "01-s2.jpg",
+   "01-s3.jpg",
+   "01-s4.jpg",
+   "01-s5.jpg",
+   "01-s6.jpg",
+   "01-s7.jpg",
+   "01-s8.jpg"
+  ],
+  "caption": "Kok bisa sih prompt, instruksi sistem, dan konteks sering tertukar?\n\nBiar tidak tertukar saat menulis instruksi.\n\nKamu sudah memisahkan ketiganya? Tulis ya atau belum.\n\nGeser sampai slide terakhir. 👉\n\n#aiagent #aiautomation #belajarai #aiindonesia #produktivitas"
+ },
+ {
+  "day": 2,
+  "kind": "atm",
+  "n": 32,
+  "title": "Apa jadinya kalau kodemu tidak mengontrol alat yang dipakai model?",
+  "files": [
+   "02-s1.jpg",
+   "02-s2.jpg",
+   "02-s3.jpg",
+   "02-s4.jpg",
+   "02-s5.jpg",
+   "02-s6.jpg",
+   "02-s7.jpg",
+   "02-s8.jpg"
+  ],
+  "caption": "Apa jadinya kalau kodemu tidak mengontrol alat yang dipakai model?\n\nModel meminta, kodemu menjalankan.\n\nBagian mana yang paling baru buatmu? Tulis di komentar.\n\nGeser sampai slide terakhir. 👉\n\n#aiagent #aiautomation #belajarai #aiindonesia #produktivitas"
+ },
+ {
+  "day": 3,
+  "kind": "atm",
+  "n": 33,
+  "title": "Kok bisa sih agent tiba-tiba lupa instruksi awal?",
+  "files": [
+   "03-s1.jpg",
+   "03-s2.jpg",
+   "03-s3.jpg",
+   "03-s4.jpg",
+   "03-s5.jpg",
+   "03-s6.jpg",
+   "03-s7.jpg",
+   "03-s8.jpg"
+  ],
+  "caption": "Kok bisa sih agent tiba-tiba lupa instruksi awal?\n\nBatas konteks, dijelaskan sederhana.\n\nPernah agent-mu melenceng di tengah? Ceritakan di komentar.\n\nGeser sampai slide terakhir. 👉\n\n#aiagent #aiautomation #belajarai #aiindonesia #produktivitas"
+ },
+ {
+  "day": 4,
+  "kind": "atm",
+  "n": 34,
+  "title": "Jawaban yang yakin itu belum tentu karena jawabannya benar.",
+  "files": [
+   "04-s1.jpg",
+   "04-s2.jpg",
+   "04-s3.jpg",
+   "04-s4.jpg",
+   "04-s5.jpg",
+   "04-s6.jpg",
+   "04-s7.jpg",
+   "04-s8.jpg"
+  ],
+  "caption": "Jawaban yang yakin itu belum tentu karena jawabannya benar.\n\nHalusinasi AI: apa itu dan cara mengurangi risikonya.\n\nPernah kena halusinasi? Ceritakan di komentar.\n\nGeser sampai slide terakhir. 👉\n\n#aiagent #aiautomation #belajarai #aiindonesia #produktivitas"
+ },
+ {
+  "day": 5,
+  "kind": "atm",
+  "n": 35,
+  "title": "Apa yang kamu lakukan jika bingung mulai belajar AI agent?",
+  "files": [
+   "05-s1.jpg",
+   "05-s2.jpg",
+   "05-s3.jpg",
+   "05-s4.jpg",
+   "05-s5.jpg",
+   "05-s6.jpg",
+   "05-s7.jpg",
+   "05-s8.jpg"
+  ],
+  "caption": "Apa yang kamu lakukan jika bingung mulai belajar AI agent?\n\nSupaya belajarmu terarah.\n\nTugas apa yang ingin kamu ringankan? Tulis di komentar.\n\nGeser sampai slide terakhir. 👉\n\n#aiagent #aiautomation #belajarai #aiindonesia #produktivitas"
+ },
+ {
+  "day": 6,
+  "kind": "atm",
+  "n": 36,
+  "title": "Kalau kamu pemula dan ingin belajar agent, peta 4 minggu ini untukmu.",
+  "files": [
+   "06-s1.jpg",
+   "06-s2.jpg",
+   "06-s3.jpg",
+   "06-s4.jpg",
+   "06-s5.jpg",
+   "06-s6.jpg",
+   "06-s7.jpg",
+   "06-s8.jpg"
+  ],
+  "caption": "Kalau kamu pemula dan ingin belajar agent, peta 4 minggu ini untukmu.\n\nDari pemula ke menengah, tanpa lompat.\n\nKamu di minggu berapa? Tulis di komentar.\n\nGeser sampai slide terakhir. 👉\n\n#aiagent #aiautomation #belajarai #aiindonesia #produktivitas"
+ },
+ {
+  "day": 7,
+  "kind": "atm",
+  "n": 37,
+  "title": "Kok bisa sih agent nggak tahu kapan harus berhenti?",
+  "files": [
+   "07-s1.jpg",
+   "07-s2.jpg",
+   "07-s3.jpg",
+   "07-s4.jpg",
+   "07-s5.jpg",
+   "07-s6.jpg",
+   "07-s7.jpg",
+   "07-s8.jpg"
+  ],
+  "caption": "Kok bisa sih agent nggak tahu kapan harus berhenti?\n\nAgent perlu tahu kapan berhenti.\n\nMau template lengkap? Komen AGENT, nanti kukirim paketnya.\n\nGeser sampai slide terakhir. 👉\n\n#aiagent #aiautomation #belajarai #aiindonesia #produktivitas"
+ },
+ {
+  "day": 8,
+  "kind": "atm",
+  "n": 38,
+  "title": "Biasain untuk selalu simpan prompt yang berhasil, kalian.",
+  "files": [
+   "08-s1.jpg",
+   "08-s2.jpg",
+   "08-s3.jpg",
+   "08-s4.jpg",
+   "08-s5.jpg",
+   "08-s6.jpg",
+   "08-s7.jpg",
+   "08-s8.jpg"
+  ],
+  "caption": "Biasain untuk selalu simpan prompt yang berhasil, kalian.\n\nTandai bagian variabel dengan [kurung].\n\nSimpan buat dipakai. Template apa yang paling sering kamu butuhkan?\n\nGeser sampai slide terakhir. 👉\n\n#aiagent #aiautomation #belajarai #aiindonesia #produktivitas"
+ },
+ {
+  "day": 9,
+  "kind": "atm",
+  "n": 39,
+  "title": "Kalau kamu kasih tugas terlalu besar, agent jadi kewalahan.",
+  "files": [
+   "09-s1.jpg",
+   "09-s2.jpg",
+   "09-s3.jpg",
+   "09-s4.jpg",
+   "09-s5.jpg",
+   "09-s6.jpg",
+   "09-s7.jpg",
+   "09-s8.jpg"
+  ],
+  "caption": "Kalau kamu kasih tugas terlalu besar, agent jadi kewalahan.\n\nSupaya mudah diuji.\n\nTugas besar apa yang ingin kamu pecah? Tulis di komentar.\n\nGeser sampai slide terakhir. 👉\n\n#aiagent #aiautomation #belajarai #aiindonesia #produktivitas"
+ },
+ {
+  "day": 10,
+  "kind": "atm",
+  "n": 40,
+  "title": "Stop ngasih agent kebebasan tanpa daftar larangan.",
+  "files": [
+   "10-s1.jpg",
+   "10-s2.jpg",
+   "10-s3.jpg",
+   "10-s4.jpg",
+   "10-s5.jpg",
+   "10-s6.jpg",
+   "10-s7.jpg",
+   "10-s8.jpg"
+  ],
+  "caption": "Stop ngasih agent kebebasan tanpa daftar larangan.\n\nBatas yang tegas lebih aman.\n\nLarangan apa yang paling penting buatmu? Tulis di komentar.\n\nGeser sampai slide terakhir. 👉\n\n#aiagent #aiautomation #belajarai #aiindonesia #produktivitas"
+ },
+ {
+  "day": 11,
+  "kind": "atm",
+  "n": 41,
+  "title": "Apa jadinya kalau agent-mu diuji dengan permintaan jebakan?",
+  "files": [
+   "11-s1.jpg",
+   "11-s2.jpg",
+   "11-s3.jpg",
+   "11-s4.jpg",
+   "11-s5.jpg",
+   "11-s6.jpg",
+   "11-s7.jpg",
+   "11-s8.jpg"
+  ],
+  "caption": "Apa jadinya kalau agent-mu diuji dengan permintaan jebakan?\n\nCari tahu batasnya sebelum orang lain.\n\nJebakan apa yang ingin kamu uji? Tulis di komentar.\n\nGeser sampai slide terakhir. 👉\n\n#aiagent #aiautomation #belajarai #aiindonesia #produktivitas"
+ },
+ {
+  "day": 12,
+  "kind": "atm",
+  "n": 42,
+  "title": "Kok bisa sih format hasil agent berubah-ubah terus?",
+  "files": [
+   "12-s1.jpg",
+   "12-s2.jpg",
+   "12-s3.jpg",
+   "12-s4.jpg",
+   "12-s5.jpg",
+   "12-s6.jpg",
+   "12-s7.jpg",
+   "12-s8.jpg"
+  ],
+  "caption": "Kok bisa sih format hasil agent berubah-ubah terus?\n\nHasil konsisten lebih mudah dipakai.\n\nFormat apa yang paling kamu butuhkan? Tulis di komentar.\n\nGeser sampai slide terakhir. 👉\n\n#aiagent #aiautomation #belajarai #aiindonesia #produktivitas"
+ },
+ {
+  "day": 13,
+  "kind": "atm",
+  "n": 43,
+  "title": "Apa yang kamu lakukan jika hasil agent salah tapi kamu nggak tahu sebabnya?",
+  "files": [
+   "13-s1.jpg",
+   "13-s2.jpg",
+   "13-s3.jpg",
+   "13-s4.jpg",
+   "13-s5.jpg",
+   "13-s6.jpg",
+   "13-s7.jpg",
+   "13-s8.jpg"
+  ],
+  "caption": "Apa yang kamu lakukan jika hasil agent salah tapi kamu nggak tahu sebabnya?\n\nJejak yang membuat hasil bisa diaudit.\n\nKamu mencatat keputusan agent? Tulis ya atau belum.\n\nGeser sampai slide terakhir. 👉\n\n#aiagent #aiautomation #belajarai #aiindonesia #produktivitas"
+ },
+ {
+  "day": 14,
+  "kind": "atm",
+  "n": 44,
+  "title": "Kalau kamu takut salah kirim pesan ke pelanggan, pola ini untukmu.",
+  "files": [
+   "14-s1.jpg",
+   "14-s2.jpg",
+   "14-s3.jpg",
+   "14-s4.jpg",
+   "14-s5.jpg",
+   "14-s6.jpg",
+   "14-s7.jpg",
+   "14-s8.jpg"
+  ],
+  "caption": "Kalau kamu takut salah kirim pesan ke pelanggan, pola ini untukmu.\n\nPola paling aman untuk tugas yang menghadap orang lain.\n\nKomen AGENT untuk paket template. Isinya brief, laporan akhir, dan checklist.\n\nGeser sampai slide terakhir. 👉\n\n#aiagent #aiautomation #belajarai #aiindonesia #produktivitas"
+ },
+ {
+  "day": 15,
+  "kind": "atm",
+  "n": 45,
+  "title": "Apa yang kamu lakukan jika pertanyaan pelanggan itu-itu terus?",
+  "files": [
+   "15-s1.jpg",
+   "15-s2.jpg",
+   "15-s3.jpg",
+   "15-s4.jpg",
+   "15-s5.jpg",
+   "15-s6.jpg",
+   "15-s7.jpg",
+   "15-s8.jpg"
+  ],
+  "caption": "Apa yang kamu lakukan jika pertanyaan pelanggan itu-itu terus?\n\nTanpa membiarkannya berjanji sembarangan.\n\nPertanyaan apa yang paling sering kamu terima? Tulis di komentar.\n\nGeser sampai slide terakhir. 👉\n\n#aiagent #aiautomation #belajarai #aiindonesia #produktivitas"
+ },
+ {
+  "day": 16,
+  "kind": "atm",
+  "n": 46,
+  "title": "Apa jadinya kalau otomatisasi dibangun tanpa dihitung?",
+  "files": [
+   "16-s1.jpg",
+   "16-s2.jpg",
+   "16-s3.jpg",
+   "16-s4.jpg",
+   "16-s5.jpg",
+   "16-s6.jpg",
+   "16-s7.jpg",
+   "16-s8.jpg"
+  ],
+  "caption": "Apa jadinya kalau otomatisasi dibangun tanpa dihitung?\n\nRumus sederhana, tanpa angka karangan.\n\nTugas apa yang ingin kamu hitung? Tulis di komentar.\n\nGeser sampai slide terakhir. 👉\n\n#aiagent #aiautomation #belajarai #aiindonesia #produktivitas"
+ },
+ {
+  "day": 17,
+  "kind": "atm",
+  "n": 47,
+  "title": "Jawaban agent yang ngawur itu belum tentu karena agent-nya.",
+  "files": [
+   "17-s1.jpg",
+   "17-s2.jpg",
+   "17-s3.jpg",
+   "17-s4.jpg",
+   "17-s5.jpg",
+   "17-s6.jpg",
+   "17-s7.jpg",
+   "17-s8.jpg"
+  ],
+  "caption": "Jawaban agent yang ngawur itu belum tentu karena agent-nya.\n\nCek dulu bahan dokumentasimu.\n\nDokumenmu sudah rapi? Tulis ya atau belum.\n\nGeser sampai slide terakhir. 👉\n\n#aiagent #aiautomation #belajarai #aiindonesia #produktivitas"
+ },
+ {
+  "day": 18,
+  "kind": "atm",
+  "n": 48,
+  "title": "Kok bisa sih angka rekap penjualan salah padahal dibantu agent?",
+  "files": [
+   "18-s1.jpg",
+   "18-s2.jpg",
+   "18-s3.jpg",
+   "18-s4.jpg",
+   "18-s5.jpg",
+   "18-s6.jpg",
+   "18-s7.jpg",
+   "18-s8.jpg"
+  ],
+  "caption": "Kok bisa sih angka rekap penjualan salah padahal dibantu agent?\n\nPisahkan menghitung dan menafsirkan.\n\nRekap apa yang paling merepotkan? Tulis di komentar.\n\nGeser sampai slide terakhir. 👉\n\n#aiagent #aiautomation #belajarai #aiindonesia #produktivitas"
+ },
+ {
+  "day": 19,
+  "kind": "atm",
+  "n": 49,
+  "title": "Kalau kamu bikin konten dengan bantuan agent, ini untukmu.",
+  "files": [
+   "19-s1.jpg",
+   "19-s2.jpg",
+   "19-s3.jpg",
+   "19-s4.jpg",
+   "19-s5.jpg",
+   "19-s6.jpg",
+   "19-s7.jpg",
+   "19-s8.jpg"
+  ],
+  "caption": "Kalau kamu bikin konten dengan bantuan agent, ini untukmu.\n\nBatas jelas antara draf dan tayang.\n\nBagian konten mana yang ingin kamu serahkan? Tulis di komentar.\n\nGeser sampai slide terakhir. 👉\n\n#aiagent #aiautomation #belajarai #aiindonesia #produktivitas"
+ },
+ {
+  "day": 20,
+  "kind": "atm",
+  "n": 50,
+  "title": "Stop ngasih agent kebebasan buat bicara atas nama bisnismu.",
+  "files": [
+   "20-s1.jpg",
+   "20-s2.jpg",
+   "20-s3.jpg",
+   "20-s4.jpg",
+   "20-s5.jpg",
+   "20-s6.jpg",
+   "20-s7.jpg",
+   "20-s8.jpg"
+  ],
+  "caption": "Stop ngasih agent kebebasan buat bicara atas nama bisnismu.\n\nJanji sembarangan bisa mahal.\n\nKomen AGENT untuk checklist pagar. Kukirim lewat DM.\n\nGeser sampai slide terakhir. 👉\n\n#aiagent #aiautomation #belajarai #aiindonesia #produktivitas"
+ },
+ {
+  "day": 21,
+  "kind": "atm",
+  "n": 51,
+  "title": "Biasain untuk selalu meninjau minggumu tiap Jumat, kalian.",
+  "files": [
+   "21-s1.jpg",
+   "21-s2.jpg",
+   "21-s3.jpg",
+   "21-s4.jpg",
+   "21-s5.jpg",
+   "21-s6.jpg",
+   "21-s7.jpg",
+   "21-s8.jpg"
+  ],
+  "caption": "Biasain untuk selalu meninjau minggumu tiap Jumat, kalian.\n\nSepuluh menit untuk belajar dari minggu ini.\n\nRutinitas akhir pekanmu apa? Tulis di komentar.\n\nGeser sampai slide terakhir. 👉\n\n#aiagent #aiautomation #belajarai #aiindonesia #produktivitas"
+ },
+ {
+  "day": 22,
+  "kind": "atm",
+  "n": 52,
+  "title": "Apa yang kamu lakukan jika agent mengutip sumber yang nggak ada?",
+  "files": [
+   "22-s1.jpg",
+   "22-s2.jpg",
+   "22-s3.jpg",
+   "22-s4.jpg",
+   "22-s5.jpg",
+   "22-s6.jpg",
+   "22-s7.jpg",
+   "22-s8.jpg"
+  ],
+  "caption": "Apa yang kamu lakukan jika agent mengutip sumber yang nggak ada?\n\nCepat tidak boleh asal.\n\nSumber riset favoritmu apa? Tulis di komentar.\n\nGeser sampai slide terakhir. 👉\n\n#aiagent #aiautomation #belajarai #aiindonesia #produktivitas"
+ },
+ {
+  "day": 23,
+  "kind": "atm",
+  "n": 53,
+  "title": "Apa jadinya kalau agent boleh menghapus emailmu?",
+  "files": [
+   "23-s1.jpg",
+   "23-s2.jpg",
+   "23-s3.jpg",
+   "23-s4.jpg",
+   "23-s5.jpg",
+   "23-s6.jpg",
+   "23-s7.jpg",
+   "23-s8.jpg"
+  ],
+  "caption": "Apa jadinya kalau agent boleh menghapus emailmu?\n\nRapi tanpa kehilangan yang penting.\n\nEmail apa yang paling menumpuk? Tulis di komentar.\n\nGeser sampai slide terakhir. 👉\n\n#aiagent #aiautomation #belajarai #aiindonesia #produktivitas"
+ },
+ {
+  "day": 24,
+  "kind": "atm",
+  "n": 54,
+  "title": "Kalau kamu sering rapat tanpa agenda, template ini untukmu.",
+  "files": [
+   "24-s1.jpg",
+   "24-s2.jpg",
+   "24-s3.jpg",
+   "24-s4.jpg",
+   "24-s5.jpg",
+   "24-s6.jpg",
+   "24-s7.jpg",
+   "24-s8.jpg"
+  ],
+  "caption": "Kalau kamu sering rapat tanpa agenda, template ini untukmu.\n\nSiapkan sebelum, rapikan sesudah.\n\nKomen AGENT untuk paket template. Kukirim lewat DM.\n\nGeser sampai slide terakhir. 👉\n\n#aiagent #aiautomation #belajarai #aiindonesia #produktivitas"
+ },
+ {
+  "day": 25,
+  "kind": "atm",
+  "n": 55,
+  "title": "Kalau idemu muncul saat tidak bisa mengetik, jangan biarkan hilang.",
+  "files": [
+   "25-s1.jpg",
+   "25-s2.jpg",
+   "25-s3.jpg",
+   "25-s4.jpg",
+   "25-s5.jpg",
+   "25-s6.jpg",
+   "25-s7.jpg",
+   "25-s8.jpg"
+  ],
+  "caption": "Kalau idemu muncul saat tidak bisa mengetik, jangan biarkan hilang.\n\nAlur umum, apa pun alatnya.\n\nKamu suka catatan suara? Ya atau tidak, tulis di komentar.\n\nGeser sampai slide terakhir. 👉\n\n#aiagent #aiautomation #belajarai #aiindonesia #produktivitas"
+ },
+ {
+  "day": 26,
+  "kind": "atm",
+  "n": 56,
+  "title": "Ada satu halaman brief yang kata orang cuma formalitas.",
+  "files": [
+   "26-s1.jpg",
+   "26-s2.jpg",
+   "26-s3.jpg",
+   "26-s4.jpg",
+   "26-s5.jpg",
+   "26-s6.jpg",
+   "26-s7.jpg",
+   "26-s8.jpg"
+  ],
+  "caption": "Ada satu halaman brief yang kata orang cuma formalitas.\n\nSatu halaman supaya semua searah.\n\nTim kecilmu pakai brief? Tulis ya atau belum.\n\nGeser sampai slide terakhir. 👉\n\n#aiagent #aiautomation #belajarai #aiindonesia #produktivitas"
+ },
+ {
+  "day": 27,
+  "kind": "atm",
+  "n": 57,
+  "title": "Ada satu kalimat ajaib yang kata orang bikin hasil AI pasti sempurna.",
+  "files": [
+   "27-s1.jpg",
+   "27-s2.jpg",
+   "27-s3.jpg",
+   "27-s4.jpg",
+   "27-s5.jpg",
+   "27-s6.jpg",
+   "27-s7.jpg",
+   "27-s8.jpg"
+  ],
+  "caption": "Ada satu kalimat ajaib yang kata orang bikin hasil AI pasti sempurna.\n\nOpini: yang ada hanya prompt yang lebih jelas.\n\nSetuju atau tidak? Tulis alasanmu di komentar.\n\nGeser sampai slide terakhir. 👉\n\nCatatan: ini opini pribadi, bukan aturan mutlak.\n\n#aiagent #aiautomation #belajarai #aiindonesia #produktivitas"
+ },
+ {
+  "day": 28,
+  "kind": "atm",
+  "n": 58,
+  "title": "Kok bisa sih agent yang yakin tetap bisa salah?",
+  "files": [
+   "28-s1.jpg",
+   "28-s2.jpg",
+   "28-s3.jpg",
+   "28-s4.jpg",
+   "28-s5.jpg",
+   "28-s6.jpg",
+   "28-s7.jpg",
+   "28-s8.jpg"
+  ],
+  "caption": "Kok bisa sih agent yang yakin tetap bisa salah?\n\nNada yakin bukan bukti.\n\nPernah tertipu jawaban yang yakin? Ceritakan di komentar.\n\nGeser sampai slide terakhir. 👉\n\n#aiagent #aiautomation #belajarai #aiindonesia #produktivitas"
+ },
+ {
+  "day": 29,
+  "kind": "atm",
+  "n": 59,
+  "title": "Kalau tugasmu cuma \"rapikan data ini,\" agent bisa nggak tahu kapan selesai.",
+  "files": [
+   "29-s1.jpg",
+   "29-s2.jpg",
+   "29-s3.jpg",
+   "29-s4.jpg",
+   "29-s5.jpg",
+   "29-s6.jpg",
+   "29-s7.jpg",
+   "29-s8.jpg"
+  ],
+  "caption": "Kalau tugasmu cuma \"rapikan data ini,\" agent bisa nggak tahu kapan selesai.\n\nAgent berhenti terlalu cepat atau tidak berhenti.\n\nPernah mengalami agent tanpa akhir? Ceritakan di komentar.\n\nGeser sampai slide terakhir. 👉\n\n#aiagent #aiautomation #belajarai #aiindonesia #produktivitas"
+ },
+ {
+  "day": 30,
+  "kind": "atm",
+  "n": 60,
+  "title": "Apa jadinya kalau aturan lama dan baru bertabrakan?",
+  "files": [
+   "30-s1.jpg",
+   "30-s2.jpg",
+   "30-s3.jpg",
+   "30-s4.jpg",
+   "30-s5.jpg",
+   "30-s6.jpg",
+   "30-s7.jpg",
+   "30-s8.jpg"
+  ],
+  "caption": "Apa jadinya kalau aturan lama dan baru bertabrakan?\n\nAturan lama dan baru bertumpuk.\n\nInstruksimu sudah bersih dari bentrok? Tulis ya atau belum.\n\nGeser sampai slide terakhir. 👉\n\n#aiagent #aiautomation #belajarai #aiindonesia #produktivitas"
+ },
+ {
+  "day": 31,
+  "kind": "atm",
+  "n": 61,
+  "title": "Stop nempel data pelanggan mentah ke prompt.",
+  "files": [
+   "31-s1.jpg",
+   "31-s2.jpg",
+   "31-s3.jpg",
+   "31-s4.jpg",
+   "31-s5.jpg",
+   "31-s6.jpg",
+   "31-s7.jpg",
+   "31-s8.jpg"
+  ],
+  "caption": "Stop nempel data pelanggan mentah ke prompt.\n\nRapi dan cepat tidak boleh mengorbankan privasi.\n\nKomen AGENT untuk checklist keamanan. Kukirim lewat DM.\n\nGeser sampai slide terakhir. 👉\n\n#aiagent #aiautomation #belajarai #aiindonesia #produktivitas"
+ },
+ {
+  "day": 32,
+  "kind": "atm",
+  "n": 62,
+  "title": "Susah mulai AI agent itu belum tentu karena kamu bukan programmer.",
+  "files": [
+   "32-s1.jpg",
+   "32-s2.jpg",
+   "32-s3.jpg",
+   "32-s4.jpg",
+   "32-s5.jpg",
+   "32-s6.jpg",
+   "32-s7.jpg",
+   "32-s8.jpg"
+  ],
+  "caption": "Susah mulai AI agent itu belum tentu karena kamu bukan programmer.\n\nMulai tanpa kode itu mungkin, tapi ada batasnya.\n\nKamu bisa coding atau tidak? Tulis di komentar.\n\nGeser sampai slide terakhir. 👉\n\nCatatan: ini opini pribadi, bukan aturan mutlak.\n\n#aiagent #aiautomation #belajarai #aiindonesia #produktivitas"
+ },
+ {
+  "day": 33,
+  "kind": "atm",
+  "n": 63,
+  "title": "Apa yang kamu lakukan jika email menumpuk tiap pagi?",
+  "files": [
+   "33-s1.jpg",
+   "33-s2.jpg",
+   "33-s3.jpg",
+   "33-s4.jpg",
+   "33-s5.jpg",
+   "33-s6.jpg",
+   "33-s7.jpg",
+   "33-s8.jpg"
+  ],
+  "caption": "Apa yang kamu lakukan jika email menumpuk tiap pagi?\n\nContoh ilustrasi, bukan hasil nyata.\n\nMau studi kasus lain? Tulis tugas yang ingin kubahas.\n\nGeser sampai slide terakhir. 👉\n\nCatatan: ini contoh ilustrasi, bukan hasil nyata.\n\n#aiagent #aiautomation #belajarai #aiindonesia #produktivitas"
+ },
+ {
+  "day": 34,
+  "kind": "atm",
+  "n": 64,
+  "title": "Apa jadinya kalau ide kontenmu dikelompokkan agent?",
+  "files": [
+   "34-s1.jpg",
+   "34-s2.jpg",
+   "34-s3.jpg",
+   "34-s4.jpg",
+   "34-s5.jpg",
+   "34-s6.jpg",
+   "34-s7.jpg",
+   "34-s8.jpg"
+  ],
+  "caption": "Apa jadinya kalau ide kontenmu dikelompokkan agent?\n\nContoh ilustrasi, bukan hasil nyata.\n\nMau studi kasus lain? Tulis tugas yang ingin kubahas.\n\nGeser sampai slide terakhir. 👉\n\nCatatan: ini contoh ilustrasi, bukan hasil nyata.\n\n#aiagent #aiautomation #belajarai #aiindonesia #produktivitas"
+ },
+ {
+  "day": 35,
+  "kind": "atm",
+  "n": 65,
+  "title": "Kok bisa sih draf rapi tetap lolos dengan salah ketik?",
+  "files": [
+   "35-s1.jpg",
+   "35-s2.jpg",
+   "35-s3.jpg",
+   "35-s4.jpg",
+   "35-s5.jpg",
+   "35-s6.jpg",
+   "35-s7.jpg",
+   "35-s8.jpg"
+  ],
+  "caption": "Kok bisa sih draf rapi tetap lolos dengan salah ketik?\n\nContoh ilustrasi, bukan hasil nyata.\n\nMau studi kasus lain? Tulis tugas yang ingin kubahas.\n\nGeser sampai slide terakhir. 👉\n\nCatatan: ini contoh ilustrasi, bukan hasil nyata.\n\n#aiagent #aiautomation #belajarai #aiindonesia #produktivitas"
+ },
+ {
+  "day": 36,
+  "kind": "atm",
+  "n": 66,
+  "title": "Apa yang kamu lakukan jika laporan mingguan ditulis ulang terus?",
+  "files": [
+   "36-s1.jpg",
+   "36-s2.jpg",
+   "36-s3.jpg",
+   "36-s4.jpg",
+   "36-s5.jpg",
+   "36-s6.jpg",
+   "36-s7.jpg",
+   "36-s8.jpg"
+  ],
+  "caption": "Apa yang kamu lakukan jika laporan mingguan ditulis ulang terus?\n\nContoh ilustrasi, bukan hasil nyata.\n\nMau studi kasus lain? Tulis tugas yang ingin kubahas.\n\nGeser sampai slide terakhir. 👉\n\nCatatan: ini contoh ilustrasi, bukan hasil nyata.\n\n#aiagent #aiautomation #belajarai #aiindonesia #produktivitas"
+ },
+ {
+  "day": 37,
+  "kind": "atm",
+  "n": 67,
+  "title": "Kalau kamu males baca dokumentasi tool agent, ini untukmu.",
+  "files": [
+   "37-s1.jpg",
+   "37-s2.jpg",
+   "37-s3.jpg",
+   "37-s4.jpg",
+   "37-s5.jpg",
+   "37-s6.jpg",
+   "37-s7.jpg",
+   "37-s8.jpg"
+  ],
+  "caption": "Kalau kamu males baca dokumentasi tool agent, ini untukmu.\n\nTanpa tenggelam di detail.\n\nSimpan buat dipakai. Tool apa yang ingin kamu pelajari?\n\nGeser sampai slide terakhir. 👉\n\n#aiagent #aiautomation #belajarai #aiindonesia #produktivitas"
+ },
+ {
+  "day": 38,
+  "kind": "atm",
+  "n": 68,
+  "title": "Apa yang kamu lakukan jika harus memilih open source atau layanan siap pakai?",
+  "files": [
+   "38-s1.jpg",
+   "38-s2.jpg",
+   "38-s3.jpg",
+   "38-s4.jpg",
+   "38-s5.jpg",
+   "38-s6.jpg",
+   "38-s7.jpg",
+   "38-s8.jpg"
+  ],
+  "caption": "Apa yang kamu lakukan jika harus memilih open source atau layanan siap pakai?\n\nPertimbangan umum, bukan rekomendasi produk.\n\nKamu condong ke mana? Tulis di komentar.\n\nGeser sampai slide terakhir. 👉\n\n#aiagent #aiautomation #belajarai #aiindonesia #produktivitas"
+ },
+ {
+  "day": 39,
+  "kind": "atm",
+  "n": 69,
+  "title": "Stop ngasih akun asli buat tool yang baru kamu coba.",
+  "files": [
+   "39-s1.jpg",
+   "39-s2.jpg",
+   "39-s3.jpg",
+   "39-s4.jpg",
+   "39-s5.jpg",
+   "39-s6.jpg",
+   "39-s7.jpg",
+   "39-s8.jpg"
+  ],
+  "caption": "Stop ngasih akun asli buat tool yang baru kamu coba.\n\nTempat latihan tanpa risiko.\n\nKomen AGENT untuk checklist akun uji. Kukirim lewat DM.\n\nGeser sampai slide terakhir. 👉\n\n#aiagent #aiautomation #belajarai #aiindonesia #produktivitas"
+ },
+ {
+  "day": 40,
+  "kind": "atm",
+  "n": 70,
+  "title": "Kok bisa sih alur sederhana dibangun pakai kode yang rumit?",
+  "files": [
+   "40-s1.jpg",
+   "40-s2.jpg",
+   "40-s3.jpg",
+   "40-s4.jpg",
+   "40-s5.jpg",
+   "40-s6.jpg",
+   "40-s7.jpg",
+   "40-s8.jpg"
+  ],
+  "caption": "Kok bisa sih alur sederhana dibangun pakai kode yang rumit?\n\nBerdasarkan kebutuhan, bukan gengsi.\n\nKamu di kubu mana? Tulis di komentar.\n\nGeser sampai slide terakhir. 👉\n\n#aiagent #aiautomation #belajarai #aiindonesia #produktivitas"
+ }
+]
