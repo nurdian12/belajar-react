@@ -16,14 +16,14 @@ const css = `*{margin:0;padding:0;box-sizing:border-box}body{background:#ddd;fon
 .av{width:180px;height:180px;border-radius:50%;background:#e9eaee;display:flex;align-items:center;justify-content:center;font-size:84px;font-weight:700;color:#8a8f9c}
 .nm{font-size:36px;font-weight:700}.hd{font-size:36px;color:#80848e;margin-top:6px}
 .txt{position:absolute;left:128px;right:110px;top:490px}.txt p{font-size:64px;line-height:1.3;margin-bottom:48px;font-weight:450}
-.kd{position:absolute;left:124px;top:390px;right:60px}.lb{font-size:22px;color:#6b6f79;letter-spacing:.04em;margin-bottom:14px}
+.kd{position:absolute;left:124px;top:390px;right:60px}.lb{font-size:22px;color:#e02d2d;letter-spacing:.04em;margin-bottom:14px}
 .pill{display:inline-block;background:#efeff1;border-radius:44px;padding:20px 34px;font-size:32px;font-weight:500;max-width:100%}
 .cols{position:absolute;left:114px;right:40px;top:568px;display:grid;grid-template-columns:1fr 1fr}
 .c1{padding-right:34px;border-right:2px solid #d6d6da;min-height:560px}.c2{padding-left:58px}
-.l{font-size:23px;letter-spacing:.2em;font-weight:700;color:#8a8a8e;margin-bottom:30px}.l.r{color:#e02d2d}
-.c1 .no{font-size:38px;line-height:1.45;color:#b9b9bd}.c2 p{font-size:38px;line-height:1.45;margin-bottom:20px}
+.l{font-size:23px;letter-spacing:.2em;font-weight:700;color:#e02d2d;margin-bottom:30px}.l.r{color:#e02d2d}
+.c1 .no{font-size:38px;line-height:1.45;color:#e8504a}.c2 p{font-size:38px;line-height:1.45;margin-bottom:20px}
 .nf .txt{top:300px}.nf .kd{top:210px}.nf .cols{top:388px}.nf .c1{min-height:700px}
-.ft{position:absolute;left:128px;right:110px;bottom:70px;display:flex;justify-content:space-between;align-items:center;font-size:26px;color:#8a8f9c;font-weight:600}.ft b{color:#111;font-size:30px;font-weight:700;display:flex;gap:12px;align-items:center}.ft i{width:11px;height:11px;border-radius:50%;background:#e02d2d;display:inline-block}
+.ft{position:absolute;left:128px;right:110px;bottom:70px;display:flex;justify-content:space-between;align-items:center;font-size:26px;color:#e02d2d;font-weight:600}.ft b{color:#111;font-size:30px;font-weight:700;display:flex;gap:12px;align-items:center}.ft i{width:11px;height:11px;border-radius:50%;background:#e02d2d;display:inline-block}
 .sm1 .txt p{font-size:56px}.sm2 .txt p{font-size:50px}.sm3 .txt p{font-size:44px}
 .sm1 .c2 p,.sm1 .c1 .no{font-size:34px}.sm2 .c2 p,.sm2 .c1 .no{font-size:30px}.sm3 .c2 p,.sm3 .c1 .no{font-size:27px}`;
 const html = `<!doctype html><html><head><meta charset="utf-8"><style>${css}</style></head><body>${posts.map(p => slidesOf(p).map((b, i) => `<div class="s${NOFOTO ? ' nf' : ''}">${head}${b}${NOFOTO ? `<div class="ft"><span>${i + 1} / 6</span><b><i></i>${HANDLE}<i></i></b><span>${i < 5 ? 'GESER →' : 'SELESAI ✓'}</span></div>` : ''}</div>`).join('')).join('')}</body></html>`;
