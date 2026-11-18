@@ -1,6 +1,6 @@
 // Gaya model chat (gelembung pesan). Isi sama dengan b6.js.  ONLY=37 OUT=v13 node bubble.js
 const { chromium } = require('playwright'); const fs = require('fs'), path = require('path');
-const posts = require('./b6.js').filter(p => !process.env.ONLY || String(p.id) === process.env.ONLY);
+const posts = require(process.env.SRC || './b6.js').filter(p => !process.env.ONLY || String(p.id) === process.env.ONLY);
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 const HANDLE = '@alamnurdiann'; const lines = s => String(s).split('|').map(x => `<p>${esc(x)}</p>`).join('');
 const bar = `<div class="bar"><div class="back">&#8249;</div><div><div class="who">AI Agent</div><div class="on"><i></i>online</div></div></div>`;
