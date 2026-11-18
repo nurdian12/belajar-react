@@ -10,6 +10,13 @@ new = {m['id']: m for m in json.load(open(os.path.join(CHAT, 'manifest.json')))}
 cur = json.load(open(os.path.join(HERE, 'schedule_state_v10.json')))
 items = sorted((v['scheduleAt'], int(k), v['id']) for k, v in cur.items())
 limit = (datetime.now(timezone.utc) + timedelta(minutes=20)).strftime('%Y-%m-%dT%H:%M')
+import time
+def up(path):
+    for a in range(4):
+        try: return P.upload(path, 'image/jpeg')
+        except Exception as e:
+            print('ulang upload', os.path.basename(path), str(e)[:60].replace('\n', ' ')); time.sleep(3 * (a + 1))
+    raise SystemExit('upload gagal berulang: ' + path)
 done = skip = 0
 for when, pid, oid in items:
     if str(pid) in state: continue
@@ -17,7 +24,7 @@ for when, pid, oid in items:
     c, old = P.call('GET', '/public/schedule/' + oid)
     if c != 200 or old.get('status') != 'pending': print('LEWATI (bukan pending):', pid, c, old.get('status') if isinstance(old, dict) else old); skip += 1; continue
     m = new[pid]
-    urls = [P.upload(os.path.join(CHAT, 'slides', f), 'image/jpeg') for f in m['files']]
+    urls = [up(os.path.join(CHAT, 'slides', f)) for f in m['files']]
     tmpl = old['medias'][0]
     medias = []
     for u in urls:
