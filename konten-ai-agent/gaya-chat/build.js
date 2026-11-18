@@ -1,8 +1,9 @@
 // Render 62 carousel gaya tweet + skrip -> v10/slides + manifest.json.  node build.js
 const { chromium } = require('playwright'); const fs = require('fs'), path = require('path');
-const posts = require('./b6.js'); const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const posts = require('./b6.js').filter(p => !process.env.ONLY || String(p.id) === process.env.ONLY); const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 const NAME = 'alam nurdiann', HANDLE = '@alamnurdiann';
-const head = `<div class="head"><div class="av">A</div><div><div class="nm">${NAME}</div><div class="hd">${HANDLE}</div></div></div>`;
+const NOFOTO = !!process.env.NOFOTO;
+const head = NOFOTO ? '' : `<div class="head"><div class="av">A</div><div><div class="nm">${NAME}</div><div class="hd">${HANDLE}</div></div></div>`;
 const lines = s => String(s).split('|').map(x => `<p>${esc(x)}</p>`).join('');
 const slidesOf = p => [
   `<div class="txt">${[p.a, p.b].map(x => `<p>${esc(x)}</p>`).join('')}</div>`,
@@ -21,10 +22,12 @@ const css = `*{margin:0;padding:0;box-sizing:border-box}body{background:#ddd;fon
 .c1{padding-right:34px;border-right:2px solid #d6d6da;min-height:560px}.c2{padding-left:58px}
 .l{font-size:23px;letter-spacing:.2em;font-weight:700;color:#8a8a8e;margin-bottom:30px}.l.r{color:#e02d2d}
 .c1 .no{font-size:38px;line-height:1.45;color:#b9b9bd}.c2 p{font-size:38px;line-height:1.45;margin-bottom:20px}
+.nf .txt{top:300px}.nf .kd{top:210px}.nf .cols{top:388px}.nf .c1{min-height:700px}
+.ft{position:absolute;left:128px;right:110px;bottom:70px;display:flex;justify-content:space-between;align-items:center;font-size:26px;color:#8a8f9c;font-weight:600}.ft b{color:#111;font-size:30px;font-weight:700;display:flex;gap:12px;align-items:center}.ft i{width:11px;height:11px;border-radius:50%;background:#e02d2d;display:inline-block}
 .sm1 .txt p{font-size:56px}.sm2 .txt p{font-size:50px}.sm3 .txt p{font-size:44px}
 .sm1 .c2 p,.sm1 .c1 .no{font-size:34px}.sm2 .c2 p,.sm2 .c1 .no{font-size:30px}.sm3 .c2 p,.sm3 .c1 .no{font-size:27px}`;
-const html = `<!doctype html><html><head><meta charset="utf-8"><style>${css}</style></head><body>${posts.map(p => slidesOf(p).map(b => `<div class="s">${head}${b}</div>`).join('')).join('')}</body></html>`;
-const dir = path.join(__dirname, 'v10'); fs.mkdirSync(path.join(dir, 'slides'), { recursive: true }); fs.writeFileSync(path.join(dir, 'series.html'), html);
+const html = `<!doctype html><html><head><meta charset="utf-8"><style>${css}</style></head><body>${posts.map(p => slidesOf(p).map((b, i) => `<div class="s${NOFOTO ? ' nf' : ''}">${head}${b}${NOFOTO ? `<div class="ft"><span>${i + 1} / 6</span><b><i></i>${HANDLE}<i></i></b><span>${i < 5 ? 'GESER →' : 'SELESAI ✓'}</span></div>` : ''}</div>`).join('')).join('')}</body></html>`;
+const dir = path.join(__dirname, process.env.OUT || 'v10'); fs.mkdirSync(path.join(dir, 'slides'), { recursive: true }); fs.writeFileSync(path.join(dir, 'series.html'), html);
 const tags = '#aiagent #aiautomation #belajarai #aiindonesia #produktivitas';
 (async () => {
   const b = await chromium.launch(); const pg = await b.newPage({ viewport: { width: 1080, height: 1350 } });
