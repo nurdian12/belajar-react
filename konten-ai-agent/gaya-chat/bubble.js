@@ -31,13 +31,20 @@ const dir = path.join(__dirname, process.env.OUT || 'v13'); fs.mkdirSync(path.jo
 (async () => {
   const b = await chromium.launch(); const pg = await b.newPage({ viewport: { width: 1080, height: 1350 } });
   await pg.goto('file://' + path.join(dir, 'series.html')); await pg.evaluate(() => document.fonts.ready);
-  const els = await pg.$$('.s'); let k = 0;
-  for (const p of posts) for (let j = 0; j < 6; j++) {
-    const el = els[k++];
-    const over = () => el.evaluate(s => s.querySelector('.chat,.txt').getBoundingClientRect().bottom - s.getBoundingClientRect().top - 1230);
-    let o = await over(); for (const c of ['sm1', 'sm2']) if (o > 0) { await el.evaluate((s, c) => { s.className = 's ' + c; }, c); o = await over(); }
-    if (o > 0) console.log('OVERFLOW', p.id, j + 1, Math.round(o));
-    await el.screenshot({ path: path.join(dir, 'slides', `${String(p.id).padStart(2, '0')}-s${j + 1}.jpg`), type: 'jpeg', quality: 92 });
+  const els = await pg.$$('.s'); let k = 0; const man = []; const tags = '#aiagent #aiautomation #belajarai #aiindonesia #produktivitas';
+  for (const p of posts) {
+    const files = [];
+    for (let j = 0; j < 6; j++) {
+      const el = els[k++];
+      const over = () => el.evaluate(s => s.querySelector('.chat,.txt').getBoundingClientRect().bottom - s.getBoundingClientRect().top - 1230);
+      let o = await over(); for (const c of ['sm1', 'sm2']) if (o > 0) { await el.evaluate((s, c) => { s.className = 's ' + c; }, c); o = await over(); }
+      if (o > 0) console.log('OVERFLOW', p.id, j + 1, Math.round(o));
+      const f = `${String(p.id).padStart(2, '0')}-s${j + 1}.jpg`;
+      await el.screenshot({ path: path.join(dir, 'slides', f), type: 'jpeg', quality: 92 }); files.push(f);
+    }
+    const cap = `${p.a}\n\n${p.b}\n\nGeser buat lihat skripnya. 👉\n\n${p.e2}${p.opini ? '\n\nCatatan: ini opini pribadi, bukan aturan mutlak.' : ''}${p.il ? '\n\nCatatan: ini contoh ilustrasi, bukan hasil nyata.' : ''}\n\n${tags}`;
+    man.push({ id: p.id, files, caption: cap });
   }
-  await b.close(); console.log('ok', k);
+  fs.writeFileSync(path.join(dir, 'manifest.json'), JSON.stringify(man, null, 1));
+  await b.close(); console.log('ok', k, 'posts', man.length);
 })();
