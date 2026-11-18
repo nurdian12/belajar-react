@@ -42,7 +42,7 @@ const dir = path.join(__dirname, process.env.OUT || 'v13'); fs.mkdirSync(path.jo
       const f = `${String(p.id).padStart(2, '0')}-s${j + 1}.jpg`;
       await el.screenshot({ path: path.join(dir, 'slides', f), type: 'jpeg', quality: 92 }); files.push(f);
     }
-    const cap = `${p.a}\n\n${p.b}\n\nGeser buat lihat skripnya. 👉\n\n${p.e2}${p.opini ? '\n\nCatatan: ini opini pribadi, bukan aturan mutlak.' : ''}${p.il ? '\n\nCatatan: ini contoh ilustrasi, bukan hasil nyata.' : ''}\n\n${tags}`;
+    const cap = `${p.a}\n\n${p.b}\n\nGeser buat lihat skripnya. 👉\n\n${p.e2}${p.opini ? '\n\nCatatan: ini opini pribadi, bukan aturan mutlak.' : ''}${p.il ? '\n\nCatatan: ini contoh ilustrasi, bukan hasil nyata.' : ''}${p.src ? '\n\nCatatan: ' + p.src : ''}\n\n${tags}`;
     man.push({ id: p.id, files, caption: cap });
   }
   fs.writeFileSync(path.join(dir, 'manifest.json'), JSON.stringify(man, null, 1));
