@@ -1,0 +1,100 @@
+burden:Rapat,Laporan,Tim baru,Target
+bars:Lembur=90,Waktu keluarga=25,Tidur=40
+scale:Loyalitas,Lembur,Tenaga|Gaji
+bars:Rapat=38,Chat=20,Kerja nyata=42
+scale+:Rajin,Lembur|Pandai tampil,Citra,Relasi
+lines:Harga +15%|Gaji +10%
+burden:Sewa,Makan,Cicilan,Listrik
+burden:Kerjaan A,Kerjaan B,Kerjaan C,Kerjaan D
+bars:Sampingan per jam=40,Gaji per jam=70
+lines+:Skill baru|Gaji
+bars:Gaji kotor=100,Pajak dan BPJS=88,Dibawa pulang=72
+lines:Gaji lompat|Gaji bertahan
+scale+:Kerja keras|Catatan,Angka,Bukti
+bars:Gaji teman=100,Sisa teman=5,Gaji kamu=60,Sisa kamu=40
+lines:Dunia berubah|Skillmu
+scale:Tugas baru,Target,Lembur|Gaji tetap
+bars:Kerja=95,Istirahat=25,Keluarga=15
+scale+:Ijazah|Skill,Portofolio,Karya
+leak:Pajak,BPJS,Ongkos,Makan siang
+glow:Rekan,Jejaring,Peluang
+bars:Gaji kantor=100,Sumber kedua=8
+scale+:Lembur|Upah,Waktu
+lines+:Pencapaian|Gaji
+bars:Dana darurat=15,Rencana=10,Peluang=5
+bars:Tahun 1=80,Tahun 5=82,Tahun 10=83
+lines:Gaya hidup|Tabungan
+leak:Jajan,Parkir,Pulsa,Kopi
+bars:Harga barang=100,Plus admin=108,Plus asuransi=118
+scale:Butuh|Diskon,Promo,Flash sale
+bars:Nilai Rp100rb tahun 1=100,Tahun 10=74,Tahun 20=55
+bars:Pinjam Rp1jt=100,Bulan 1=125,Bulan 2=160
+scale:Janji untung,Testimoni,Pasti cuan|Izin OJK
+scale:Musibah,Sakit,PHK|Dana darurat
+bars+:Tabungan=20,Tagihan=40,Jajan=40
+bars:Penghasilan=100,Pengeluaran=95,Disimpan=5
+burden:Cicilan HP,Paylater,Kartu kredit,Gadget
+bars:Per hari Rp25rb=5,Per bulan Rp750rb=35,Per tahun Rp9jt=100
+glow:Belajar,Pahami,Mulai kecil
+glow:Asuransi,Dana darurat,Tenang
+leak:Jajan,Cicilan,Hobi,Entah ke mana
+burden:Paylater 1,Paylater 2,Paylater 3,Bunga
+bars+:Kebutuhan=50,Keinginan=30,Tabungan=20
+burden:Tagihan,Bunga,Denda,Limit
+lines+:Mulai hari ini|Menunggu
+lines:Harga|Uang diam
+lines+:Konsisten rutin|Cari untung cepat
+bars+:Mengingat=20,Mencatat=95
+bars:Utang=40,Dana darurat=35,Senang-senang=25
+bars:Barang baru=100,Setelah dibeli=70,Bekas bagus=65
+leak:Langganan lupa,Biaya admin,Jajan,Denda
+bars:Sol sepatu tahun 1=100,Tahun 5=60,Tahun 10=25
+scale:Porsi ibu|Porsi anak,Porsi adik
+leak:Uang jajan,Pulsa,Traktiran,Dirimu sendiri
+scale+:Tiket|Pulang,Pelukan,Kangen
+glow:Nilai,Kebiasaan,Doa
+leak:Cicilan,Sekolah adik,Arisan,Listrik
+scale+:Mainan mahal|Waktumu,Pelukan,Cerita
+glow:Terbuka,Jujur,Rencana
+burden:Gedung,Katering,Dekor,Utang
+glow:Contoh,Celengan,Kebiasaan
+glow:Telepon,Kabar,Hangat
+burden:Utang,Janji,Canggung
+glow:Bicara,Dengar,Sepakat
+lines:Biaya sekolah|Tabungan dari lahir
+glow:Cerita,Perjuangan,Pelajaran
+scale+:Keluarga|Dirimu
+bars+:Rumah=40,Sekolah=60,Haji=25
+bars+:Uang saku mingguan=15,Belajar=50,Siap uang besar=100
+glow:Obrolan,Tawa,Dekat
+bars:Celengan ayam=90,Aplikasi canggih=25
+glow:Asuransi,Perlindungan,Cinta
+bars+:Jatah kamu=40,Jatah pasangan=40,Bersama=20
+burden:Orang tua,Anak,Cicilan,Diri sendiri
+scale+:Barang mahal|Dipikirkan,Tulus,Tepat
+glow:Keluarga,Pulang,Hangat
+leak:Stok,Listrik,Sewa,Bon,Pribadi
+leak:Bon Pak A,Bon Bu B,Bon Mas C,Bon Mbak D
+scale:Laku,Ramai,Murah|Untung
+leak:Dapur,Cicilan,Jajan,Arisan
+burden:Sewa 2,Karyawan,Stok,Cicilan
+bars+:Modal=40,Ongkos=65,Jam kerja=85,Harga jual=100
+glow:Foto bagus,Etalase,Posting
+burden:Stok A,Stok B,Stok C,Stok D
+lines+:Catatan rutin|Tebak-tebakan
+lines+:Mulai sekarang|Menunggu sempurna
+bars:Puas bawa 3=30,Kecewa hilang 10=100
+lines+:Pre-order|Stok menumpuk
+bars:Harga normal=100,Promo 1=80,Promo 2=60,Promo 3=40
+glow:Percaya,Tugas kecil,Adil
+bars+:Untung per barang Rp5rb=5,Laku 100 per hari=50,Per hari Rp500rb=100
+glow:Dekat pelanggan,Cepat berubah,Lincah
+bars+:Omzet=100,Biaya=70,Untung=30
+lines+:Layanan bagus|Lokasi saja
+bars+:Omzet=100,Biaya=75,Untung=25
+scale:Cicilan,Bunga,Denda|Laba
+glow:Rekening usaha,Catatan,Rapi
+glow:QRIS,Antar,Chat
+bars+:Biaya cari baru=90,Biaya jaga lama=20
+bars+:Laba=100,Dihabiskan=90,Modal besok=10
+lines+:Disiplin kecil|Modal besar

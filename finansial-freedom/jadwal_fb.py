@@ -1,9 +1,9 @@
-"""Jadwalkan 100 kartu ke fanpage Facebook 'Financial freedom' (Repliz), 5 postingan per hari.
+"""Jadwalkan 100 video animasi (video/NNN.mp4) ke fanpage Facebook 'Financial freedom' (Repliz), 5 postingan per hari.
   python3 jadwal_fb.py                 # simulasi (tanpa mengunggah)
   python3 jadwal_fb.py --go --limit 1  # unggah + jadwalkan 1 postingan pertama (uji)
   python3 jadwal_fb.py --go            # semua (aman diulang, tidak membuat jadwal ganda)
 Slot 07.00, 12.00, 16.00, 19.00, 21.00 WIB. Status di schedule_state.json."""
-import argparse, json, os, ssl, sys, time, urllib.request, urllib.error
+import argparse, json, os, ssl, subprocess, sys, time, urllib.request, urllib.error
 from datetime import datetime, timedelta, timezone
 
 API = 'https://api.repliz.com'; HERE = os.path.dirname(os.path.abspath(__file__))
@@ -71,9 +71,13 @@ def main():
         if key in state: print('LEWATI (sudah terjadwal):', tag, state[key]['id']); continue
         if a.limit and done >= a.limit: break
         if not a.go: print('SIMULASI:', tag); continue
-        url = upload(os.path.join(HERE, 'out', m['file']))
-        body = {'title': '', 'description': m['caption'], 'topic': '', 'type': 'image',
-                'medias': [{'alt': m['hook'], 'customThumbnail': False, 'type': 'image', 'thumbnail': '', 'url': url}],
+        vp = os.path.join(HERE, 'video', f"{m['n']:03d}.mp4")
+        if not os.path.exists(vp): print('VIDEO BELUM ADA, berhenti di', tag); break
+        thumb = f"/tmp/ff-thumb-{m['n']:03d}.jpg"
+        subprocess.run(['ffmpeg', '-y', '-v', 'error', '-ss', '1.6', '-i', vp, '-frames:v', '1', '-q:v', '3', thumb], check=True)
+        vurl, turl = upload(vp, 'video/mp4'), upload(thumb, 'image/jpeg')
+        body = {'title': m['hook'][:90], 'description': m['caption'], 'topic': '', 'type': 'video',
+                'medias': [{'alt': '', 'customThumbnail': True, 'type': 'video', 'thumbnail': turl, 'url': vurl}],
                 'meta': {'title': '', 'description': '', 'url': ''},
                 'additionalInfo': {'isAiGenerated': False, 'isDraft': False, 'isAutoAddMusic': False, 'isShareToFeed': False, 'privacy': 'public', 'trialParams': {'graduationStrategy': ''}, 'collaborators': [], 'products': [], 'tags': [], 'mentions': [], 'targetCountries': []},
                 'replies': [], 'accountId': ACCOUNT, 'scheduleAt': when}
