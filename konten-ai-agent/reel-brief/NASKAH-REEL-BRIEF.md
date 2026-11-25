@@ -118,3 +118,6 @@ Catatan pemakaian:
 **Komentar pin:** "Skit ini fiksi. AI hanya menyusun pertanyaan, periksa sebelum dikirim ke klien. Prompt dikirim lewat DM setelah komen BRIEF."
 
 **Teks sampul:** BRIEF KLIEN KABUR? TANYA DULU
+
+## Catatan versi rekaman (26 Nov 2026)
+Rekaman yang diunggah berdurasi 38 detik. Dari pola jedanya, giliran "Kok banyak nanya? Kamu kan dibayar buat mikir!" dan twist "Mau lima pertanyaan sekarang, atau lima kali revisi nanti?" sepertinya tidak ada di rekaman (dugaan dari durasi, bukan dari transkrip). Video `video-brief/reel-brief.mp4` dirender sesuai isi rekaman itu. Kalau twist mau dimasukkan, rekam ulang dengan teks lengkap di atas.
