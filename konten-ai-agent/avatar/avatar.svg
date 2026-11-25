@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" width="1000" height="1000">
+<defs>
+ <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#eaf2ff"/><stop offset="1" stop-color="#cfe0ff"/></linearGradient>
+ <radialGradient id="glow" cx=".5" cy=".42" r=".55"><stop offset="0" stop-color="#ffffff" stop-opacity=".95"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></radialGradient>
+ <linearGradient id="shell" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#dbe6fb"/></linearGradient>
+ <linearGradient id="visor" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a2342"/><stop offset="1" stop-color="#070c1c"/></linearGradient>
+ <linearGradient id="ear" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5a9bff"/><stop offset="1" stop-color="#1d6fe8"/></linearGradient>
+ <filter id="sh" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#0f3b8c" flood-opacity=".28"/></filter>
+</defs>
+<rect width="1000" height="1000" fill="url(#bg)"/>
+<circle cx="500" cy="430" r="430" fill="url(#glow)"/>
+<g opacity=".18" stroke="#1d6fe8" stroke-width="2"><path d="M0 0V1000M0 0H1000"/><path d="M125 0V1000M0 125H1000"/><path d="M250 0V1000M0 250H1000"/><path d="M375 0V1000M0 375H1000"/><path d="M500 0V1000M0 500H1000"/><path d="M625 0V1000M0 625H1000"/><path d="M750 0V1000M0 750H1000"/><path d="M875 0V1000M0 875H1000"/><path d="M1000 0V1000M0 1000H1000"/></g>
+<!-- bahu -->
+<g filter="url(#sh)"><path d="M170 1000c0-170 120-250 330-250s330 80 330 250z" fill="url(#shell)"/></g>
+<circle cx="500" cy="880" r="62" fill="#1d6fe8"/><text x="500" y="906" text-anchor="middle" font-family="Inter,DejaVu Sans,sans-serif" font-size="72" font-weight="800" fill="#fff">A</text>
+<!-- antena -->
+<path d="M500 180v-70" stroke="#9db8ee" stroke-width="14" stroke-linecap="round"/><circle cx="500" cy="96" r="30" fill="#1d6fe8"/><circle cx="490" cy="86" r="9" fill="#fff" opacity=".7"/>
+<!-- telinga -->
+<circle cx="190" cy="470" r="78" fill="url(#ear)" filter="url(#sh)"/><circle cx="810" cy="470" r="78" fill="url(#ear)" filter="url(#sh)"/>
+<circle cx="168" cy="448" r="18" fill="#fff" opacity=".45"/><circle cx="788" cy="448" r="18" fill="#fff" opacity=".45"/>
+<!-- kepala -->
+<g filter="url(#sh)"><rect x="200" y="190" width="600" height="560" rx="230" fill="url(#shell)"/></g>
+<ellipse cx="420" cy="250" rx="150" ry="38" fill="#fff" opacity=".8"/>
+<!-- visor -->
+<rect x="260" y="290" width="480" height="340" rx="160" fill="url(#visor)"/>
+<ellipse cx="400" cy="330" rx="120" ry="24" fill="#fff" opacity=".12"/>
+<!-- mata dan senyum -->
+<path d="M340 470q50-80 100 0" fill="none" stroke="#fff" stroke-width="26" stroke-linecap="round"/>
+<path d="M560 470q50-80 100 0" fill="none" stroke="#fff" stroke-width="26" stroke-linecap="round"/>
+<path d="M440 540q60 55 120 0" fill="none" stroke="#fff" stroke-width="24" stroke-linecap="round"/>
+<circle cx="318" cy="530" r="20" fill="#5a9bff" opacity=".55"/><circle cx="682" cy="530" r="20" fill="#5a9bff" opacity=".55"/>
+</svg>
