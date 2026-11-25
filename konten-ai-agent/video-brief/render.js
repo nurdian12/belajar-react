@@ -1,7 +1,7 @@
 // Reel skit "Bos vs admin": avatar bos (kiri, topi koki) dan admin (kanan), visual prop di tengah, teks tulisan tangan di atas, voice over 45,21 dtk.
 // node render.js [--test=detik,detik] | node render.js --chunks
 const { chromium } = require('playwright'); const { spawn } = require('child_process'); const fs = require('fs'), path = require('path');
-const W = 1080, H = 1920, FPS = 30, DUR = 38.42; const dir = __dirname;
+const W = 1080, H = 1920, FPS = 30, DUR = 48.03; const dir = __dirname;
 const IMG = (n) => 'data:image/png;base64,' + fs.readFileSync(path.join(dir, n)).toString('base64');
 const IMGS = {}; for (let i = 0; i < 9; i++) IMGS['face' + i] = IMG(`face${i}.png`);
 const LIP = require('../lipsync/lipsync.js'); const ENV = JSON.parse(fs.readFileSync(path.join(dir, 'env.json')));
@@ -25,6 +25,7 @@ const SEG = [
   [34.60, 36.74, 'Mau template prompt untuk memecah *brief* klien?', ['paket', 'paket'], [0, 0], 'N'],
   [37.13, 38.42, 'Komen *BRIEF*.', ['cta'], [0], 'N'],
 ];
+const SLOW = 1.25; SEG.forEach(q => { q[0] *= SLOW; q[1] *= SLOW; }); // suara diperlambat ke 80%
 const CH = [];
 SEG.forEach((s, si) => {
   const words = s[2].split(' '); const parts = []; let cur = [];
