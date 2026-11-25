@@ -4,6 +4,7 @@ const { chromium } = require('playwright'); const { spawn } = require('child_pro
 const W = 1080, H = 1920, FPS = 30, DUR = 45.21; const dir = __dirname;
 const IMG = (n) => 'data:image/png;base64,' + fs.readFileSync(path.join(dir, n)).toString('base64');
 const IMGS = {}; for (let i = 0; i < 9; i++) IMGS['face' + i] = IMG(`face${i}.png`);
+const LIP = require('../lipsync/lipsync.js'); const ENV = JSON.parse(fs.readFileSync(path.join(dir, 'env.json')));
 const FONT = fs.readFileSync(path.join(dir, 'fonts/kalam-latin-700-normal.woff2')).toString('base64');
 // [mulaiSuara, akhirSuara, teks (*kata* = sorot), [visual per frasa], [stiker wajah per frasa], pembicara B/A/N]
 // stiker: 0 tertawa, 1 marah, 2 sedih menangis, 3 "huh?", 4 datar, 5 sedih, 6 cemas, 7 kaget, 8 lidah
@@ -38,7 +39,7 @@ if (process.argv.includes('--chunks')) { CH.forEach(c => console.log(c.a.toFixed
 const html = `<!doctype html><html><head><meta charset="utf-8"><style>@font-face{font-family:Kalam;font-weight:700;src:url(data:font/woff2;base64,${FONT})}body{margin:0;background:#fff}canvas{display:block}</style></head><body><canvas id="c" width="${W}" height="${H}"></canvas>
 <script>
 const W=${W},H=${H};const c=document.getElementById('c'),x=c.getContext('2d');
-const CH=${JSON.stringify(CH)};const SRC=${JSON.stringify(IMGS)};const IM={};
+const CH=${JSON.stringify(CH)};const ENV=${JSON.stringify(ENV)};const SPANS=${JSON.stringify(SEG.map(q=>[q[0],q[1]]))};const SRC=${JSON.stringify(IMGS)};const IM={};
 const clamp=(v,a=0,b=1)=>Math.min(b,Math.max(a,v)),lerp=(a,b,t)=>a+(b-a)*t,ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2,prog=(t,a,b)=>clamp((t-a)/(b-a));
 const back=t=>{const c1=1.9,c3=c1+1;return 1+c3*Math.pow(t-1,3)+c1*Math.pow(t-1,2)};
 const FK='Kalam, sans-serif',FI='Inter, DejaVu Sans, sans-serif';const BLUE='#1d6fe8',GREEN='#25c26a',RED='#e5352b',YEL='#ffc233',GRAY='#e9ecf3',ORANGE='#f08a1d';const Y0=800;
@@ -55,11 +56,13 @@ function card(label,lines,t,t0,t1,cx,cy,col){const w=900,h=150+lines.length*74;x
   rr(-w/2+34,-h/2+30,label.length*24+64,56,28);x.fillStyle=col;x.fill();txt(label,-w/2+66,-h/2+70,28,'#fff',800,'left');
   const all=lines.join(' ').length;const n=Math.floor(prog(t,t0,t1)*all);let used=0;
   lines.forEach((s,i)=>{const take=Math.max(0,Math.min(s.length,n-used));used+=s.length+1;txt(s.slice(0,take),-w/2+40,-h/2+170+i*74,50,'#f6f2ea',700,'left')});x.restore()}
-function faceD(cx,cy,w,rot=0,k=1){const im=IM['face'+k];const h=w*im.height/im.width;x.save();x.translate(cx,cy);x.rotate(rot);shadow();x.drawImage(im,-w/2,-h/2,w,h);x.restore()}
-function chefAvatar(cx,cy,w,k,lt,rot=0){const im=IM['face'+k];const h=w*im.height/im.width;x.save();x.translate(cx,cy);x.rotate(rot);shadow();x.drawImage(im,-w/2,-h/2,w,h);shadow(false);
+function faceD(cx,cy,w,rot=0,k=1,talk=-1){const im=IM['face'+k];const h=w*im.height/im.width;x.save();x.translate(cx,cy);x.rotate(rot);shadow();x.drawImage(im,-w/2,-h/2,w,h);shadow(false);if(talk>=0)talkMouth(k,w,h,talk);x.restore()}
+function chefAvatar(cx,cy,w,k,lt,rot=0,talk=-1){const im=IM['face'+k];const h=w*im.height/im.width;x.save();x.translate(cx,cy);x.rotate(rot);shadow();x.drawImage(im,-w/2,-h/2,w,h);shadow(false);if(talk>=0)talkMouth(k,w,h,talk);
   const y0=-h*.27,lw=Math.max(5,w*.022);x.lineWidth=lw;x.strokeStyle='#111';x.lineJoin='round';x.fillStyle='#fff';
   [[-.22,-.10,.17],[0,-.17,.20],[.22,-.10,.17]].forEach(a=>{x.beginPath();x.arc(a[0]*w,y0+a[1]*h,a[2]*w,0,7);x.fill();x.stroke()});rr(-.36*w,y0-.04*h,.72*w,.11*h,w*.04);x.fill();x.stroke();x.restore()}
+${LIP.code}
 function arrow(X1,X2,Y,lt,t0){const a=prog(lt,t0,t0+.3);if(a<=0)return;x.save();x.strokeStyle='#111';x.fillStyle='#111';x.lineWidth=14;x.lineCap='round';const xe=X1+(X2-X1)*a;x.beginPath();x.moveTo(X1,Y);x.lineTo(xe,Y);x.stroke();if(a>.9){x.beginPath();x.moveTo(X2,Y);x.lineTo(X2-34,Y-26);x.lineTo(X2-34,Y+26);x.closePath();x.fill()}x.restore()}
+function inSpan(t){return SPANS.some(q=>t>=q[0]-.03&&t<=q[1]+.05)}
 function vis(t,V){const p=V.lt,a=V.t-V.lt;
   switch(V.n){
   case 'tumpuk':for(let i=0;i<5;i++)bub('Berapa harganya, kak?',i%2?680:400,Y0-260+i*95,GRAY,'#10142a',44,.05+i*.12,p,0);break;
@@ -95,7 +98,7 @@ function caption(t,k){const C=CH[k];const lines=wrapT(C.text);const pp=back(prog
     for(const q of L){x.textAlign='left';x.textBaseline='alphabetic';x.fillStyle=q.hl?(C.who==='B'?ORANGE:BLUE):'#111';x.fillText(q.w,X,Y);X+=x.measureText(q.w+' ').width}});x.restore()}
 function avatars(t,C,lt,k){const prevWho=k>0?CH[k-1].who:C.who;
   [['B',250],['A',830]].forEach(([who,cx])=>{const active=C.who===who||C.who==='N';const changed=(prevWho!==C.who);const pop=active&&changed?back(prog(lt,0,.3)):1;const sc=(active?1:.8)*(active?(.9+.1*pop):1);const k2=active?C.face:4;const cy=1290;const bob=active?Math.sin(lt*7)*8:0;
-    x.save();x.globalAlpha=active?1:.7;x.translate(cx,cy+bob);x.scale(sc,sc);x.translate(-cx,-cy);if(who==='B')chefAvatar(cx,cy,340,k2,lt,.05*Math.sin(lt*5)*(active?1:0));else faceD(cx,cy,340,.05*Math.sin(lt*5)*(active?1:0),k2);x.restore();
+    x.save();x.globalAlpha=active?1:.7;x.translate(cx,cy+bob);x.scale(sc,sc);x.translate(-cx,-cy);const tk=(active&&inSpan(t))?envAt(t):-1;if(who==='B')chefAvatar(cx,cy,340,k2,lt,.05*Math.sin(lt*5)*(active?1:0),tk);else faceD(cx,cy,340,.05*Math.sin(lt*5)*(active?1:0),k2,tk);x.restore();
     chip(who==='B'?'BOS':'ADMIN',cx,1565,who==='B'?ORANGE:BLUE,'#fff',34,'',active?1:.6)})}
 function frame(t){x.fillStyle='#fff';x.fillRect(0,0,W,H);let k=0;for(let i=0;i<CH.length;i++)if(t>=CH[i].a)k=i;const C=CH[k];
   x.save();x.globalAlpha=.85;chip('SKIT FIKSI',W-170,80,'#e9ecf3','#555',30);x.restore();

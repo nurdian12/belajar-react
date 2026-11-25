@@ -4,6 +4,7 @@ const { chromium } = require('playwright'); const { spawn } = require('child_pro
 const W = 1080, H = 1920, FPS = 30, DUR = 62.29; const dir = __dirname;
 const IMG = (n, m = 'jpeg') => `data:image/${m};base64,` + fs.readFileSync(path.join(dir, n)).toString('base64');
 const IMGS = { butler: IMG('butler.jpg') }; for (let i = 0; i < 9; i++) IMGS['face' + i] = IMG(`face${i}.png`, 'png');
+const LIP = require('../lipsync/lipsync.js'); const ENV = JSON.parse(fs.readFileSync(path.join(dir, 'env.json')));
 const FONT = fs.readFileSync(path.join(dir, 'fonts/kalam-latin-700-normal.woff2')).toString('base64');
 // [mulaiSuara, akhirSuara, teks (*kata* = sorot), [visual per frasa], [ekspresi per frasa]]
 // ekspresi: 0 marah, 1 datar, 2 senyum lebar, 3 cemberut, 4 tenang, 5 curiga, 6 kaget, 7 heran, 8 sinis
@@ -46,7 +47,7 @@ if (process.argv.includes('--chunks')) { CH.forEach(c => console.log(c.a.toFixed
 const html = `<!doctype html><html><head><meta charset="utf-8"><style>@font-face{font-family:Kalam;font-weight:700;src:url(data:font/woff2;base64,${FONT})}body{margin:0;background:#fff}canvas{display:block}</style></head><body><canvas id="c" width="${W}" height="${H}"></canvas>
 <script>
 const W=${W},H=${H};const c=document.getElementById('c'),x=c.getContext('2d');
-const CH=${JSON.stringify(CH)};const SRC=${JSON.stringify(IMGS)};const IM={};
+const CH=${JSON.stringify(CH)};const ENV=${JSON.stringify(ENV)};const SPANS=${JSON.stringify(SEG.map(q=>[q[0],q[1]]))};const SRC=${JSON.stringify(IMGS)};const IM={};
 const clamp=(v,a=0,b=1)=>Math.min(b,Math.max(a,v)),lerp=(a,b,t)=>a+(b-a)*t,ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2,prog=(t,a,b)=>clamp((t-a)/(b-a));
 const back=t=>{const c1=1.9,c3=c1+1;return 1+c3*Math.pow(t-1,3)+c1*Math.pow(t-1,2)};
 const FK='Kalam, sans-serif',FI='Inter, DejaVu Sans, sans-serif';const BLUE='#1d6fe8',GREEN='#25c26a',RED='#e5352b',YEL='#ffc233',GRAY='#e9ecf3';
@@ -56,9 +57,11 @@ function shadow(on=true){x.shadowColor=on?'rgba(0,0,0,.28)':'transparent';x.shad
 function bub(s,cx,cy,col,tcol,size=52,t0=0,t=9,tail=0){const p=back(prog(t,t0,t0+.3));if(p<=0)return;x.save();x.font='800 '+size+'px '+FI;const w=x.measureText(s).width+80,h=size+56;x.translate(cx,cy);x.scale(p,p);shadow();rr(-w/2,-h/2,w,h,h/2);x.fillStyle=col;x.fill();shadow(false);
   if(tail){x.beginPath();x.moveTo(tail*(w/2-70),h/2-4);x.lineTo(tail*(w/2-20),h/2+44);x.lineTo(tail*(w/2-120),h/2-4);x.fill()}x.fillStyle=tcol;x.textAlign='center';x.textBaseline='middle';x.fillText(s,0,4);x.restore()}
 function pic(name,cx,cy,w,rot=0){const im=IM[name];const h=w*im.height/im.width;x.save();x.translate(cx,cy);x.rotate(rot);x.drawImage(im,-w/2,-h/2,w,h);x.restore()}
-function faceD(cx,cy,w,rot=0,k=1){const im=IM['face'+k];const h=w*im.height/im.width;x.save();x.translate(cx,cy);x.rotate(rot);shadow();x.drawImage(im,-w/2,-h/2,w,h);x.restore()}
+function faceD(cx,cy,w,rot=0,k=1,talk=-1){const im=IM['face'+k];const h=w*im.height/im.width;x.save();x.translate(cx,cy);x.rotate(rot);shadow();x.drawImage(im,-w/2,-h/2,w,h);shadow(false);if(talk>=0)talkMouth(k,w,h,talk);x.restore()}
+function inSpan(t){return SPANS.some(q=>t>=q[0]-.03&&t<=q[1]+.05)}
+${LIP.code}
 
-function costume(type,cx,cy,w,k,lt=0,rot=0){const im=IM['face'+k];const h=w*im.height/im.width;x.save();x.translate(cx,cy);x.rotate(rot);shadow();x.drawImage(im,-w/2,-h/2,w,h);shadow(false);
+function costume(type,cx,cy,w,k,lt=0,rot=0,talk=-1){const im=IM['face'+k];const h=w*im.height/im.width;x.save();x.translate(cx,cy);x.rotate(rot);shadow();x.drawImage(im,-w/2,-h/2,w,h);shadow(false);if(talk>=0)talkMouth(k,w,h,talk);
   const y0=-h*.27,lw=Math.max(5,w*.022);x.lineWidth=lw;x.strokeStyle='#111';x.lineJoin='round';x.lineCap='round';
   if(type==='katering'){x.fillStyle='#fff';[[-.22,-.10,.17],[0,-.17,.20],[.22,-.10,.17]].forEach(a=>{x.beginPath();x.arc(a[0]*w,y0+a[1]*h,a[2]*w,0,7);x.fill();x.stroke()});
     rr(-.36*w,y0-.04*h,.72*w,.11*h,w*.04);x.fill();x.stroke();
@@ -119,13 +122,13 @@ function frame(t){x.fillStyle='#fff';x.fillRect(0,0,W,H);let k=0;for(let i=0;i<C
   if(t<4.4){x.save();x.globalAlpha=.7*(1-ease(prog(t,3.8,4.4)));txt('Disclaimer: Konten ini murni untuk tujuan edukasi.',W/2,100,30,'#666',600,'center');txt('AI hanya menyusun draf. Harga dan promo tetap kamu cek.',W/2,142,30,'#666',600,'center');x.restore()}
   caption(t,k);
   const lt=t-C.a,pp=back(prog(lt,0,.25));x.save();const sc=.88+.12*pp;x.translate(540,1000);x.scale(sc,sc);x.translate(-540,-1000);x.globalAlpha=clamp(pp*2.5);vis(t,{n:C.vis,lt,t});x.restore();
-  {const v=C.vis,pf=back(prog(lt,0,.3));
-   if(v==='laundry'||v==='katering'||v==='kursus'){x.save();x.translate(540,760);const q=.6+.4*pf;x.scale(q,q);x.translate(-540,-760);costume(v,540,760,430,C.face,lt,.05*Math.sin(lt*3));x.restore()}
-   else if(v==='sama'){[['laundry',200],['katering',540],['kursus',860]].forEach((a,i)=>{const d=prog(lt,i*.12,i*.12+.3);x.save();x.translate(a[1],880);const q=.5+.5*back(d);x.scale(q,q);x.translate(-a[1],-880);costume(a[0],a[1],880,270,C.face,lt+i,.06*Math.sin(lt*4+i));x.restore()})}
+  {const v=C.vis,pf=back(prog(lt,0,.3)),tk=inSpan(t)?envAt(t):-1;
+   if(v==='laundry'||v==='katering'||v==='kursus'){x.save();x.translate(540,760);const q=.6+.4*pf;x.scale(q,q);x.translate(-540,-760);costume(v,540,760,430,C.face,lt,.05*Math.sin(lt*3),tk);x.restore()}
+   else if(v==='sama'){[['laundry',200],['katering',540],['kursus',860]].forEach((a,i)=>{const d=prog(lt,i*.12,i*.12+.3);x.save();x.translate(a[1],880);const q=.5+.5*back(d);x.scale(q,q);x.translate(-a[1],-880);costume(a[0],a[1],880,270,C.face,lt+i,.06*Math.sin(lt*4+i),tk);x.restore()})}
    else{const cta=v==='cta',butler=/butler|kirimTeman/.test(v);
     // avatar berpindah kiri/kanan setiap frasa (butler selalu di kiri, jadi avatar di kanan)
     const right=butler||k%2===0;const sl=ease(prog(lt,0,.4));const cx0=cta?540:(right?850:230),cy=cta?1420:(k%4<2?650:720),w=cta?400:340;const dx=cta?0:(right?1:-1)*(1-sl)*300;
-    x.save();x.translate(cx0+dx,cy);x.scale(.6+.4*pf,.6+.4*pf);x.translate(-(cx0+dx),-cy);faceD(cx0+dx,cy,w,.06*Math.sin(lt*4)+(1-sl)*(right?.25:-.25),C.face);x.restore()}}
+    x.save();x.translate(cx0+dx,cy);x.scale(.6+.4*pf,.6+.4*pf);x.translate(-(cx0+dx),-cy);faceD(cx0+dx,cy,w,.06*Math.sin(lt*4)+(1-sl)*(right?.25:-.25),C.face,tk);x.restore()}}
   x.save();x.globalAlpha=.4;txt('@alamnurdiann',W/2,H-210,34,'#333',700,'center');x.restore()}
 window.draw=frame;window.ready=Promise.all(Object.keys(SRC).map(k=>new Promise(r=>{const im=new Image();im.onload=()=>{IM[k]=im;r()};im.src=SRC[k]}))).then(()=>Promise.all([document.fonts.load('700 84px Kalam'),document.fonts.load('800 50px Inter'),document.fonts.load('900 50px Inter')])).then(()=>true);
 </script></body></html>`;

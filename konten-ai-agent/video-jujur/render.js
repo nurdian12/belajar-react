@@ -5,6 +5,7 @@ const W = 1080, H = 1920, FPS = 30, DUR = 50.37; const dir = __dirname;
 const IMG = (n, m = 'jpeg') => `data:image/${m};base64,` + fs.readFileSync(path.join(dir, n)).toString('base64');
 const IMGS = { butler: IMG('butler.jpg'), terminator: IMG('terminator.jpg'), jas: IMG('jas_putih.jpg') };
 for (let i = 0; i < 9; i++) IMGS['face' + i] = IMG(`face${i}.png`, 'png');
+const LIP = require('../lipsync/lipsync.js'); const ENV = JSON.parse(fs.readFileSync(path.join(dir, 'env.json')));
 const FONT = fs.readFileSync(path.join(dir, 'fonts/kalam-latin-700-normal.woff2')).toString('base64');
 // [mulaiSuara, akhirSuara, teks, [visual per frasa]]
 const SEG = [
@@ -42,7 +43,7 @@ const EXPR = [7,5,8, 1,4,2, 2,3,7, 4,1,8, 4,2, 0,2,4,3,3, 1,0,3,4, 7,6,5, 4,6, 7
 const html = `<!doctype html><html><head><meta charset="utf-8"><style>@font-face{font-family:Kalam;font-weight:700;src:url(data:font/woff2;base64,${FONT})}body{margin:0;background:#fff}canvas{display:block}</style></head><body><canvas id="c" width="${W}" height="${H}"></canvas>
 <script>
 const W=${W},H=${H};const c=document.getElementById('c'),x=c.getContext('2d');
-const CH=${JSON.stringify(CH)};const EXP=${JSON.stringify(EXPR)};const SRC=${JSON.stringify(IMGS)};const IM={};
+const CH=${JSON.stringify(CH)};const ENV=${JSON.stringify(ENV)};const SPANS=${JSON.stringify(SEG.map(q=>[q[2],q[3]]))};const EXP=${JSON.stringify(EXPR)};const SRC=${JSON.stringify(IMGS)};const IM={};
 const clamp=(v,a=0,b=1)=>Math.min(b,Math.max(a,v)),lerp=(a,b,t)=>a+(b-a)*t,ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2,prog=(t,a,b)=>clamp((t-a)/(b-a));
 const back=t=>{const c1=1.9,c3=c1+1;return 1+c3*Math.pow(t-1,3)+c1*Math.pow(t-1,2)};
 const FK='Kalam, sans-serif',FI='Inter, DejaVu Sans, sans-serif';const BLUE='#1d6fe8',GREEN='#25c26a',RED='#e5352b',YEL='#ffc233';
@@ -53,7 +54,9 @@ function bub(s,cx,cy,col,tcol,size=52,t0=0,t=9,tail=0){const p=back(prog(t,t0,t0
   if(tail){x.beginPath();x.moveTo(tail*(w/2-70),h/2-4);x.lineTo(tail*(w/2-20),h/2+44);x.lineTo(tail*(w/2-120),h/2-4);x.fill()}x.fillStyle=tcol;x.textAlign='center';x.textBaseline='middle';x.fillText(s,0,4);x.restore()}
 function pic(name,cx,cy,w,rot=0,round=28,frame=true){const im=IM[name];const h=w*im.height/im.width;x.save();x.translate(cx,cy);x.rotate(rot);shadow(frame);if(frame){rr(-w/2,-h/2,w,h,round);x.fillStyle='#fff';x.fill();shadow(false);x.save();rr(-w/2,-h/2,w,h,round);x.clip();x.drawImage(im,-w/2,-h/2,w,h);x.restore()}else{x.drawImage(im,-w/2,-h/2,w,h)}x.restore()}
 function face(){}
-function faceD(cx,cy,w,rot=0,k=1){const im=IM['face'+k];const h=w*im.height/im.width;x.save();x.translate(cx,cy);x.rotate(rot);shadow();x.drawImage(im,-w/2,-h/2,w,h);x.restore()}
+function faceD(cx,cy,w,rot=0,k=1,talk=-1){const im=IM['face'+k];const h=w*im.height/im.width;x.save();x.translate(cx,cy);x.rotate(rot);shadow();x.drawImage(im,-w/2,-h/2,w,h);shadow(false);if(talk>=0)talkMouth(k,w,h,talk);x.restore()}
+function inSpan(t){return SPANS.some(q=>t>=q[0]-.03&&t<=q[1]+.05)}
+${LIP.code}
 function chip(s,cx,cy,col,tcol='#fff',size=44,mark=''){x.save();x.font='800 '+size+'px '+FI;const w=x.measureText(s).width+70+(mark?60:0),h=size+44;shadow();rr(cx-w/2,cy-h/2,w,h,h/2);x.fillStyle=col;x.fill();shadow(false);x.fillStyle=tcol;x.textAlign='center';x.textBaseline='middle';x.fillText(s,cx+(mark?30:0),cy+3);
   if(mark){x.font='900 '+size+'px '+FI;x.fillText(mark,cx-w/2+48,cy+3)}x.restore()}
 function typed(lines,t,t0,t1){const all=lines.join(' ').length;const n=Math.floor(prog(t,t0,t1)*all);let used=0;return lines.map(s=>{const take=Math.max(0,Math.min(s.length,n-used));used+=s.length+1;return s.slice(0,take)})}
@@ -99,7 +102,7 @@ function caption(t,k){const C=CH[k];const lines=wrapT(C.text);const pp=back(prog
 function wrapT(s){x.font='700 84px '+FK;const ws=s.split(' ');const L=[];let cur='';for(const w of ws){const tt=cur?cur+' '+w:w;if(x.measureText(tt).width>940&&cur){L.push(cur);cur=w}else cur=tt}if(cur)L.push(cur);return L}
 function frame(t){x.fillStyle='#fff';x.fillRect(0,0,W,H);let k=0;for(let i=0;i<CH.length;i++)if(t>=CH[i].a)k=i;const C=CH[k];
   if(t<4.2){x.save();x.globalAlpha=.7*(1-ease(prog(t,3.6,4.2)));txt('Disclaimer: Konten ini murni untuk tujuan edukasi.',W/2,100,30,'#666',600,'center');txt('AI tetap bisa salah, periksa hal penting.',W/2,142,30,'#666',600,'center');x.restore()}
-  caption(t,k);vis(t,{n:C.vis,lt:t-C.a,t});{const lt=t-C.a,pp=back(prog(lt,0,.3));const big=C.vis==='faceTanya',cta=C.vis==='cta';x.save();const cx=big?540:cta?540:850,cy=big?980:cta?1420:650,w=big?600:cta?400:340;x.translate(cx,cy);x.scale(.5+.5*pp,.5+.5*pp);x.translate(-cx,-cy);faceD(cx,cy,w,.06*Math.sin(lt*4),EXP[k]);x.restore()}
+  caption(t,k);vis(t,{n:C.vis,lt:t-C.a,t});{const lt=t-C.a,pp=back(prog(lt,0,.3));const big=C.vis==='faceTanya',cta=C.vis==='cta';x.save();const cx=big?540:cta?540:850,cy=big?980:cta?1420:650,w=big?600:cta?400:340;x.translate(cx,cy);x.scale(.5+.5*pp,.5+.5*pp);x.translate(-cx,-cy);faceD(cx,cy,w,.06*Math.sin(lt*4),EXP[k],inSpan(t)?envAt(t):-1);x.restore()}
   x.save();x.globalAlpha=.4;txt('@alamnurdiann',W/2,H-210,34,'#333',700,'center');x.restore()}
 window.draw=frame;window.ready=Promise.all(Object.keys(SRC).map(k=>new Promise(r=>{const im=new Image();im.onload=()=>{IM[k]=im;r()};im.src=SRC[k]}))).then(()=>Promise.all([document.fonts.load('700 84px Kalam'),document.fonts.load('800 50px Inter')])).then(()=>true);
 </script></body></html>`;
