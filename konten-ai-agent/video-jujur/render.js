@@ -36,6 +36,9 @@ SEG.forEach((s, si) => {
 if (process.argv.includes('--chunks')) { CH.forEach(c => console.log(c.a.toFixed(2), c.b.toFixed(2), c.vis.padEnd(14), c.text)); process.exit(0); }
 // ekspresi per frasa (indeks stiker 0-8): 0 marah, 1 datar, 2 senyum lebar, 3 cemberut, 4 tenang, 5 curiga, 6 kaget tangan di pipi, 7 heran, 8 jijik/lirik
 const EXPR = [7,5,8, 1,4,2, 2,3,7, 4,1,8, 4,2, 0,2,4,3,3, 1,0,3,4, 7,6,5, 4,6, 7,2, 2,8];
+// peta ke lembar kartun: 0/4 senyum, 1/3 marah, 2/5 tertawa, 6 sedih, 7/8 kaget (selang-seling supaya tidak sama berurutan)
+{ const MAP = [1, 0, 2, 6, 4, 3, 7, 8, 3], ALT = { 0: 4, 4: 0, 1: 3, 3: 1, 2: 5, 5: 2, 7: 8, 8: 7, 6: 6 }; let prev = -1;
+  for (let i = 0; i < EXPR.length; i++) { let m = MAP[EXPR[i]]; if (m === prev) m = ALT[m]; EXPR[i] = m; prev = m; } }
 const html = `<!doctype html><html><head><meta charset="utf-8"><style>@font-face{font-family:Kalam;font-weight:700;src:url(data:font/woff2;base64,${FONT})}body{margin:0;background:#fff}canvas{display:block}</style></head><body><canvas id="c" width="${W}" height="${H}"></canvas>
 <script>
 const W=${W},H=${H};const c=document.getElementById('c'),x=c.getContext('2d');
@@ -96,7 +99,7 @@ function caption(t,k){const C=CH[k];const lines=wrapT(C.text);const pp=back(prog
 function wrapT(s){x.font='700 84px '+FK;const ws=s.split(' ');const L=[];let cur='';for(const w of ws){const tt=cur?cur+' '+w:w;if(x.measureText(tt).width>940&&cur){L.push(cur);cur=w}else cur=tt}if(cur)L.push(cur);return L}
 function frame(t){x.fillStyle='#fff';x.fillRect(0,0,W,H);let k=0;for(let i=0;i<CH.length;i++)if(t>=CH[i].a)k=i;const C=CH[k];
   if(t<4.2){x.save();x.globalAlpha=.7*(1-ease(prog(t,3.6,4.2)));txt('Disclaimer: Konten ini murni untuk tujuan edukasi.',W/2,100,30,'#666',600,'center');txt('AI tetap bisa salah, periksa hal penting.',W/2,142,30,'#666',600,'center');x.restore()}
-  caption(t,k);vis(t,{n:C.vis,lt:t-C.a,t});{const lt=t-C.a,pp=back(prog(lt,0,.3));const big=C.vis==='faceTanya',cta=C.vis==='cta';x.save();const cx=big?540:cta?540:850,cy=big?980:cta?1420:640,w=big?560:cta?360:300;x.translate(cx,cy);x.scale(.5+.5*pp,.5+.5*pp);x.translate(-cx,-cy);faceD(cx,cy,w,.06*Math.sin(lt*4),EXP[k]);x.restore()}
+  caption(t,k);vis(t,{n:C.vis,lt:t-C.a,t});{const lt=t-C.a,pp=back(prog(lt,0,.3));const big=C.vis==='faceTanya',cta=C.vis==='cta';x.save();const cx=big?540:cta?540:850,cy=big?980:cta?1420:650,w=big?600:cta?400:340;x.translate(cx,cy);x.scale(.5+.5*pp,.5+.5*pp);x.translate(-cx,-cy);faceD(cx,cy,w,.06*Math.sin(lt*4),EXP[k]);x.restore()}
   x.save();x.globalAlpha=.4;txt('@alamnurdiann',W/2,H-210,34,'#333',700,'center');x.restore()}
 window.draw=frame;window.ready=Promise.all(Object.keys(SRC).map(k=>new Promise(r=>{const im=new Image();im.onload=()=>{IM[k]=im;r()};im.src=SRC[k]}))).then(()=>Promise.all([document.fonts.load('700 84px Kalam'),document.fonts.load('800 50px Inter')])).then(()=>true);
 </script></body></html>`;
